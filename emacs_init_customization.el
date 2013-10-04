@@ -2,6 +2,9 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
+; so we can use thing at point
+(require 'thingatpt)
+
 ; Add newlines at the end of line with C-n
 (setq next-line-add-newlines t)
 
