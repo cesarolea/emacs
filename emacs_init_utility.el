@@ -64,7 +64,7 @@ by using nxml's indentation rules."
     (message "Ah, much better!"))
 (global-set-key (kbd "C-c C-l") 'xml-format)
 
-; replacement for all the other M-u M-l nonesense
+; replacement for all the other M-u M-l nonsense
 (defun toggle-letter-case ()
   "Toggle the letter case of current word or text selection.
 Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
