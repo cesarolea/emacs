@@ -1,12 +1,14 @@
 ; sources
 (require 'package)
-(add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-	     '("org" . "http://orgmode.org/elpa/") t)
+(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
+                         ("gnu"       . "http://elpa.gnu.org/packages/")
+                         ("melpa"     . "http://melpa.milkbox.net/packages/")
+                         ("tromey"    . "http://tromey.com/elpa/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
+
+; default theme
+(load-theme 'ample t)
 
 ; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
@@ -55,3 +57,9 @@
 ; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (provide 'emacs_init_packages)
+
+(require 'highlight-symbol)
+(global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
+(global-set-key (kbd "<f14>") 'highlight-symbol-prev)
+(global-set-key (kbd "<f15>") 'highlight-symbol-next)
+(global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)

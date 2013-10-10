@@ -148,4 +148,5 @@
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
 							(flycheck-mode 1)
-							(electric-pair-mode 1)))
+							(electric-pair-mode 1)
+							(rainbow-mode 1)))

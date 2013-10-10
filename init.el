@@ -16,9 +16,6 @@
 ; default font
 (set-default-font "Inconsolata-13")
 
-; default theme
-(load-theme 'wombat t)
-
 ; sbcl
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
@@ -33,5 +30,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(custom-enabled-themes (quote (ample)))
+ '(custom-safe-themes (quote ("94d66281c0398118afd3fdb921d8b813401a36748ce4541e7ad6b1533a557a9f" "427234e4b45350b4159575f1ac72860c32dce79bb57a29a196b9cfb9dd3554d9" default)))
  '(ecb-layout-window-sizes (quote (("left8" (ecb-directories-buffer-name 0.13 . 0.2923076923076923) (ecb-sources-buffer-name 0.13 . 0.23076923076923078) (ecb-methods-buffer-name 0.13 . 0.2923076923076923) (ecb-history-buffer-name 0.13 . 0.16923076923076924)))))
  '(ecb-options-version "2.40"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
