@@ -98,6 +98,9 @@
 ;; which function model
 (which-function-mode 1)
 
+;; stop telling me the menu command key
+(setq suggest-key-bindings nil)
+
 ;; initial frame position
 (if (window-system) (progn
 					  (cond
@@ -117,6 +120,8 @@
 ;; org-mode
 (require 'org-install)
 (require 'org-latex)
+;; so when completing tasks the timestamp is set
+(setq org-log-done t)
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
@@ -150,3 +155,28 @@
 							(flycheck-mode 1)
 							(electric-pair-mode 1)
 							(rainbow-mode 1)))
+
+; default major mode is text mode instead of fundamental mode
+(setq default-major-mode 'text-mode)
+(add-hook 'text-mode-hook (lambda ()
+								   (electric-pair-mode 0)
+								   (linum-mode 0)
+								   (flycheck-mode 0)))
+
+; hippie expand
+(global-set-key (kbd "M-/") 'hippie-expand)
+(setq hippie-expand-try-functions-list
+	  '(try-expand-dabbrev
+		try-expand-dabbrev-all-buffers
+		try-expand-dabbrev-from-kill
+		try-complete-file-name-partially
+		try-complete-file-name
+		try-expand-all-abbrevs
+		try-expand-list
+		try-expand-line
+		try-complete-lisp-symbol-partially
+		try-complete-lisp-symbol))
+
+(require 'hippie-expand-slime)
+(add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)

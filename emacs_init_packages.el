@@ -27,6 +27,10 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
+; js2-refactor
+(require 'js2-refactor)
+(js2r-add-keybindings-with-prefix "C-c C-r")
+
 ; js-comint
 (require 'js-comint)
 (cond ((eq system-type 'darwin) (progn
@@ -63,3 +67,8 @@
 (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
 (global-set-key (kbd "<f15>") 'highlight-symbol-next)
 (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)
+
+; real auto save
+(require 'real-auto-save)
+(add-hook 'org-mode-hook 'turn-on-real-auto-save)
+(setq real-auto-save-interval 30) ;;in seconds
