@@ -8,7 +8,7 @@
 (package-initialize)
 
 ; default theme
-(load-theme 'ample t)
+(load-theme 'sunny-day t)
 
 ; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
@@ -69,6 +69,12 @@
 (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)
 
 ; real auto save
-(require 'real-auto-save)
-(add-hook 'org-mode-hook 'turn-on-real-auto-save)
-(setq real-auto-save-interval 30) ;;in seconds
+;(require 'real-auto-save)
+;(add-hook 'org-mode-hook 'turn-on-real-auto-save)
+;(setq real-auto-save-interval 30) ;;in seconds
+
+; highlight current line
+(require 'highlight-current-line)
+(set-face-background 'highlight-current-line-face "wheat3")
+(add-hook 'prog-mode-hook (lambda ()
+							(highlight-current-line-minor-mode t)))

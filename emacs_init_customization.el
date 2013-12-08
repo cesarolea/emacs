@@ -42,8 +42,8 @@
 ; show column number in bar
 (column-number-mode t)
 
-; highlight matching parens
-(show-paren-mode t)
+; highlight matching parens with smartparens
+(show-smartparens-global-mode +1)
 
 ; highlight incremental search
 (defconst search-highlight t)
@@ -105,7 +105,7 @@
 (if (window-system) (progn
 					  (cond
 					   ((string= system-name "Galadriel.local") (set-frame-size (selected-frame) 150 50))
-					   ((string= system-name "Minas-Tirith.local") (set-frame-size (selected-frame) 200 65))
+					   ((string= system-name "Minas-Tirith") (set-frame-size (selected-frame) 200 65))
 					   )))
 
 ;; the C style
