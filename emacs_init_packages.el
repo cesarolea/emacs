@@ -8,7 +8,7 @@
 (package-initialize)
 
 ; default theme
-(load-theme 'sunny-day t)
+(load-theme 'ample t)
 
 ; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
@@ -75,6 +75,6 @@
 
 ; highlight current line
 (require 'highlight-current-line)
-(set-face-background 'highlight-current-line-face "wheat3")
+(set-face-background 'highlight-current-line-face "gray11")
 (add-hook 'prog-mode-hook (lambda ()
 							(highlight-current-line-minor-mode t)))
