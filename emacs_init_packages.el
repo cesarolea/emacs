@@ -76,5 +76,10 @@
 ; highlight current line
 (require 'highlight-current-line)
 (set-face-background 'highlight-current-line-face "gray11")
+
+; auto-highlight symbol
+(require 'auto-highlight-symbol)
+
 (add-hook 'prog-mode-hook (lambda ()
-							(highlight-current-line-minor-mode t)))
+							(highlight-current-line-minor-mode t)
+							(auto-highlight-symbol-mode t)))
