@@ -119,7 +119,6 @@
 
 ;; org-mode
 (require 'org-install)
-(require 'org-latex)
 ;; so when completing tasks the timestamp is set
 (setq org-log-done t)
 

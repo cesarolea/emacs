@@ -2,7 +2,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ; The all important load path
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/elpa")
 
 ; don't display startup message
 (setq inhibit-startup-message t)
