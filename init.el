@@ -7,6 +7,9 @@
 ; don't display startup message
 (setq inhibit-startup-message t)
 
+; use srgb
+(setq ns-use-srgb-colorspace t)
+
 ; Turn off mouse interface early in startup to avoid momentary display
 ;; You really don't need these; trust me.
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
