@@ -1,0 +1,19 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Jan  2 15:44:27 2014
+;; Desktop file format version 206
+;; Emacs version 24.3.50.1
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (21189 60363 589125 0) (desktop . "206") "cesarolea@Minas-Tirith" nil nil ((((font-backend mac-ct ns) (fontsize . 0) (font . "-*-Inconsolata-normal-normal-normal-*-13-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (vertical-scroll-bars) (foreground-color . "#5f5f5f") (background-color . "#fdfde7") (line-spacing) (left-fringe . 10) (right-fringe . 11) (menu-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 0) (alpha) (fullscreen) (horizontal-scroll-bars . t) (display-type . color) (background-mode . light) (cursor-color . "#5f5f5f") (environment) (frameset--id . "6F62-DABD-0E0A-B9C4") (frameset--mini t . t) (height . 65) (width . 200) (modeline . t) (minibuffer . t) (unsplittable) (left . 0) (top . 22) (right-divider-width . 0) (bottom-divider-width . 0) (icon-name) (visibility . t) (display . "Minas-Tirith") (explicit-name) (tool-bar-position . top)) ((min-height . 4) (min-width . 20) (min-height-ignore . 2) (min-width-ignore . 12) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 28) (min-pixel-width-ignore . 70) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1421) (pixel-height . 896) (total-width . 203) (total-height . 64) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 714) (pixel-height . 896) (total-width . 102) (total-height . 64) (normal-height . 1.0) (normal-width . 0.5) (buffer "*scratch*" (selected) (hscroll . 0) (fringes 10 11 nil) (margins 1) (scroll-bars 15 0 t nil) (vscroll . 0) (dedicated) (point . 192) (start . 1))) (leaf (last . t) (pixel-width . 707) (pixel-height . 896) (total-width . 101) (total-height . 64) (normal-height . 1.0) (normal-width . 0.5) (buffer "*magit: webroot*" (selected . t) (hscroll . 0) (fringes 10 11 nil) (margins nil) (scroll-bars 15 0 t nil) (vscroll . 0) (dedicated) (point . 1) (start . 1)))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("~/.emacs.d/" "~/Sites/autopal/webroot/" "~/.ido.last" "~/workspace/lisp/wizard.lisp" "~/Sites/autopal/webroot/.git/COMMIT_EDITMSG" "~/Sites/autopal/api/.git/COMMIT_EDITMSG" "~/.emacs.d/url/cookies" "~/.emacs.d/emacs_init_packages.el" "~/.emacs.d/emacs_init_customization.el" "~/.emacs.d/init.el" "/Volumes/Tomb/Sync/Org/AutoPal/NewYear.org" "~/Sites/autopal/webroot/apps/projects/autopal/system/uMod/company/loan/pages/userinfo/verification.js" "~/.emacs.d/elpa/org-20131230/org-loaddefs.el" "~/.emacs.d/elpa/org-20131230/org-autoloads.el" "~/.emacs.d/elpa/smartparens-20131230.514/smartparens-autoloads.el" "~/.emacs.d/elpa/archives/marmalade/archive-contents" "~/.emacs.d/elpa/archives/tromey/archive-contents" "~/.emacs.d/elpa/archives/melpa/archive-contents" "~/.emacs.d/elpa/archives/gnu/archive-contents" "~/.emacs.d/elpa/archives/org/archive-contents" "~/Sites/autopal/gearman_workers/.git/COMMIT_EDITMSG" "/usr/local/bin/background.sh"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:

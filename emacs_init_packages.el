@@ -50,6 +50,7 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+(setf smex-key-advice-ignore-menu-bar 1)
 
 ; helm
 (require 'helm-files)
@@ -83,3 +84,6 @@
 (add-hook 'prog-mode-hook (lambda ()
 							(highlight-current-line-minor-mode t)
 							(auto-highlight-symbol-mode t)))
+
+; highlight matching parens with smartparens
+(show-smartparens-global-mode +1)
