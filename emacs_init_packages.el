@@ -52,11 +52,23 @@
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 (setf smex-key-advice-ignore-menu-bar 1)
 
+; ido vertical mode
+(require 'ido-vertical-mode)
+(ido-mode 1)
+(ido-vertical-mode 1)
+
 ; helm
 (require 'helm-files)
 (setq helm-idle-delay 0.1)
 (setq helm-input-idle-delay 0.1)
 (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
+(setq helm-for-files-preferred-list
+	  '(helm-source-buffers-list
+		helm-source-recentf
+		helm-source-bookmarks
+		helm-source-file-cache
+		helm-source-files-in-current-dir
+		helm-source-mac-spotlight))
 (global-set-key "\C-x\ a" 'helm-for-files)
 
 ; flycheck
@@ -83,7 +95,16 @@
 
 (add-hook 'prog-mode-hook (lambda ()
 							(highlight-current-line-minor-mode t)
-							(auto-highlight-symbol-mode t)))
+							(auto-highlight-symbol-mode t)
+							(flyspell-prog-mode)))
 
 ; highlight matching parens with smartparens
 (show-smartparens-global-mode +1)
+
+; git gutter
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+(set-face-foreground 'git-gutter-fr:added    "PaleGreen4")
+
+; eyebrowse
+(eyebrowse-mode t)

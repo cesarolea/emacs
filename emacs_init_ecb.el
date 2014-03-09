@@ -6,7 +6,7 @@
 
 ;;; init ecb
 (require 'ecb)
-(require 'ecb-autoloads)
+;(require 'ecb-autoloads)
 
 ;;; the layout to use
 (setq ecb-layout-name "left8")
