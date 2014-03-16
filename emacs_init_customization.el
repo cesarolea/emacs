@@ -98,7 +98,7 @@
 ;; scroll PDFs with the mouse wheel
 (setq doc-view-continuous t)
 
-;; which function model
+;; which function mode
 (which-function-mode 1)
 
 ;; stop telling me the menu command key
@@ -194,3 +194,8 @@
 	(read-kbd-macro paredit-backward-delete-key) nil))
 (add-hook 'slime-repl-mode-hook
 		  'override-slime-repl-bindings-with-paredit t)
+
+;; remember buffer place across sessions
+(require 'saveplace)
+(setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
+(setq-default save-place t)

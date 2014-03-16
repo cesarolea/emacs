@@ -81,14 +81,8 @@
 (global-set-key (kbd "<f15>") 'highlight-symbol-next)
 (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)
 
-; real auto save
-;(require 'real-auto-save)
-;(add-hook 'org-mode-hook 'turn-on-real-auto-save)
-;(setq real-auto-save-interval 30) ;;in seconds
-
 ; highlight current line
 (require 'highlight-current-line)
-(set-face-background 'highlight-current-line-face "LightYellow2")
 
 ; auto-highlight symbol
 (require 'auto-highlight-symbol)
