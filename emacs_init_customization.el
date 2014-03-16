@@ -19,6 +19,10 @@
 										; no bell
 (setq ring-bell-function 'ignore)
 
+										; OSX keybindings
+(setq mac-command-modifier 'super)
+(setq ns-function-modifier 'hyper)
+
 ;; Move to the previous window
 (global-set-key (kbd "C-x O") (lambda ()
                                 (interactive)

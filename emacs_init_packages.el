@@ -108,3 +108,10 @@
 
 ; eyebrowse
 (eyebrowse-mode t)
+
+; undo tree
+(global-undo-tree-mode 1)
+; command is mapped to super (lowercase s)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "s-z") 'undo)
+(global-set-key (kbd "M-z") 'redo)
