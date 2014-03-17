@@ -34,11 +34,4 @@
 (load "~/.emacs.d/emacs_init_ecb.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 
-; machine specific customization
-(if (window-system) (progn
-					  (cond
-					   ((string= system-name "Galadriel.local") (load "~/.emacs.d/emacs_init_galadriel.local.el"))
-					   ((string= system-name "Minas-Tirith") (load "~/.emacs.d/emacs_init_minas.tirith.el"))
-					   )))
-
 (load custom-file)

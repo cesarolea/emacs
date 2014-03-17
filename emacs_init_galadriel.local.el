@@ -6,5 +6,5 @@
 ;; Highlight line
 (set-face-background 'highlight-current-line-face "LightYellow2")
 
-;; set theme
-;; set to moe-theme light by default
+;; Font and stuff
+(set-default-font "Inconsolata-13")
