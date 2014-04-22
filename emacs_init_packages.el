@@ -105,7 +105,30 @@
 
 ; undo tree
 (global-undo-tree-mode 1)
+
 ; command is mapped to super (lowercase s)
 (defalias 'redo 'undo-tree-redo)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "M-z") 'redo)
+
+; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+; web-mode indentation
+(setq web-mode-markup-indent-offset 4)
+(setq web-mode-code-indent-offset 4)
+
+; sublimity smooth scrolling
+(require 'sublimity)
+(require 'sublimity-scroll)
+
+(require 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
