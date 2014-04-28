@@ -149,7 +149,10 @@
                             (linum-mode 1)
 							(flycheck-mode 1)
 							(electric-pair-mode 1)
-							(rainbow-mode 1)))
+							(rainbow-mode 1)
+							(flyspell-mode 1)))
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 										; default major mode is text mode instead of fundamental mode
 (setq default-major-mode 'text-mode)
@@ -184,6 +187,7 @@
 (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+(add-hook 'clojure-mode-hook          #'enable-paredit-mode)
 
 										; paredit + slime, sitting on a tree...
 (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
@@ -199,18 +203,6 @@
 (require 'saveplace)
 (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
 (setq-default save-place t)
-
-(if (featurep 'ns)
-    (progn
-      (defun ns-raise-emacs ()
-        "Raise Emacs."
-        (ns-do-applescript "tell application \"Emacs\" to activate"))
-
-      (if (display-graphic-p)
-          (progn
-            (add-hook 'server-visit-hook 'ns-raise-emacs)
-            (add-hook 'before-make-frame-hook 'ns-raise-emacs)
-            (ns-raise-emacs)))))
 
 ; which function
 (which-function-mode)

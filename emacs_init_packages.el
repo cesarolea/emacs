@@ -134,3 +134,6 @@
 (define-key global-map (kbd "C-' SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-' C-u SPC") 'ace-jump-char-mode)
 (define-key global-map (kbd "C-' C-u C-u SPC") 'ace-jump-line-mode)
+
+; so we don't get lost in lisp
+(require 'rainbow-delimiters)
