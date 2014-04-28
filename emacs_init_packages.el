@@ -126,10 +126,6 @@
 (setq web-mode-markup-indent-offset 4)
 (setq web-mode-code-indent-offset 4)
 
-; sublimity smooth scrolling
-(require 'sublimity)
-(require 'sublimity-scroll)
-
 (require 'ace-jump-mode)
 (define-key global-map (kbd "C-' SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-' C-u SPC") 'ace-jump-char-mode)
