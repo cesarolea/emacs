@@ -1,12 +1,3 @@
-; sources
-(require 'package)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa"     . "http://melpa.milkbox.net/packages/")
-                         ("tromey"    . "http://tromey.com/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-(package-initialize)
-
 ; default theme
 (load-theme 'moe-light t)
 
@@ -133,3 +124,10 @@
 
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
+
+; configure autocomplete for clojure
+(require 'ac-nrepl)
+(add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
+(add-hook 'cider-mode-hook 'ac-nrepl-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'cider-repl-mode))

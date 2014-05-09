@@ -2,7 +2,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ; The all important load path
-(add-to-list 'load-path "~/.emacs.d/elpa")
+;(add-to-list 'load-path "~/.emacs.d/elpa")
 
 ; I don't like Customize customizing my init.el
 (setq custom-file "~/.emacs.d/lisp/custom.el")
@@ -27,8 +27,23 @@
 
 ; sbcl
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq inferior-lisp-program "/usr/bin/sbcl")
 
+; sources
+(require 'package)
+(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
+                         ("gnu"       . "http://elpa.gnu.org/packages/")
+                         ("melpa"     . "http://melpa.milkbox.net/packages/")
+                         ("tromey"    . "http://tromey.com/elpa/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+(package-initialize)
+
+; cask & pallet
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
+(require 'pallet)
+
+; custom init files
 (load "~/.emacs.d/emacs_init_packages.el")
 (load "~/.emacs.d/emacs_init_customization.el")
 (load "~/.emacs.d/emacs_init_ecb.el")
