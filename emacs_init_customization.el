@@ -144,7 +144,7 @@
       (find-file file))))
 (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
 
-										; which buffers should have lines (all major modes for programming)
+; which buffers should have lines (all major modes for programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
 							(flycheck-mode 1)
@@ -154,14 +154,14 @@
 
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-										; default major mode is text mode instead of fundamental mode
+; default major mode is text mode instead of fundamental mode
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
 							(electric-pair-mode 0)
 							(linum-mode 0)
 							(flycheck-mode 0)))
 
-										; hippie expand
+; hippie expand
 (global-set-key (kbd "M-/") 'hippie-expand)
 (setq hippie-expand-try-functions-list
 	  '(try-expand-dabbrev
@@ -179,7 +179,7 @@
 (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
 (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)
 
-										; paredit
+; paredit
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
 (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -189,15 +189,28 @@
 (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
 (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
 
-										; paredit + slime, sitting on a tree...
+; paredit + slime, sitting on a tree...
 (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
-										; Stop SLIME's REPL from grabbing DEL,
-										; which is annoying when backspacing over a '('
+
+; Stop SLIME's REPL from grabbing DEL,
+; which is annoying when backspacing over a '('
 (defun override-slime-repl-bindings-with-paredit ()
   (define-key slime-repl-mode-map
 	(read-kbd-macro paredit-backward-delete-key) nil))
 (add-hook 'slime-repl-mode-hook
 		  'override-slime-repl-bindings-with-paredit t)
+
+; clojure stuff
+(require 'cljdoc)
+(require 'ac-nrepl)
+(require 'cider)
+(add-hook 'clojure-mode-hook 'cider-mode)
+(add-hook 'cider-interaction-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
+(add-hook 'cider-repl-mode-hook 'electric-pair-mode)
+(add-hook 'cider-mode-hook 'ac-nrepl-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'cider-repl-mode))
 
 ;; remember buffer place across sessions
 (require 'saveplace)
