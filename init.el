@@ -41,7 +41,6 @@
 ; cask & pallet
 (require 'cask "/usr/local/Cellar/cask/0.6.0/cask.el")
 (cask-initialize)
-(require 'pallet)
 
 ; custom init files
 (load "~/.emacs.d/emacs_init_packages.el")
