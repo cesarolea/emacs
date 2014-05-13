@@ -5,6 +5,7 @@
 
 (depends-on "ac-nrepl")
 (depends-on "ace-jump-mode")
+(depends-on "ace-window")
 (depends-on "auto-complete")
 (depends-on "auto-highlight-symbol")
 (depends-on "cask")
