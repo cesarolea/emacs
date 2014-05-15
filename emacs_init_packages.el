@@ -132,3 +132,8 @@
 (add-hook 'cider-mode-hook 'ac-nrepl-setup)
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'cider-repl-mode))
+
+; popwin
+(require 'popwin)
+(global-set-key (kbd "M-z") popwin:keymap)
+(popwin-mode 1)
