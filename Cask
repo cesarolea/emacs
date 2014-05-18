@@ -13,6 +13,7 @@
 (depends-on "dash")
 (depends-on "ecb")
 (depends-on "eyebrowse")
+(depends-on "expand-region")
 (depends-on "flycheck")
 (depends-on "flyspell")
 (depends-on "git-gutter-fringe")

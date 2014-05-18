@@ -138,3 +138,7 @@
 (require 'popwin)
 (global-set-key (kbd "M-z") popwin:keymap)
 (popwin-mode 1)
+
+;; expand region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
