@@ -92,6 +92,7 @@
 (set-face-foreground 'git-gutter-fr:added    "PaleGreen4")
 
 ; eyebrowse
+(setq eyebrowse-keymap-prefix (kbd "H-w"))
 (eyebrowse-mode t)
 
 ; undo tree
