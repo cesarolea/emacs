@@ -107,8 +107,7 @@
 ;; ido
 (ido-mode 1)
 (setq ido-everywhere t)
-(flx-ido-mode 1)
-(setq ido-use-faces nil)
+(setq ido-use-faces t)
 
 ;; org-mode
 (require 'org-install)

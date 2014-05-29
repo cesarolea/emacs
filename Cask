@@ -16,7 +16,6 @@
 (depends-on "expand-region")
 (depends-on "flycheck")
 (depends-on "flyspell")
-(depends-on "flx-ido")
 (depends-on "git-gutter-fringe")
 (depends-on "helm")
 (depends-on "highlight-current-line")
