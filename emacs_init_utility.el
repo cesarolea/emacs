@@ -60,6 +60,29 @@ by using nxml's indentation rules."
     (message "Ah, much better!"))
 (define-key utility-map (kbd "H-x") 'xml-format)
 
+; copy filename to clipboard
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+(define-key utility-map (kbd "H-c") 'copy-file-name-to-clipboard)
+
+; show filename of current buffer
+(defun show-file-name-of-current-buffer ()
+  "Print the current buffer file name"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (message filename))))
+(define-key utility-map (kbd "H-s") 'show-file-name-of-current-buffer)
+
 ; replacement for all the other M-u M-l nonsense
 (defun toggle-letter-case ()
   "Toggle the letter case of current word or text selection.
