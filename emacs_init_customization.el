@@ -202,6 +202,7 @@
 		  'override-slime-repl-bindings-with-paredit t)
 
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
 
 ;; remember buffer place across sessions
 (require 'saveplace)
