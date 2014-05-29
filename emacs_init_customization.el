@@ -106,8 +106,8 @@
 
 ;; ido
 (ido-mode 1)
-(setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
+(setq ido-use-faces t)
 
 ;; org-mode
 (require 'org-install)
@@ -152,6 +152,7 @@
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
 
 ;; default major mode is text mode instead of fundamental mode
