@@ -61,6 +61,7 @@
 		helm-source-files-in-current-dir
 		helm-source-mac-spotlight))
 (global-set-key "\C-x\ a" 'helm-for-files)
+(global-set-key (kbd "C-c y") 'helm-show-kill-ring)
 
 ; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
