@@ -6,7 +6,7 @@
 
 ;; Prefix all commands with Fn-u
 (define-prefix-command 'utility-map)
-(global-set-key (kbd "H-u") 'utility-map)
+(global-set-key (kbd "H-z") 'utility-map)
 (defun url-humanify ()
   "Take the URL at point and make it human readable."
   (interactive)
