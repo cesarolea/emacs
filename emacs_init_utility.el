@@ -6,7 +6,35 @@
 
 ;; Prefix all commands with Fn-u
 (define-prefix-command 'utility-map)
-(global-set-key (kbd "H-u") 'utility-map)
+(global-set-key (kbd "H-z") 'utility-map)
+(defun url-humanify ()
+  "Take the URL at point and make it human readable."
+  (interactive)
+  (let* ((area (bounds-of-thing-at-point 'url))
+         (num-params  (count-occurances-in-region "&" (car area) (cdr area)))
+         (i 0))
+    (beginning-of-thing 'url)
+    (when (search-forward "?" (cdr area) t nil)
+      (insert "\n  ")
+      (while (< i num-params)
+        (search-forward "&" nil t nil)
+        (insert "\n  ")
+        (save-excursion
+          (previous-line)
+          (beginning-of-line)
+          (let ((start (search-forward "="))
+                (end (search-forward "&")))
+            (url-decode-region start end)))
+        (setq i (+ i 1))))))
+(define-key utility-map (kbd "H-u") 'url-humanify)
+
+(defun url-decode-region (start end)
+  "Replace a region with the same contents, only URL decoded."
+  (interactive "r")
+  (let ((text (url-unhex-string (buffer-substring start end))))
+    (delete-region start end)
+    (insert text)))
+(define-key utility-map (kbd "H-d") 'url-decode-region)
 
 ;; format json
 (defun json-format ()
