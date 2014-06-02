@@ -212,3 +212,6 @@
 
 ;; which function
 (which-function-mode)
+
+;; discover-my-major keybinding
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
