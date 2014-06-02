@@ -111,6 +111,10 @@
 
 ;; org-mode
 (require 'org-install)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;; so when completing tasks the timestamp is set
 (setq org-log-done t)
