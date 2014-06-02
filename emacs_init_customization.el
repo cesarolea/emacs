@@ -215,3 +215,6 @@
 
 ;; discover-my-major keybinding
 (global-set-key (kbd "C-h C-m") 'discover-my-major)
+
+;; move naturally between open windows
+(windmove-default-keybindings)
