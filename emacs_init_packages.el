@@ -125,6 +125,9 @@
 (define-key global-map (kbd "C-' C-u C-u SPC") 'ace-jump-line-mode)
 (define-key global-map (kbd "M-'") 'ace-window)
 
+; unset C-x o for other window
+(define-key global-map (kbd "C-x o") nil)
+
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
 

@@ -207,6 +207,7 @@
 		  'override-slime-repl-bindings-with-paredit t)
 
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
 
 ;; remember buffer place across sessions
 (require 'saveplace)
@@ -215,3 +216,9 @@
 
 ;; which function
 (which-function-mode)
+
+;; discover-my-major keybinding
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
+
+;; move naturally between open windows
+(windmove-default-keybindings)
