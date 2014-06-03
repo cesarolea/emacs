@@ -218,3 +218,7 @@
 
 ;; move naturally between open windows
 (windmove-default-keybindings)
+
+;; move text lines or regions
+(global-set-key [M-S-up] 'move-text-up)
+(global-set-key [M-S-down] 'move-text-down)

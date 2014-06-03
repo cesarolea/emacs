@@ -29,6 +29,7 @@
 (depends-on "magit")
 (depends-on "moe-theme")
 (depends-on "multiple-cursors")
+(depends-on "move-text")
 (depends-on "org")
 (depends-on "paredit")
 (depends-on "popup")
