@@ -1,4 +1,4 @@
-; default theme
+;; default theme
 (load-theme 'moe-light t)
 
 ; flyspell
