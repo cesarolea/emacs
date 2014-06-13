@@ -1,9 +1,6 @@
 ; Themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-; The all important load path
-;(add-to-list 'load-path "~/.emacs.d/elpa")
-
 ; I don't like Customize customizing my init.el
 (setq custom-file "~/.emacs.d/lisp/custom.el")
 

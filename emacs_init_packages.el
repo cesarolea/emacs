@@ -1,5 +1,5 @@
 ;; default theme
-(load-theme 'moe-light t)
+(load-theme 'moe-dark t)
 
 ; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
