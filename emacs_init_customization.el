@@ -32,6 +32,7 @@
 
 ;; Erase region on insert
 (delete-selection-mode 1)
+(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
 
 ;; tabs and indentation
 (setq standard-indent 2)
@@ -116,13 +117,18 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
+;; org-capture
+(setq org-default-notes-file "~/Sync/Org/refile.org")
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/Sync/Org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("n" "note" entry (file "~/Sync/Org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
+
 ;; so when completing tasks the timestamp is set
 (setq org-log-done t)
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-
 (add-hook 'org-mode-hook (lambda ()
 			   (flyspell-mode 1)
                            (linum-mode 0)
