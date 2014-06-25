@@ -3,7 +3,7 @@
 ;; set frame size
 (set-frame-size (selected-frame) 140 45)
 
-(load-theme 'moe-dark t)
+;; (load-theme 'moe-dark t)
 
 ;; set highlight line
 (set-face-background 'highlight-current-line-face "gray17")
