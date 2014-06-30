@@ -146,3 +146,7 @@
 ;; expand region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; auto upcase SQL
+(require 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlup-mode)

@@ -40,6 +40,7 @@
 (depends-on "saveplace")
 (depends-on "smartparens")
 (depends-on "smex")
+(depends-on "sqlup-mode")
 (depends-on "undo-tree")
 (depends-on "web-mode")
 (depends-on "yasnippet")
