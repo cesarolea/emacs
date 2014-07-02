@@ -215,6 +215,11 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
 
+;; hide special buffers
+(setq nrepl-hide-special-buffers t)
+;; don't show error buffer automatically on error (you can still visit it)
+(setq cider-show-error-buffer nil)
+
 ;; remember buffer place across sessions
 (require 'saveplace)
 (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
