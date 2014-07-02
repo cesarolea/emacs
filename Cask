@@ -34,6 +34,7 @@
 (depends-on "paredit")
 (depends-on "popup")
 (depends-on "popwin")
+(depends-on "powerline")
 (depends-on "rainbow-delimiters")
 (depends-on "rainbow-mode")
 (depends-on "recentf")

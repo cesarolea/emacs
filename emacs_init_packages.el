@@ -1,5 +1,9 @@
 ;; default theme
-(load-theme 'moe-dark t)
+(require 'moe-theme)
+(moe-dark)
+
+(require 'powerline)
+(powerline-moe-theme)
 
 ; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
