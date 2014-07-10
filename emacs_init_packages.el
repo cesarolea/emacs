@@ -91,11 +91,6 @@
 ; highlight matching parens with smartparens
 (show-smartparens-global-mode +1)
 
-; git gutter
-(require 'git-gutter-fringe)
-(global-git-gutter-mode t)
-(set-face-foreground 'git-gutter-fr:added    "PaleGreen4")
-
 ; eyebrowse
 (setq eyebrowse-keymap-prefix (kbd "H-w"))
 (eyebrowse-mode t)
@@ -150,3 +145,6 @@
 ;; expand region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; visual column indicator
+(require 'fill-column-indicator)
