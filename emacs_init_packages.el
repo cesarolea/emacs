@@ -5,7 +5,12 @@
 (require 'powerline)
 (powerline-moe-theme)
 
-; flyspell
+;; git-gutter
+(require 'git-gutter)
+(global-git-gutter-mode t)
+(git-gutter:linum-setup)
+
+;; flyspell
 (global-set-key (kbd "C-c C-SPC") 'ispell-word)
 
 ; recentf
