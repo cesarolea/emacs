@@ -42,6 +42,7 @@
 (depends-on "saveplace")
 (depends-on "smartparens")
 (depends-on "smex")
+(depends-on "solarized-theme")
 (depends-on "undo-tree")
 (depends-on "web-mode")
 (depends-on "yasnippet")
