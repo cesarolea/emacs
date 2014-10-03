@@ -37,7 +37,7 @@
 (package-initialize)
 
 ; cask
-(require 'cask "/usr/local/Cellar/cask/0.6.0/cask.el")
+(require 'cask "/usr/local/Cellar/cask/0.7.0/cask.el")
 (cask-initialize)
 
 ; custom init files
@@ -52,3 +52,4 @@
 	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 
 (load custom-file)
+(put 'erase-buffer 'disabled nil)

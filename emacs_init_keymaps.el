@@ -6,3 +6,4 @@
 (global-set-key (kbd "H-u") (lambda () (interactive) (insert "ú")))
 (global-set-key (kbd "H-n") (lambda () (interactive) (insert "ñ")))
 (global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
+(global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
