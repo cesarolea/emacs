@@ -163,6 +163,7 @@
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'kibit-mode)
 
 
 ;; default major mode is text mode instead of fundamental mode

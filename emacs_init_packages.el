@@ -135,7 +135,6 @@
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
 
-; configure autocomplete for clojure
 (require 'ac-nrepl)
 (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
 (add-hook 'cider-mode-hook 'ac-nrepl-setup)
