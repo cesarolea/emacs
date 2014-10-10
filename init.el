@@ -43,7 +43,7 @@
 ; custom init files
 (load "~/.emacs.d/emacs_init_packages.el")
 (load "~/.emacs.d/emacs_init_customization.el")
-(load "~/.emacs.d/emacs_init_ecb.el")
+;(load "~/.emacs.d/emacs_init_ecb.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
