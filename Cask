@@ -27,7 +27,6 @@
 (depends-on "js-comint")
 (depends-on "js2-mode")
 (depends-on "js2-refactor")
-(depends-on "kibit-mode")
 (depends-on "magit")
 (depends-on "moe-theme")
 (depends-on "multiple-cursors")
