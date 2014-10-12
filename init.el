@@ -11,7 +11,7 @@
 (setq ns-use-srgb-colorspace t)
 
 ; use a different ispell
-(setq-default ispell-program-name "aspell")
+(setq-default ispell-program-name "/usr/local/bin/aspell")
 
 ; Turn off mouse interface early in startup to avoid momentary display
 ;; You really don't need these; trust me.
