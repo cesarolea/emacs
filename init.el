@@ -53,3 +53,6 @@
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
+
+; Set exec path from shell variables
+(exec-path-from-shell-initialize)

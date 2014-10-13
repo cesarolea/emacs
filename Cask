@@ -15,6 +15,7 @@
 (depends-on "ecb")
 (depends-on "eyebrowse")
 (depends-on "expand-region")
+(depends-on "exec-path-from-shell")
 (depends-on "fill-column-indicator")
 (depends-on "flycheck")
 (depends-on "flyspell")
