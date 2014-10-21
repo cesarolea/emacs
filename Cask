@@ -1,8 +1,9 @@
 (source gnu)
 (source marmalade)
-(source melpa)
+(source melpa-stable)
 (source org)
 
+(depends-on "ac-cider")
 (depends-on "ac-nrepl")
 (depends-on "ace-jump-mode")
 (depends-on "ace-window")
@@ -12,7 +13,6 @@
 (depends-on "cider")
 (depends-on "dash")
 (depends-on "discover-my-major")
-(depends-on "ecb")
 (depends-on "eyebrowse")
 (depends-on "expand-region")
 (depends-on "exec-path-from-shell")
