@@ -30,8 +30,8 @@
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
                          ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ;("melpa"     . "http://melpa.milkbox.net/packages/")
-                         ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+			 ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+                         ("melpa"     . "http://melpa.milkbox.net/packages/")
                          ("tromey"    . "http://tromey.com/elpa/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
@@ -43,7 +43,6 @@
 ; custom init files
 (load "~/.emacs.d/emacs_init_packages.el")
 (load "~/.emacs.d/emacs_init_customization.el")
-;(load "~/.emacs.d/emacs_init_ecb.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
 

@@ -1,9 +1,10 @@
 (source gnu)
 (source marmalade)
+(source melpa-stable)
 (source melpa)
 (source org)
 
-(depends-on "ac-nrepl")
+(depends-on "ac-cider")
 (depends-on "ace-jump-mode")
 (depends-on "ace-window")
 (depends-on "auto-complete")
