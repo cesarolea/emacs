@@ -135,15 +135,13 @@
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
 
-<<<<<<< HEAD
-=======
 ;; (require 'ac-nrepl)
 ;; (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
 ;; (add-hook 'cider-mode-hook 'ac-nrepl-setup)
 ;; (eval-after-load "auto-complete"
 ;;   '(add-to-list 'ac-modes 'cider-repl-mode))
 
->>>>>>> 921fa9f7e335bf439b1f1b7d05a8ff834ecfa77a
+
 (require 'ac-cider)
 (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
 (add-hook 'cider-mode-hook 'ac-cider-setup)
