@@ -13,7 +13,6 @@
 (depends-on "cider")
 (depends-on "dash")
 (depends-on "discover-my-major")
-(depends-on "ecb")
 (depends-on "eyebrowse")
 (depends-on "expand-region")
 (depends-on "exec-path-from-shell")
