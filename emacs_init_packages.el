@@ -57,6 +57,11 @@
 (ido-mode 1)
 (ido-vertical-mode 1)
 
+; flx-ido
+(flx-ido-mode 1)
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+
 ; helm
 (require 'helm-files)
 (setq helm-idle-delay 0.1)
@@ -71,6 +76,10 @@
 		helm-source-mac-spotlight))
 (global-set-key "\C-x\ a" 'helm-for-files)
 (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+
+; integration with projectile
+(require 'helm-projectile)
+(helm-projectile-on)
 
 ; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -155,8 +164,8 @@
 (popwin-mode 1)
 
 ;; expand region
-;(require 'expand-region)
-;(global-set-key (kbd "C-=") 'er/expand-region)
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; visual column indicator
 (require 'fill-column-indicator)

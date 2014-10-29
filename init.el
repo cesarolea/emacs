@@ -30,14 +30,19 @@
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
                          ("gnu"       . "http://elpa.gnu.org/packages/")
-			 ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-                         ("melpa"     . "http://melpa.milkbox.net/packages/")
+                         ("melpa-stable" . "http://melpa-stable.org/packages/")
+                         ("melpa"     . "http://melpa.org/packages/")
                          ("tromey"    . "http://tromey.com/elpa/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(ac-cider . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(projectile . "melpa-stable"))
+
 (package-initialize)
 
 ; cask
-(require 'cask "/usr/local/Cellar/cask/0.7.0/cask.el")
+(require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
 (cask-initialize)
 
 ; custom init files

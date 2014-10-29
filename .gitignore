@@ -13,3 +13,6 @@ places
 saveplace.el
 .cask/
 bookmarks
+ido.last
+projectile-bookmarks.eld
+recentf

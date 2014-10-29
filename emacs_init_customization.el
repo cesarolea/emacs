@@ -155,10 +155,11 @@
 ;; which buffers should have lines (all major modes for programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
-			    (flycheck-mode 1)
-			    (electric-pair-mode 1)
-			    (rainbow-mode 1)
-			    (flyspell-mode 1)))
+                            (flycheck-mode 1)
+                            (electric-pair-mode 1)
+                            (rainbow-mode 1)
+                            (flyspell-mode 1)
+                            (projectile-mode 1)))
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
