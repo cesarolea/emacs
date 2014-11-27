@@ -19,9 +19,26 @@
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-; autocomplete
-(require 'auto-complete-config)
-(ac-config-default)
+;; company mode
+(add-hook 'after-init-hook 'global-company-mode)
+
+(eval-after-load 'company
+  '(progn
+     (add-to-list 'company-backends 'company-yasnippet t)
+     (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
+     (define-key company-active-map [tab] 'company-yasnippet-or-completion)
+     (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
+
+(defun company-yasnippet-or-completion ()
+  (interactive)
+  (if (yas/expansion-at-point)
+      (progn (company-abort)
+             (yas/expand))
+    (company-complete-common)))
+ 
+(defun yas/expansion-at-point ()
+  "Tested with v0.6.1. Extracted from `yas/expand-1'"
+    (yas--templates-for-key-at-point))
 
 ; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
@@ -143,20 +160,6 @@
 
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
-
-;; (require 'ac-nrepl)
-;; (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-;; (add-hook 'cider-mode-hook 'ac-nrepl-setup)
-;; (eval-after-load "auto-complete"
-;;   '(add-to-list 'ac-modes 'cider-repl-mode))
-
-
-(require 'ac-cider)
-(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-mode))
 
 ; popwin
 (require 'popwin)

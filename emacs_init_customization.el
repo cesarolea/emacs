@@ -75,11 +75,10 @@
 ;; warn when opening files bigger than 100MB
 (setq large-file-warning-threshold 100000000)
 
-
-
 ;; don't prompt for new buffer creation in ido
 (setq ido-create-new-buffer 'always)
-									     ; for commenting lines or blocks
+
+;; for commenting lines or blocks
 (global-set-key "\C-c\ -" 'comment-region)
 (global-set-key "\C-c\ +" 'uncomment-region)
 
@@ -165,7 +164,6 @@
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-
 ;; default major mode is text mode instead of fundamental mode
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
@@ -190,6 +188,11 @@
 (require 'hippie-expand-slime)
 (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
 (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)
+
+;; yasnippets
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"))
+(yas-global-mode 1)
 
 ;; paredit
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
