@@ -1,3 +1,6 @@
+; save/restore opened files and windows config
+(desktop-save-mode 1)
+
 ; Themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 

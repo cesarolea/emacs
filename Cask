@@ -4,12 +4,10 @@
 (source melpa)
 (source org)
 
-;(depends-on "ac-cider")
 (depends-on "ace-jump-mode")
 (depends-on "ace-window")
 (depends-on "auto-highlight-symbol")
 (depends-on "cask")
-;(depends-on "cider")
 (depends-on "company")
 (depends-on "dash")
 (depends-on "discover-my-major")
