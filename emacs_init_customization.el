@@ -1,3 +1,16 @@
+(global-set-key "\M-/" 'hippie-expand)
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+	try-expand-dabbrev-all-buffers
+	try-expand-dabbrev-from-kill
+	try-complete-file-name-partially
+	try-complete-file-name
+	try-expand-all-abbrevs
+	try-expand-list
+	try-expand-line
+	try-complete-lisp-symbol-partially
+	try-complete-lisp-symbol))
+
 ; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -104,53 +117,6 @@
 ;; stop telling me the menu command key
 (setq suggest-key-bindings nil)
 
-;; ido
-(ido-mode 1)
-(setq ido-everywhere t)
-(setq ido-use-faces t)
-
-;; org-mode
-(require 'org-install)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-
-;; org-capture
-(setq org-default-notes-file "~/Sync/Org/refile.org")
-(setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/Sync/Org/refile.org")
-               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("n" "note" entry (file "~/Sync/Org/refile.org")
-               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
-
-;; so when completing tasks the timestamp is set
-(setq org-log-done t)
-
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(add-hook 'org-mode-hook (lambda ()
-			   (flyspell-mode 1)
-                           (linum-mode 0)
-                           (electric-pair-mode 0)))
-
-;; org-export
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell 
-		 (replace-regexp-in-string "[[:space:]\n]*$" "" 
-								   (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
-
-;; recentf is loaded in packages
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
-(global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
-
 ;; which buffers should have lines (all major modes for programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
@@ -171,69 +137,8 @@
 			    (linum-mode 0)
 			    (flycheck-mode 0)))
 
-;; hippie expand
-(global-set-key (kbd "M-/") 'hippie-expand)
-(setq hippie-expand-try-functions-list
-	  '(try-expand-dabbrev
-		try-expand-dabbrev-all-buffers
-		try-expand-dabbrev-from-kill
-		try-complete-file-name-partially
-		try-complete-file-name
-		try-expand-all-abbrevs
-		try-expand-list
-		try-expand-line
-		try-complete-lisp-symbol-partially
-		try-complete-lisp-symbol))
-
-(require 'hippie-expand-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)
-
-;; yasnippets
-(setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"))
-(yas-global-mode 1)
-
-;; paredit
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-(add-hook 'clojure-mode-hook          #'enable-paredit-mode)
-(add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
-
-;; paredit + slime, sitting on a tree...
-(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
-
-;; Stop SLIME's REPL from grabbing DEL,
-;; which is annoying when backspacing over a '('
-(defun override-slime-repl-bindings-with-paredit ()
-  (define-key slime-repl-mode-map
-	(read-kbd-macro paredit-backward-delete-key) nil))
-(add-hook 'slime-repl-mode-hook
-		  'override-slime-repl-bindings-with-paredit t)
-
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-(add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
-
-;; hide special buffers
-(setq nrepl-hide-special-buffers t)
-;; don't show error buffer automatically on error (you can still visit it)
-(setq cider-show-error-buffer nil)
-
-;; remember buffer place across sessions
-(require 'saveplace)
-(setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
-(setq-default save-place t)
-
 ;; which function
 (which-function-mode)
-
-;; discover-my-major keybinding
-(global-set-key (kbd "C-h C-m") 'discover-my-major)
 
 ;; move naturally between open windows
 (windmove-default-keybindings)

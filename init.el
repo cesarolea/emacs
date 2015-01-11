@@ -33,7 +33,7 @@
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
                          ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa-stable" . "http://melpa-stable.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
                          ("melpa"     . "http://melpa.org/packages/")
                          ("tromey"    . "http://tromey.com/elpa/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
@@ -44,12 +44,10 @@
 
 (package-initialize)
 
-; cask
-(require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
-(cask-initialize)
+(load "~/.emacs.d/emacs_init_use_package.el")
 
 ; custom init files
-(load "~/.emacs.d/emacs_init_packages.el")
+;(load "~/.emacs.d/emacs_init_packages.el")
 (load "~/.emacs.d/emacs_init_customization.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
@@ -62,4 +60,4 @@
 (put 'erase-buffer 'disabled nil)
 
 ; Set exec path from shell variables
-(exec-path-from-shell-initialize)
+;(exec-path-from-shell-initialize)

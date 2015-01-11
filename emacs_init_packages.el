@@ -10,9 +10,6 @@
 (global-git-gutter-mode t)
 (git-gutter:linum-setup)
 
-;; flyspell
-(global-set-key (kbd "C-c C-SPC") 'ispell-word)
-
 ; recentf
 (require 'recentf)
 (recentf-mode 1)
@@ -28,17 +25,6 @@
      (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
      (define-key company-active-map [tab] 'company-yasnippet-or-completion)
      (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
-
-(defun company-yasnippet-or-completion ()
-  (interactive)
-  (if (yas/expansion-at-point)
-      (progn (company-abort)
-             (yas/expand))
-    (company-complete-common)))
- 
-(defun yas/expansion-at-point ()
-  "Tested with v0.6.1. Extracted from `yas/expand-1'"
-    (yas--templates-for-key-at-point))
 
 ; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
