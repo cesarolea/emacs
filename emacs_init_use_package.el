@@ -1,7 +1,8 @@
 (require 'use-package)
 
-(use-package moe-theme :ensure t)
-(use-package powerline-moe-theme :ensure powerline)
+(use-package powerline :ensure t)
+(use-package moe-theme :ensure t
+  :init (powerline-moe-theme))
 
 (use-package git-gutter :ensure t
   :idle (progn
