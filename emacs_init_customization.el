@@ -32,12 +32,6 @@
 ;; no bell
 (setq ring-bell-function 'ignore)
 
-;: OSX keybindings
-(setq mac-command-modifier 'super)
-(setq ns-function-modifier 'hyper)
-(setq mac-option-key-is-meta t)
-(setq mac-right-option-modifier nil)
-
 ;; Move to the previous window
 (global-set-key (kbd "C-x O") (lambda ()
                                 (interactive)

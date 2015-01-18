@@ -155,8 +155,8 @@
 
 (use-package eyebrowse :ensure t
   :init (progn
-	  (setq eyebrowse-keymap-prefix (kbd "H-w"))
-	  (eyebrowse-mode t)))
+          ;(setq eyebrowse-keymap-prefix (kbd "H-w"))
+          (eyebrowse-mode t)))
 
 (use-package undo-tree :ensure t
   :init (progn
@@ -248,12 +248,14 @@
 	    (define-key slime-repl-mode-map
 	      (read-kbd-macro paredit-backward-delete-key) nil))
 	  (add-hook 'slime-repl-mode-hook
-		    'override-slime-repl-bindings-with-paredit t)))
+              'override-slime-repl-bindings-with-paredit t)))
 
 (use-package cider :ensure t :pin melpa-stable
   :init (progn
 	  (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 	  (add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
+    (add-hook 'cider-repl-mode-hook #'company-mode)
+    (add-hook 'cider-mode-hook #'company-mode)
 
 	  (setq nrepl-hide-special-buffers t)
 	  (setq cider-show-error-buffer nil)))

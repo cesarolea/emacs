@@ -1,5 +1,8 @@
-; save/restore opened files and windows config
-(desktop-save-mode 1)
+;: OSX keybindings
+(setq mac-command-modifier 'super)
+(setq ns-function-modifier 'hyper)
+(setq mac-option-key-is-meta t)
+(setq mac-right-option-modifier nil)
 
 ; Themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
@@ -47,7 +50,6 @@
 (load "~/.emacs.d/emacs_init_use_package.el")
 
 ; custom init files
-;(load "~/.emacs.d/emacs_init_packages.el")
 (load "~/.emacs.d/emacs_init_customization.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
