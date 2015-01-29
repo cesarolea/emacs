@@ -256,6 +256,7 @@
 	  (add-hook 'cider-mode-hook (lambda () (popwin-mode nil)))
     (add-hook 'cider-repl-mode-hook #'company-mode)
     (add-hook 'cider-mode-hook #'company-mode)
+    (add-hook 'clojure-mode-hook #'company-mode)
 
 	  (setq nrepl-hide-special-buffers t)
 	  (setq cider-show-error-buffer nil)))
