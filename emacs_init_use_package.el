@@ -121,7 +121,9 @@
 		  helm-source-files-in-current-dir
 		  helm-source-mac-spotlight))
 	  (global-set-key "\C-x\ a" 'helm-for-files)
-	  (global-set-key (kbd "C-c y") 'helm-show-kill-ring)))
+	  (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+    ;; replace M-x with helm's version
+    (global-set-key (kbd "M-x") 'helm-M-x)))
 
 (use-package helm-projectile :ensure t
   :disabled t
