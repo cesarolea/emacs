@@ -123,7 +123,9 @@
 	  (global-set-key "\C-x\ a" 'helm-for-files)
 	  (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
     ;; replace M-x with helm's version
-    (global-set-key (kbd "M-x") 'helm-M-x)))
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    ;; find files with helm
+    (global-set-key (kbd "C-x C-f") 'helm-find-files)))
 
 (use-package helm-projectile :ensure t
   :disabled t
