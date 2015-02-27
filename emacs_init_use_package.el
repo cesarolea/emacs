@@ -125,7 +125,7 @@
     ;; replace M-x with helm's version
     (global-set-key (kbd "M-x") 'helm-M-x)
     ;; find files with helm
-    (global-set-key (kbd "C-x C-f") 'helm-find-files)
+    ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
     ;; replace C-x b with helm's version
     (global-set-key "\C-x\ b" 'helm-mini)))
 
