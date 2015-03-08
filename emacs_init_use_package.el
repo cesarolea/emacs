@@ -25,23 +25,6 @@
 	  (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
 	  (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)))
 
-(use-package yasnippet :ensure t
-  :init (progn
-	  (setq yas-snippet-dirs
-		'("~/.emacs.d/snippets"))
-	  (yas-global-mode 1)
-	  
-	  (defun company-yasnippet-or-completion ()
-	    (interactive)
-	    (if (yas/expansion-at-point)
-		(progn (company-abort)
-		       (yas/expand))
-	      (company-complete-common)))
-	  
-	  (defun yas/expansion-at-point ()
-	    "Tested with v0.6.1. Extracted from `yas/expand-1'"
-	    (yas--templates-for-key-at-point))))
-
 (use-package company :ensure t
   :idle (progn
 	  (add-to-list 'company-backends 'company-yasnippet t)
@@ -53,9 +36,6 @@
   :idle (progn
 	  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 	  (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
-
-(use-package js2-refactor :ensure t
-  :idle (js2r-add-keybindings-with-prefix "C-c C-r"))
 
 (use-package js-comint :ensure t
   :idle (cond ((eq system-type 'darwin)
@@ -169,7 +149,7 @@
 	  (global-undo-tree-mode 1)
 	  (defalias 'redo 'undo-tree-redo)
 	  (global-set-key (kbd "s-z") 'undo)
-	  (global-set-key (kbd "M-z") 'redo)))
+    (global-set-key (kbd "M-z") 'redo)))
 
 (use-package web-mode :ensure t
   :init (progn
@@ -196,11 +176,6 @@
 
 (use-package rainbow-mode :ensure t)
 (use-package rainbow-delimiters :ensure t)
-
-(use-package popwin :ensure t
-  :init (progn
-	  (global-set-key (kbd "M-z") popwin:keymap)
-	  (popwin-mode 1)))
 
 (use-package expand-region :ensure t
   :bind ("C-=" . er/expand-region))
