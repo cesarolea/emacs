@@ -165,13 +165,16 @@
 	  (setq web-mode-markup-indent-offset 4)
 	  (setq web-mode-code-indent-offset 4)))
 
-(use-package ace-window :ensure t)
+(use-package ace-window :ensure t
+  :init (progn
+          (define-key global-map (kbd "M-'") 'ace-window)
+          (define-key global-map (kbd "C-M-'") 'aw-flip-window)))
+
 (use-package ace-jump-mode :ensure t
   :init (progn
 	  (define-key global-map (kbd "C-' SPC") 'ace-jump-mode)
 	  (define-key global-map (kbd "C-' C-u SPC") 'ace-jump-char-mode)
 	  (define-key global-map (kbd "C-' C-u C-u SPC") 'ace-jump-line-mode)
-	  (define-key global-map (kbd "M-'") 'ace-window)
 	  (define-key global-map (kbd "C-x o") nil)))
 
 (use-package rainbow-mode :ensure t)
