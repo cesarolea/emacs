@@ -1,17 +1,14 @@
-; sources
-(require 'package)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa"     . "http://melpa.milkbox.net/packages/")
-                         ("tromey"    . "http://tromey.com/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-(package-initialize)
+;; default theme
+(require 'moe-theme)
+(moe-dark)
 
-; default theme
-(load-theme 'moe-light t)
+(require 'powerline)
+(powerline-moe-theme)
 
-; flyspell
-(global-set-key (kbd "C-c C-SPC") 'ispell-word)
+;; git-gutter
+(require 'git-gutter)
+(global-git-gutter-mode t)
+(git-gutter:linum-setup)
 
 ; recentf
 (require 'recentf)
@@ -19,9 +16,15 @@
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-; autocomplete
-(require 'auto-complete-config)
-(ac-config-default)
+;; company mode
+(add-hook 'after-init-hook 'global-company-mode)
+
+(eval-after-load 'company
+  '(progn
+     (add-to-list 'company-backends 'company-yasnippet t)
+     (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
+     (define-key company-active-map [tab] 'company-yasnippet-or-completion)
+     (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
 
 ; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
@@ -57,6 +60,11 @@
 (ido-mode 1)
 (ido-vertical-mode 1)
 
+; flx-ido
+(flx-ido-mode 1)
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+
 ; helm
 (require 'helm-files)
 (setq helm-idle-delay 0.1)
@@ -70,6 +78,11 @@
 		helm-source-files-in-current-dir
 		helm-source-mac-spotlight))
 (global-set-key "\C-x\ a" 'helm-for-files)
+(global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+
+; integration with projectile
+(require 'helm-projectile)
+(helm-projectile-on)
 
 ; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -95,12 +108,8 @@
 ; highlight matching parens with smartparens
 (show-smartparens-global-mode +1)
 
-; git gutter
-(require 'git-gutter-fringe)
-(global-git-gutter-mode t)
-(set-face-foreground 'git-gutter-fr:added    "PaleGreen4")
-
 ; eyebrowse
+(setq eyebrowse-keymap-prefix (kbd "H-w"))
 (eyebrowse-mode t)
 
 ; undo tree
@@ -130,6 +139,22 @@
 (define-key global-map (kbd "C-' SPC") 'ace-jump-mode)
 (define-key global-map (kbd "C-' C-u SPC") 'ace-jump-char-mode)
 (define-key global-map (kbd "C-' C-u C-u SPC") 'ace-jump-line-mode)
+(define-key global-map (kbd "M-'") 'ace-window)
+
+; unset C-x o for other window
+(define-key global-map (kbd "C-x o") nil)
 
 ; so we don't get lost in lisp
 (require 'rainbow-delimiters)
+
+; popwin
+(require 'popwin)
+(global-set-key (kbd "M-z") popwin:keymap)
+(popwin-mode 1)
+
+;; expand region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+;; visual column indicator
+(require 'fill-column-indicator)

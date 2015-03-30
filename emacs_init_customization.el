@@ -1,27 +1,36 @@
+(global-set-key "\M-/" 'hippie-expand)
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+	try-expand-dabbrev-all-buffers
+	try-expand-dabbrev-from-kill
+	try-complete-file-name-partially
+	try-complete-file-name
+	try-expand-all-abbrevs
+	try-expand-list
+	try-expand-line
+	try-complete-lisp-symbol-partially
+	try-complete-lisp-symbol))
+
 ; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 (setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
 
-										; so we can use thing at point
-(require 'thingatpt)
+;; so we can use thing at point
+;(require 'thingatpt)
 
-										; Add newlines at the end of line with C-n
+;; Add newlines at the end of line with C-n
 (setq next-line-add-newlines t)
 
-										; stop blinking cursor
+;; stop blinking cursor
 (blink-cursor-mode 0)
 
-										; force new frames into existing window
+;; force new frames into existing window
 (setq ns-pop-up-frames nil)
 
-										; no bell
+;; no bell
 (setq ring-bell-function 'ignore)
-
-										; OSX keybindings
-(setq mac-command-modifier 'super)
-(setq ns-function-modifier 'hyper)
 
 ;; Move to the previous window
 (global-set-key (kbd "C-x O") (lambda ()
@@ -30,54 +39,55 @@
 
 ;; Erase region on insert
 (delete-selection-mode 1)
+(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
 
-										; tabs and indentation
+;; tabs and indentation
 (setq standard-indent 2)
 (setq-default tab-width 2)
 (setq-default c-basic-offset 4)
 (setq-default indent-tabs-mode nil)
 (setq-default c-default-style "linux");
 
-										; encoding
+;; encoding
 (prefer-coding-system 'utf-8)
 (set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 
-										; show column number in bar
+;; show column number in bar
 (column-number-mode t)
 
-										; highlight incremental search
+;; highlight incremental search
 (defconst search-highlight t)
 
-										; no newlines past EOF
+;; no newlines past EOF
 (setq next-line-add-newlines nil)
 
-										; wrap lines in a tasteful way
+;; wrap lines in a tasteful way
 (global-visual-line-mode 1)
 
-										; store all backup and autosave files in the tmp dir
+;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-										; pick up changes to files on disk automatically (ie, after git pull)
+;; pick up changes to files on disk automatically (ie, after git pull)
 (global-auto-revert-mode t)
 
-										; don't confirm opening non-existant files/buffers
+;; don't confirm opening non-existant files/buffers
 (setq confirm-nonexistent-file-or-buffer nil)
 
-										; don't prompt for new buffer creation in ido
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
+;; don't prompt for new buffer creation in ido
 (setq ido-create-new-buffer 'always)
 
-										; for commenting lines or blocks
+;; for commenting lines or blocks
 (global-set-key "\C-c\ -" 'comment-region)
 (global-set-key "\C-c\ +" 'uncomment-region)
-
-(setq mac-option-key-is-meta t)
-(setq mac-right-option-modifier nil)
 
 ;; yes, I want to kill buffers with processes attached
 (setq kill-buffer-query-functions
@@ -98,124 +108,55 @@
 ;; scroll PDFs with the mouse wheel
 (setq doc-view-continuous t)
 
-;; which function mode
-(which-function-mode 1)
-
 ;; stop telling me the menu command key
 (setq suggest-key-bindings nil)
 
-;; the C style
-(setq c-default-style "linux" c-basic-offset 4)
-(setq-default tab-width 4 indent-tabs-mode t)
-
-;; ido
-(ido-mode 1)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-
-;; org-mode
-(require 'org-install)
-;; so when completing tasks the timestamp is set
-(setq org-log-done t)
-
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(add-hook 'org-mode-hook (lambda ()
-						   (flyspell-mode 1)
-                           (linum-mode 0)
-                           (electric-pair-mode 0)))
-
-										; org-export
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell 
-		 (replace-regexp-in-string "[[:space:]\n]*$" "" 
-								   (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
-
-;; recentf is loaded in packages
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
-(global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
-
-; which buffers should have lines (all major modes for programming)
+;; which buffers should have lines (all major modes for programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
-							(flycheck-mode 1)
-							(electric-pair-mode 1)
-							(rainbow-mode 1)
-							(flyspell-mode 1)))
+                            (flycheck-mode 1)
+                            (electric-pair-mode 1)
+                            (rainbow-mode 1)
+                            (flyspell-mode 1)
+                            (projectile-mode 1)))
 
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+;; but only lisps should have rainbow delimiters
+(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-; default major mode is text mode instead of fundamental mode
+;; default major mode is text mode instead of fundamental mode
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
-							(electric-pair-mode 0)
-							(linum-mode 0)
-							(flycheck-mode 0)))
+			    (electric-pair-mode 0)
+			    (linum-mode 0)
+			    (flycheck-mode 0)))
 
-; hippie expand
-(global-set-key (kbd "M-/") 'hippie-expand)
-(setq hippie-expand-try-functions-list
-	  '(try-expand-dabbrev
-		try-expand-dabbrev-all-buffers
-		try-expand-dabbrev-from-kill
-		try-complete-file-name-partially
-		try-complete-file-name
-		try-expand-all-abbrevs
-		try-expand-list
-		try-expand-line
-		try-complete-lisp-symbol-partially
-		try-complete-lisp-symbol))
-
-(require 'hippie-expand-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)
-
-; paredit
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-(add-hook 'clojure-mode-hook          #'enable-paredit-mode)
-
-; paredit + slime, sitting on a tree...
-(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
-
-; Stop SLIME's REPL from grabbing DEL,
-; which is annoying when backspacing over a '('
-(defun override-slime-repl-bindings-with-paredit ()
-  (define-key slime-repl-mode-map
-	(read-kbd-macro paredit-backward-delete-key) nil))
-(add-hook 'slime-repl-mode-hook
-		  'override-slime-repl-bindings-with-paredit t)
-
-; clojure stuff
-(require 'cljdoc)
-(require 'ac-nrepl)
-(require 'cider)
-(add-hook 'clojure-mode-hook 'cider-mode)
-(add-hook 'cider-interaction-mode-hook 'cider-turn-on-eldoc-mode)
-(add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-(add-hook 'cider-repl-mode-hook 'electric-pair-mode)
-(add-hook 'cider-mode-hook 'ac-nrepl-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-repl-mode))
-
-;; remember buffer place across sessions
-(require 'saveplace)
-(setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
-(setq-default save-place t)
-
-; which function
+;; which function
 (which-function-mode)
+
+;; move naturally between open windows
+(windmove-default-keybindings)
+
+;; move text lines or regions
+(global-set-key [M-S-up] 'move-text-up)
+(global-set-key [M-S-down] 'move-text-down)
+
+;; drag and drop arrangement
+(defun th/swap-window-buffers-by-dnd (drag-event)
+  "Swaps the buffers displayed in the DRAG-EVENT's start and end
+window."
+  (interactive "e")
+  (let ((start-win (cl-caadr drag-event))
+        (end-win   (cl-caaddr drag-event)))
+    (when (and (windowp start-win)
+               (windowp end-win)
+               (not (eq start-win end-win))
+               (not (memq (minibuffer-window)
+                          (list start-win end-win))))
+      (let ((bs (window-buffer start-win))
+            (be (window-buffer end-win)))
+        (unless (eq bs be)
+          (set-window-buffer start-win be)
+          (set-window-buffer end-win bs))))))
+
+(global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)

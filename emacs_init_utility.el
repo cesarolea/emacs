@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+;; Prefix all commands with Fn-u
+(define-prefix-command 'utility-map)
+(global-set-key (kbd "H-z") 'utility-map)
 (defun url-humanify ()
   "Take the URL at point and make it human readable."
   (interactive)
@@ -23,6 +26,7 @@
                 (end (search-forward "&")))
             (url-decode-region start end)))
         (setq i (+ i 1))))))
+(define-key utility-map (kbd "H-u") 'url-humanify)
 
 (defun url-decode-region (start end)
   "Replace a region with the same contents, only URL decoded."
@@ -30,14 +34,7 @@
   (let ((text (url-unhex-string (buffer-substring start end))))
     (delete-region start end)
     (insert text)))
-
-(defun count-occurances-in-region (needle start end)
-  (save-excursion
-    (let ((found 0))
-      (goto-char start)
-      (while (search-forward needle end t nil)
-        (setq found (+ found 1)))
-      found)))
+(define-key utility-map (kbd "H-d") 'url-decode-region)
 
 ;; format json
 (defun json-format ()
@@ -45,8 +42,7 @@
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "python -c 'import sys,json; data=json.loads(sys.stdin.read()); print json.dumps(data,sort_keys=True,indent=4).decode(\"unicode_escape\").encode(\"utf8\",\"replace\")'" (buffer-name) t)))
-(global-set-key (kbd "C-c C-j") 'json-format)
-(add-hook 'js-mode-hook (lambda () (electric-indent-mode 1)))
+(define-key utility-map (kbd "H-j") 'json-format)
 
 (defun xml-format (begin end)
   "Pretty format XML markup in region. You need to have 'nxml-mode'
@@ -62,7 +58,30 @@ by using nxml's indentation rules."
         (backward-char) (insert "\n"))
       (indent-region begin end))
     (message "Ah, much better!"))
-(global-set-key (kbd "C-c C-l") 'xml-format)
+(define-key utility-map (kbd "H-x") 'xml-format)
+
+; copy filename to clipboard
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+(define-key utility-map (kbd "H-c") 'copy-file-name-to-clipboard)
+
+; show filename of current buffer
+(defun show-file-name-of-current-buffer ()
+  "Print the current buffer file name"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (message filename))))
+(define-key utility-map (kbd "H-s") 'show-file-name-of-current-buffer)
 
 ; replacement for all the other M-u M-l nonsense
 (defun toggle-letter-case ()

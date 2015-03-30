@@ -1,8 +1,11 @@
+;: OSX keybindings
+(setq mac-command-modifier 'super)
+(setq ns-function-modifier 'hyper)
+(setq mac-option-key-is-meta t)
+(setq mac-right-option-modifier nil)
+
 ; Themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-
-; The all important load path
-(add-to-list 'load-path "~/.emacs.d/elpa")
 
 ; I don't like Customize customizing my init.el
 (setq custom-file "~/.emacs.d/lisp/custom.el")
@@ -14,7 +17,7 @@
 (setq ns-use-srgb-colorspace t)
 
 ; use a different ispell
-(setq-default ispell-program-name "aspell")
+(setq-default ispell-program-name "/usr/local/bin/aspell")
 
 ; Turn off mouse interface early in startup to avoid momentary display
 ;; You really don't need these; trust me.
@@ -29,13 +32,36 @@
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
 
-(load "~/.emacs.d/emacs_init_packages.el")
+; sources
+(require 'package)
+(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
+                         ("gnu"       . "http://elpa.gnu.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ("melpa"     . "http://melpa.org/packages/")
+                         ("tromey"    . "http://tromey.com/elpa/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(ac-cider . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(projectile . "melpa-stable") t)
+;(add-to-list 'package-pinned-packages '(moe-theme . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(powerline . "melpa-stable") t)
+
+(package-initialize)
+
+(load "~/.emacs.d/emacs_init_use_package.el")
+
+; custom init files
 (load "~/.emacs.d/emacs_init_customization.el")
-(load "~/.emacs.d/emacs_init_ecb.el")
 (load "~/.emacs.d/emacs_init_utility.el")
+(load "~/.emacs.d/emacs_init_keymaps.el")
 
 ;; load files depending on hostname
 (cond ((string= system-name "Galadriel.local") (load "~/.emacs.d/emacs_init_galadriel.local.el"))
-	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
+ 	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 
 (load custom-file)
+(put 'erase-buffer 'disabled nil)
+
+; Set exec path from shell variables
+(exec-path-from-shell-initialize)

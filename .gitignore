@@ -7,7 +7,16 @@ tramp
 ac-comphist.dat
 auto-save-list/
 elpa/
+snippets/
 *~
 url/
 places
 saveplace.el
+.cask/
+bookmarks
+ido.last
+projectile-bookmarks.eld
+recentf
+.emacs.desktop
+.emacs.desktop.lock
+smex-items
