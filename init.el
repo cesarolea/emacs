@@ -44,6 +44,8 @@
 (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(ac-cider . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(projectile . "melpa-stable") t)
+;(add-to-list 'package-pinned-packages '(moe-theme . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(powerline . "melpa-stable") t)
 
 (package-initialize)
 
@@ -56,7 +58,7 @@
 
 ;; load files depending on hostname
 (cond ((string= system-name "Galadriel.local") (load "~/.emacs.d/emacs_init_galadriel.local.el"))
-	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
+ 	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
