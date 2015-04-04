@@ -3,6 +3,10 @@
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t)
 
+(use-package popwin :ensure t
+  :defer (progn
+          (popwin-mode 1)))
+
 (use-package git-gutter :ensure t
   :defer (progn
            (global-git-gutter-mode t)
