@@ -144,7 +144,7 @@
 
 (use-package eyebrowse :ensure t
   :init (progn
-                                        ;(setq eyebrowse-keymap-prefix (kbd "H-w"))
+          (setq eyebrowse-keymap-prefix (kbd "H-w"))
           (eyebrowse-mode t)))
 
 (use-package undo-tree :ensure t
