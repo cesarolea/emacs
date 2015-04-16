@@ -46,6 +46,7 @@
 (add-to-list 'package-pinned-packages '(projectile . "melpa-stable") t)
 ;(add-to-list 'package-pinned-packages '(moe-theme . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(powerline . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(hydra . "melpa-stable") t)
 
 (package-initialize)
 
@@ -65,3 +66,4 @@
 
 ; Set exec path from shell variables
 (exec-path-from-shell-initialize)
+(moe-theme-random-color)
