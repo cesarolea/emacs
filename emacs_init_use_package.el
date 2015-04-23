@@ -13,7 +13,7 @@
            (git-gutter:linum-setup)))
 
 (use-package recentf :ensure t
-  :init (progn
+  :config (progn
           (recentf-mode 1)
           (setq recentf-max-menu-items 25))
   :bind ("\C-x\ \C-r" . recentf-open-files))
@@ -24,7 +24,7 @@
           (setq-default save-place t)))
 
 (use-package hippie-expand-slime :ensure t
-  :init (progn
+  :config (progn
           (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
           (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)))
 
@@ -55,7 +55,7 @@
                                  (replace-regexp-in-string "\033\\[[0-9]+[GKJ]" "" output)))))))))
 
 (use-package smex :ensure t
-  :init (progn
+  :config (progn
           (smex-initialize)
           (global-set-key (kbd "M-x") 'smex)
           (global-set-key (kbd "M-X") 'smex-major-mode-commands)
@@ -63,7 +63,7 @@
           (setf smex-key-advice-ignore-menu-bar 1)))
 
 (use-package ido :ensure t
-  :init (progn
+  :config (progn
           (ido-mode 1)
           (setq ido-everywhere t)
           (setq ido-use-faces t)
@@ -78,12 +78,12 @@
           (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
 
 (use-package ido-vertical-mode :ensure t
-  :init (progn
+  :config (progn
           (ido-mode 1)
           (ido-vertical-mode 1)))
 
 (use-package flx-ido :ensure t
-  :init (progn
+  :config (progn
           (flx-ido-mode 1)
           (setq ido-enable-flex-matching t)
           (setq ido-use-faces nil)))
@@ -91,7 +91,7 @@
 (use-package projectile :ensure t :pin melpa-stable)
 
 (use-package helm :ensure t
-  :init (progn
+  :config (progn
           (require 'helm-files)
           (setq helm-idle-delay 0.1)
           (setq helm-input-idle-delay 0.1)
@@ -114,11 +114,10 @@
           (global-set-key "\C-x\ \C-r" 'helm-recentf)))
 
 (use-package helm-projectile :ensure t
-  :disabled t
-  :init (helm-projectile-on))
+  :config (helm-projectile-on))
 
 (use-package flycheck :ensure t
-  :init (progn
+  :config (progn
           (add-hook 'after-init-hook #'global-flycheck-mode)
           (provide 'emacs_init_packages)))
 
@@ -126,7 +125,7 @@
   :bind ("C-c C-SPC" . ispell-word))
 
 (use-package highlight-symbol :ensure t
-  :init (progn
+  :config (progn
           (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
           (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
           (global-set-key (kbd "<f15>") 'highlight-symbol-next)
@@ -134,29 +133,29 @@
 
 (use-package highlight-current-line :ensure t)
 (use-package auto-highlight-symbol :ensure t
-  :init (progn
+  :config (progn
           (add-hook 'prog-mode-hook (lambda ()
                                       (highlight-current-line-minor-mode t)
                                       (auto-highlight-symbol-mode t)
                                       (flyspell-prog-mode)))))
 
 (use-package smartparens :ensure t :pin melpa-stable
-  :init (show-smartparens-global-mode +1))
+  :config (show-smartparens-global-mode +1))
 
 (use-package eyebrowse :ensure t
-  :init (progn
+  :config (progn
           (setq eyebrowse-keymap-prefix (kbd "H-w"))
           (eyebrowse-mode t)))
 
 (use-package undo-tree :ensure t
-  :init (progn
+  :config (progn
           (global-undo-tree-mode 1)
           (defalias 'redo 'undo-tree-redo)
           (global-set-key (kbd "s-z") 'undo)
           (global-set-key (kbd "M-z") 'redo)))
 
 (use-package web-mode :ensure t
-  :init (progn
+  :config (progn
           (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
           (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
           (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
@@ -184,7 +183,7 @@
   :bind ("C-=" . er/expand-region))
 
 (use-package org
-  :init (progn
+  :config (progn
           (global-set-key "\C-cl" 'org-store-link)
           (global-set-key "\C-cc" 'org-capture)
           (global-set-key "\C-ca" 'org-agenda)
@@ -215,7 +214,7 @@
                          "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))))
 
 (use-package paredit :ensure t
-  :init (progn
+  :config (progn
           (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
           (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
           (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -235,7 +234,7 @@
                     'override-slime-repl-bindings-with-paredit t)))
 
 (use-package cider :ensure t :pin melpa-stable
-  :init (progn
+  :config (progn
           (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)          
           (add-hook 'cider-repl-mode-hook #'company-mode)
           (add-hook 'cider-mode-hook #'company-mode)
@@ -256,10 +255,10 @@
 (use-package move-text :ensure t)
 
 (use-package hydra :ensure t :pin melpa-stable
-  :init (load "~/.emacs.d/hydras.el"))
+  :config (load "~/.emacs.d/hydras.el"))
 
 (use-package lispy :ensure t :pin melpa-stable
-  :init (progn
+  :config (progn
           (define-key lispy-mode-map (kbd "]") nil)
           (define-key lispy-mode-map (kbd "[") nil)
           (define-key lispy-mode-map (kbd "<right>") 'lispy-forward)

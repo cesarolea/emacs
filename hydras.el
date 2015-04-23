@@ -3,7 +3,8 @@
   ("q" sql-mode "SQL")
   ("o" org-mode "org")
   ("t" text-mode "text")
-  ("w" web-mode "web"))
+  ("w" web-mode "web")
+  ("j" js2-mode "JavaScript"))
 (global-set-key (kbd "C-c m") 'hydra-major/body)
 
 (defhydra hydra-window (:color red :hint nil)
