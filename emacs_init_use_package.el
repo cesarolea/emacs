@@ -1,7 +1,8 @@
 (require 'use-package)
 
 (use-package powerline :ensure t)
-(use-package moe-theme :ensure t)
+(use-package moe-theme :ensure t
+  :config (powerline-moe-theme))
 
 (use-package popwin :ensure t
   :defer (progn
