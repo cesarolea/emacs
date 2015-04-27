@@ -22,3 +22,4 @@ recentf
 .emacs.desktop.lock
 smex-items
 semanticdb/
+var/

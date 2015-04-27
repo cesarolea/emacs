@@ -40,3 +40,14 @@ Delete: _o_ther ace-_d_elete
   ("l" avi-goto-line "Go to line")
   ("w" avi-goto-word-1 "Go to word"))
 (global-set-key (kbd "C-c g") 'hydra-movement/body)
+
+(defhydra hydra-gist (:color blue)
+  "gists"
+  ("l" gist-list "List gists")
+  ("g" gitst-region-or-buffer "Gist region or buffer")
+  ("P" gist-region-or-buffer-private "Gist region or buffer private")
+  ("r" gist-region "Gist region")
+  ("R" gist-region-private "Private gist")
+  ("b" gist-buffer "Gist buffer")
+  ("B" gist-buffer-private "Gist buffer private"))
+(global-set-key (kbd "C-c s") 'hydra-gist/body)

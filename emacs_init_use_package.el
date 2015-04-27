@@ -260,10 +260,13 @@
 
 (use-package lispy :ensure t :pin melpa-stable
   :config (progn
-          (define-key lispy-mode-map (kbd "]") nil)
-          (define-key lispy-mode-map (kbd "[") nil)
-          (define-key lispy-mode-map (kbd "<right>") 'lispy-forward)
-          (define-key lispy-mode-map (kbd "<left>") 'lispy-backward)
-          (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
-          (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-          (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))))
+            (define-key lispy-mode-map (kbd "]") nil)
+            (define-key lispy-mode-map (kbd "[") nil)
+            (define-key lispy-mode-map (kbd "<right>") 'lispy-forward)
+            (define-key lispy-mode-map (kbd "<left>") 'lispy-backward)
+            (define-key lispy-mode-map (kbd "RET") 'paredit-newline)
+            (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+            (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+            (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))))
+
+(use-package gist :ensure t :pin melpa-stable)
