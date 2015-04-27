@@ -265,6 +265,8 @@
             (define-key lispy-mode-map (kbd "<right>") 'lispy-forward)
             (define-key lispy-mode-map (kbd "<left>") 'lispy-backward)
             (define-key lispy-mode-map (kbd "RET") 'paredit-newline)
+            (define-key lispy-mode-map (kbd "<up>") 'lispy-move-up)
+            (define-key lispy-mode-map (kbd "<down>") 'lispy-move-down)
             (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
             (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
             (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))))
