@@ -89,7 +89,7 @@
             (setq ido-enable-flex-matching t)
             (setq ido-use-faces nil)))
 
-(use-package projectile :ensure t :pin melpa-stable)
+(use-package projectile :ensure t)
 
 (use-package helm :ensure t
   :config (progn
