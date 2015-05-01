@@ -51,3 +51,22 @@ Delete: _o_ther ace-_d_elete
   ("b" gist-buffer "Gist buffer")
   ("B" gist-buffer-private "Gist buffer private"))
 (global-set-key (kbd "C-c s") 'hydra-gist/body)
+
+(defhydra hydra-org (:color red :hint nil)
+    "
+Capture^       ^Navigation^
+-----------------------------------------------------------
+capture         _j_ next heading
+last capture    _k_ prev heading
+                _h_ next heading (same level)
+                _l_ prev heading (same level)
+                _u_p higher heading
+                _g_o to
+"
+    ("j" outline-next-visible-heading)
+    ("k" outline-previous-visible-heading)
+    ("h" org-forward-heading-same-level)
+    ("l" org-backward-heading-same-level)
+    ("u" outline-up-heading)
+    ("g" org-goto))
+(global-set-key (kbd "C-c o") 'hydra-org/body)
