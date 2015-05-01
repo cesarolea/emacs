@@ -53,7 +53,7 @@ Delete: _o_ther ace-_d_elete
 (global-set-key (kbd "C-c s") 'hydra-gist/body)
 
 (defhydra hydra-org (:color red :hint nil)
-    "
+  "
 Capture^       ^Navigation^
 -----------------------------------------------------------
 capture         _j_ next heading
@@ -63,10 +63,10 @@ last capture    _k_ prev heading
                 _u_p higher heading
                 _g_o to
 "
-    ("j" outline-next-visible-heading)
-    ("k" outline-previous-visible-heading)
-    ("h" org-forward-heading-same-level)
-    ("l" org-backward-heading-same-level)
-    ("u" outline-up-heading)
-    ("g" org-goto))
+  ("j" outline-next-visible-heading)
+  ("k" outline-previous-visible-heading)
+  ("h" org-forward-heading-same-level)
+  ("l" org-backward-heading-same-level)
+  ("u" outline-up-heading)
+  ("g" org-goto :exit t))
 (global-set-key (kbd "C-c o") 'hydra-org/body)
