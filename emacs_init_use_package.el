@@ -150,8 +150,8 @@
 
 (use-package eyebrowse :ensure t
   :config (progn
-            (setq eyebrowse-keymap-prefix (kbd "H-w"))
-            (eyebrowse-mode t)))
+            (eyebrowse-mode t)
+            (setq eyebrowse-new-workspace t)))
 
 (use-package undo-tree :ensure t
   :config (progn
@@ -277,3 +277,9 @@
             (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))))
 
 (use-package gist :ensure t :pin melpa-stable)
+
+(use-package aggressive-indent :ensure t
+  :config (progn
+            (global-aggressive-indent-mode 1)
+            (add-to-list 'aggressive-indent-excluded-modes 'text-mode)
+            (add-to-list 'aggressive-indent-excluded-modes 'org-mode)))
