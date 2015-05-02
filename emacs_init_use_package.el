@@ -149,9 +149,11 @@
   :config (show-smartparens-global-mode +1))
 
 (use-package eyebrowse :ensure t
-  :config (progn
-            (eyebrowse-mode t)
-            (setq eyebrowse-new-workspace t)))
+  :diminish eyebrowse-mode
+  :init (progn
+          (setq eyebrowse-wrap-around t
+                eyebrowse-new-workspace t)
+          (eyebrowse-mode 1)))
 
 (use-package undo-tree :ensure t
   :config (progn
