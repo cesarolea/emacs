@@ -70,3 +70,19 @@ last capture    _k_ prev heading
   ("u" outline-up-heading)
   ("g" org-goto :exit t))
 (global-set-key (kbd "C-c o") 'hydra-org/body)
+
+(defhydra hydra-utility (:color blue :hint nil)
+  "
+URL^             ^Format^  ^Misc^
+--------------------------------------------------------
+_h_umanify        _j_son    _c_opy filename to clipboard
+_d_ecode region   _x_ml     _s_how filename of buffer
+                        _t_oggle letter case"
+  ("h" url-humanify)
+  ("d" url-decode-region)
+  ("j" json-format)
+  ("x" xml-format)
+  ("c" copy-file-name-to-clipboard)
+  ("s" show-file-name-of-current-buffer)
+  ("t" toggle-letter-case :color red))
+(global-set-key (kbd "C-c u") 'hydra-utility/body)
