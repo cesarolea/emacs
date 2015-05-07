@@ -284,9 +284,14 @@
   :config (progn
             (global-aggressive-indent-mode 1)
             (add-to-list 'aggressive-indent-excluded-modes 'text-mode)
-            (add-to-list 'aggressive-indent-excluded-modes 'org-mode)))
+            (add-to-list 'aggressive-indent-excluded-modes 'org-mode)
+            (add-to-list 'aggressive-indent-excluded-modes 'markdown-mode)))
 
 (use-package markdown-mode :ensure t
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
             (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))))
+
+(use-package org-bullets :ensure t
+  :config (progn
+            (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
