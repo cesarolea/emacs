@@ -280,13 +280,6 @@
 
 (use-package gist :ensure t :pin melpa-stable)
 
-(use-package aggressive-indent :ensure t
-  :config (progn
-            (global-aggressive-indent-mode 1)
-            (add-to-list 'aggressive-indent-excluded-modes 'text-mode)
-            (add-to-list 'aggressive-indent-excluded-modes 'org-mode)
-            (add-to-list 'aggressive-indent-excluded-modes 'markdown-mode)))
-
 (use-package markdown-mode :ensure t
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
