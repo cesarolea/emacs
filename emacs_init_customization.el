@@ -192,3 +192,6 @@ window."
            (member major-mode yank-indent-modes))
       (let ((transient-mark-mode nil))
         (yank-advised-indent-function (region-beginning) (region-end)))))
+
+;; replace ls for gls from coreutils (for dired)
+(setq insert-directory-program (executable-find "gls"))
