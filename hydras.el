@@ -4,7 +4,8 @@
   ("o" org-mode "org")
   ("t" text-mode "text")
   ("w" web-mode "web")
-  ("j" js2-mode "JavaScript"))
+  ("j" js2-mode "JavaScript")
+  ("m" markdown-mode "Markdown"))
 (global-set-key (kbd "C-c m") 'hydra-major/body)
 
 (defhydra hydra-window (:color red :hint nil)
