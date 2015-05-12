@@ -87,3 +87,29 @@ _d_ecode region   _x_ml     _s_how filename of buffer
   ("s" show-file-name-of-current-buffer)
   ("t" toggle-letter-case :color red))
 (global-set-key (kbd "C-c u") 'hydra-utility/body)
+
+(defhydra hydra-eyebrowse (:color blue :hint nil)
+  "
+Workspace^                     ^Navigation^
+------------------------------------------------
+Workspace _1_   Workspace _6_   _n_ext workspace
+Workspace _2_   Workspace _7_   _p_rev workspace
+Workspace _3_   Workspace _8_   _l_ast workspace
+Workspace _4_   Workspace _9_   _c_lose workspace
+Workspace _5_   Workspace _0_
+"
+  ("1" eyebrowse-switch-to-window-config-0)
+  ("2" eyebrowse-switch-to-window-config-2)
+  ("3" eyebrowse-switch-to-window-config-3)
+  ("4" eyebrowse-switch-to-window-config-4)
+  ("5" eyebrowse-switch-to-window-config-5)
+  ("6" eyebrowse-switch-to-window-config-6)
+  ("7" eyebrowse-switch-to-window-config-7)
+  ("8" eyebrowse-switch-to-window-config-8)
+  ("9" eyebrowse-switch-to-window-config-9)
+  ("0" eyebrowse-switch-to-window-config-0)
+  ("n" eyebrowse-next-window-config)
+  ("p" eyebrowse-prev-window-config)
+  ("l" eyebrowse-last-window-config)
+  ("c" eyebrowse-close-window-config))
+(global-set-key (kbd "C-c w") 'hydra-eyebrowse/body)

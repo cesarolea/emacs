@@ -153,7 +153,8 @@
   :init (progn
           (setq eyebrowse-wrap-around t
                 eyebrowse-new-workspace t)
-          (eyebrowse-mode 1)))
+          (eyebrowse-mode 1)
+          (eyebrowse-switch-to-window-config-0)))
 
 (use-package undo-tree :ensure t
   :config (progn
@@ -265,7 +266,7 @@
 (use-package hydra :ensure t :pin melpa-stable
   :config (load "~/.emacs.d/hydras.el"))
 
-(use-package lispy :ensure t :pin melpa-stable
+(use-package lispy :ensure t
   :config (progn
             (define-key lispy-mode-map (kbd "]") nil)
             (define-key lispy-mode-map (kbd "[") nil)
