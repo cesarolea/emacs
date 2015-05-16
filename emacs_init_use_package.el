@@ -189,7 +189,9 @@
 (use-package rainbow-delimiters :ensure t)
 
 (use-package expand-region :ensure t
-  :bind ("C-=" . er/expand-region))
+  :config (progn
+            (global-set-key (kbd "C-=") 'er/expand-region)
+            (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package org
   :config (progn
