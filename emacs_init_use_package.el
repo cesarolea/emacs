@@ -289,3 +289,6 @@
 (use-package org-bullets :ensure t
   :config (progn
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+
+(use-package reveal-in-finder :ensure t
+  :bind ("C-c C-f" . reveal-in-finder))
