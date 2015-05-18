@@ -189,7 +189,9 @@
 (use-package rainbow-delimiters :ensure t)
 
 (use-package expand-region :ensure t
-  :bind ("C-=" . er/expand-region))
+  :config (progn
+            (global-set-key (kbd "C-=") 'er/expand-region)
+            (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package org
   :config (progn
@@ -295,3 +297,6 @@
             (clean-aindent-mode 1)
             (setq clean-aindent-is-simple-indent t)
             (define-key global-map (kbd "RET") 'newline-and-indent)))
+
+(use-package reveal-in-finder :ensure t
+  :bind ("C-c C-f" . reveal-in-finder))
