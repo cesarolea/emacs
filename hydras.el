@@ -112,4 +112,4 @@ Workspace _5_   Workspace _0_
   ("p" eyebrowse-prev-window-config)
   ("l" eyebrowse-last-window-config)
   ("c" eyebrowse-close-window-config))
-(global-set-key (kbd "C-c w") 'hydra-eyebrowse/body)
+(global-set-key (kbd "C-c e") 'hydra-eyebrowse/body)

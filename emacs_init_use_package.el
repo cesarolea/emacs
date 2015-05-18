@@ -289,3 +289,9 @@
 (use-package org-bullets :ensure t
   :config (progn
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+
+(use-package clean-aindent-mode :ensure t
+  :config (progn
+            (clean-aindent-mode 1)
+            (setq clean-aindent-is-simple-indent t)
+            (define-key global-map (kbd "RET") 'newline-and-indent)))
