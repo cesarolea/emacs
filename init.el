@@ -57,7 +57,7 @@
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
 ;; load files depending on hostname
-(cond ((string= system-name "Galadriel.local") (load "~/.emacs.d/emacs_init_galadriel.local.el"))
+(cond ((string= system-name "Galadriel.lan") (load "~/.emacs.d/emacs_init_galadriel.local.el"))
  	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 
 (load custom-file)

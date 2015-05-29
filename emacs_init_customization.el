@@ -15,7 +15,10 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-(setq backup-directory-alist `(("." . "~/.emacs.d/saves")))
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
 
 ;; so we can use thing at point
 ;(require 'thingatpt)
