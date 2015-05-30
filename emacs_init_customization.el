@@ -20,9 +20,6 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
-;; so we can use thing at point
-;(require 'thingatpt)
-
 ;; Add newlines at the end of line with C-n
 (setq next-line-add-newlines t)
 
@@ -239,3 +236,10 @@ Version 2015-05-06"
         (message "buffer text copied")
       (message "text copied"))))
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
+
+;; Allow clipboard from outside emacs
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t)
