@@ -12,6 +12,7 @@
   "
  Split: _v_ert _x_:horz
 Delete: _o_ther ace-_d_elete
+Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter right
   Move: _s_wap
   Misc: _a_ce-window
 "
@@ -32,6 +33,10 @@ Delete: _o_ther ace-_d_elete
          (split-window-below)
          (windmove-down)) "Split below and move")
   ("o" delete-other-windows "Delete other windows" :exit t)
+  ("H" hydra-move-splitter-left)
+  ("J" hydra-move-splitter-down)
+  ("K" hydra-move-splitter-up)
+  ("L" hydra-move-splitter-right)
   ("a" ace-window "Ace window" :exit t))
 (global-set-key (kbd "C-c w") 'hydra-window/body)
 
