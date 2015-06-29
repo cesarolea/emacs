@@ -58,8 +58,9 @@
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
 ;; load files depending on hostname
-(cond ((compare-strings system-name 0 8 "Galadriel" 0 8) (load "~/.emacs.d/emacs_init_galadriel.local.el"))
- 	  (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
+(cond ((string= (substring system-name 0 9) "Galadriel")
+       (load "~/.emacs.d/emacs_init_galadriel.local.el"))
+      (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
