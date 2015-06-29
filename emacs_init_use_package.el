@@ -4,6 +4,10 @@
   :config (progn
             (diminish 'visual-line-mode)))
 
+(use-package nlinum :ensure t
+  :config (progn
+            (add-hook 'prog-mode-hook 'nlinum-mode)))
+
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
   :config (progn
@@ -41,7 +45,8 @@
            (add-to-list 'company-backends 'company-yasnippet t)
            (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
            (define-key company-active-map [tab] 'company-yasnippet-or-completion)
-           (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
+           (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)
+           (diminish 'company-mode)))
 
 (use-package js2-mode :ensure t
   :config (progn
@@ -96,7 +101,11 @@
             (setq ido-enable-flex-matching t)
             (setq ido-use-faces nil)))
 
-(use-package projectile :ensure t)
+(use-package projectile :ensure t
+  :config (progn
+            (setq projectile-require-project-root nil)
+            (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
+            (projectile-global-mode t)))
 
 (use-package helm :ensure t
   :config (progn
@@ -222,7 +231,7 @@
             (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
             (add-hook 'org-mode-hook (lambda ()
                                        (flyspell-mode 1)
-                                       (linum-mode 0)
+                                       (nlinum-mode 0)
                                        (electric-pair-mode 0)))
 
             (defun set-exec-path-from-shell-PATH ()
@@ -307,3 +316,10 @@
 
 (use-package reveal-in-finder :ensure t
   :bind ("C-c C-f" . reveal-in-finder))
+
+(use-package anzu :ensure t :pin melpa-stable
+  :config (progn
+            (diminish 'anzu-mode)
+            (global-anzu-mode)
+            (set-face-attribute 'anzu-mode-line nil
+                                :foreground "white" :weight 'bold)))
