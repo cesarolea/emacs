@@ -107,14 +107,19 @@
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
 
-(use-package helm :ensure t
+(use-package helm :ensure t :pin melpa-stable
   :config (progn
             (require 'helm-files)
-            (add-to-list 'display-buffer-alist
-                    `(,(rx bos "*helm" (* not-newline) "*" eos)
-                         (display-buffer-in-side-window)
-                         (inhibit-same-window . t)
-                         (window-height . 0.25)))
+
+            ;; window management
+            (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
+            (add-hook 'helm-after-initialize-hook (lambda ()
+                                                    (popwin:display-buffer helm-buffer t)
+                                                    (popwin-mode -1)))
+
+            ;;  Restore popwin-mode after a Helm session finishes.
+            (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+            
             (setq helm-idle-delay 0.1)
             (setq helm-input-idle-delay 0.1)
             (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
@@ -290,6 +295,7 @@
 (use-package exec-path-from-shell :ensure t)
 (use-package magit :ensure t
   :config (progn
+            (setq magit-last-seen-setup-instructions "1.4.0")
             (diminish 'magit-auto-revert-mode)))
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
