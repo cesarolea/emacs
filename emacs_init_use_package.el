@@ -1,8 +1,14 @@
 (require 'use-package)
 
+(use-package diminish :ensure t
+  :config (progn
+            (diminish 'visual-line-mode)))
+
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
-  :config (powerline-moe-theme))
+  :config (progn
+            (powerline-moe-theme)
+            (setq powerline-display-buffer-size nil)))
 
 (use-package popwin :ensure t
   :config (progn
@@ -11,7 +17,8 @@
 (use-package git-gutter :ensure t
   :config (progn
            (global-git-gutter-mode t)
-           (git-gutter:linum-setup)))
+           (git-gutter:linum-setup)
+           (diminish 'git-gutter-mode)))
 
 (use-package recentf :ensure t
   :config (progn
@@ -128,7 +135,9 @@
             (provide 'emacs_init_packages)))
 
 (use-package flyspell :ensure t
-  :bind ("C-c C-SPC" . ispell-word))
+  :bind ("C-c C-SPC" . ispell-word)
+  :config (progn
+            (diminish 'flyspell-mode)))
 
 (use-package highlight-symbol :ensure t
   :config (progn
@@ -137,13 +146,17 @@
             (global-set-key (kbd "<f15>") 'highlight-symbol-next)
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
-(use-package highlight-current-line :ensure t)
+(use-package highlight-current-line :ensure t
+  :config (progn
+            (diminish 'highlight-current-line-minor-mode)))
+
 (use-package auto-highlight-symbol :ensure t
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (highlight-current-line-minor-mode t)
                                         (auto-highlight-symbol-mode t)
-                                        (flyspell-prog-mode)))))
+                                        (flyspell-prog-mode)))
+            (diminish 'auto-highlight-symbol-mode)))
 
 (use-package smartparens :ensure t :pin melpa-stable
   :config (show-smartparens-global-mode +1))
@@ -161,7 +174,8 @@
             (global-undo-tree-mode 1)
             (defalias 'redo 'undo-tree-redo)
             (global-set-key (kbd "s-z") 'undo)
-            (global-set-key (kbd "M-z") 'redo)))
+            (global-set-key (kbd "M-z") 'redo)
+            (diminish 'undo-tree-mode)))
 
 (use-package web-mode :ensure t
   :config (progn
@@ -185,7 +199,10 @@
 
 (use-package ace-jump-mode :ensure t)
 
-(use-package rainbow-mode :ensure t)
+(use-package rainbow-mode :ensure t
+  :config (progn
+               (diminish 'rainbow-mode)))
+
 (use-package rainbow-delimiters :ensure t)
 
 (use-package expand-region :ensure t
@@ -242,7 +259,8 @@
               (define-key slime-repl-mode-map
                 (read-kbd-macro paredit-backward-delete-key) nil))
             (add-hook 'slime-repl-mode-hook
-                      'override-slime-repl-bindings-with-paredit t)))
+                      'override-slime-repl-bindings-with-paredit t)
+            (diminish 'paredit-mode)))
 
 (use-package cider :ensure t :pin melpa-stable
   :config (progn
@@ -261,7 +279,9 @@
 
 (use-package dash :ensure t)
 (use-package exec-path-from-shell :ensure t)
-(use-package magit :ensure t)
+(use-package magit :ensure t
+  :config (progn
+            (diminish 'magit-auto-revert-mode)))
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
 

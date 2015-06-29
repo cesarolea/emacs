@@ -118,3 +118,22 @@ Workspace _5_   Workspace _0_
   ("l" eyebrowse-last-window-config)
   ("c" eyebrowse-close-window-config))
 (global-set-key (kbd "C-c e") 'hydra-eyebrowse/body)
+
+(defhydra hydra-flycheck (:color red :hint nil)
+  "
+Navigation^  ^Buffer^
+------------------
+_j_ Next      _C_lear
+_k_ Prev      _B_uffer
+_h_ First     _D_isable
+_l_ List      _S_etup
+"
+  ("j" flycheck-next-error)
+  ("k" flycheck-previous-error)
+  ("h" flycheck-first-error)
+  ("l" flycheck-list-errors :color blue)
+  ("C" flycheck-clear)
+  ("B" flycheck-buffer)
+  ("D" flycheck-disable-checker :color blue)
+  ("S" flycheck-verify-setup :color blue))
+(global-set-key (kbd "C-c f") 'hydra-flycheck/body)
