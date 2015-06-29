@@ -323,3 +323,13 @@
             (global-anzu-mode)
             (set-face-attribute 'anzu-mode-line nil
                                 :foreground "white" :weight 'bold)))
+
+(use-package bm :ensure t
+  :config (progn
+            (setq-default bm-buffer-persistence t)
+            (add-hook' after-init-hook 'bm-repository-load)
+            (add-hook 'find-file-hooks 'bm-buffer-restore)
+            (add-hook 'kill-buffer-hook 'bm-buffer-save)
+            (add-hook 'kill-emacs-hook '(lambda nil
+                                          (bm-buffer-save-all)
+                                          (bm-repository-save)))))

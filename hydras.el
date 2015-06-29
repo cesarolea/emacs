@@ -137,3 +137,12 @@ _l_ List      _S_etup
   ("D" flycheck-disable-checker :color blue)
   ("S" flycheck-verify-setup :color blue))
 (global-set-key (kbd "C-c f") 'hydra-flycheck/body)
+
+(defhydra hydra-bm (:color red :hint nil :idle 1.0)
+  "Bookmarks"
+  ("t" bm-toggle "Toggle")
+  ("j" bm-next "Next")
+  ("k" bm-previous "Previous")
+  ("l" bm-show "Show local")
+  ("A" bm-show-all "Show all"))
+(global-set-key (kbd "C-c b") 'hydra-bm/body)
