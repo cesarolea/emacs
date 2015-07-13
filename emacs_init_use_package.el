@@ -107,9 +107,11 @@
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
 
-(use-package helm :ensure t :pin melpa-stable
+(use-package helm :ensure t
   :config (progn
             (require 'helm-files)
+
+            (helm-adaptive-mode 1)
 
             ;; window management
             (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
@@ -295,8 +297,7 @@
 (use-package exec-path-from-shell :ensure t)
 (use-package magit :ensure t
   :config (progn
-            (setq magit-last-seen-setup-instructions "1.4.0")
-            (diminish 'magit-auto-revert-mode)))
+            (setq magit-last-seen-setup-instructions "1.4.0")))
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
 
