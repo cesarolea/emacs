@@ -44,7 +44,8 @@ Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter righ
   "movement"
   ("c" avi-goto-char-2 "Go to char")
   ("l" avi-goto-line "Go to line")
-  ("w" avi-goto-word-1 "Go to word"))
+  ("w" avi-goto-word-1 "Go to word")
+  ("n" goto-line "Go to line number"))
 (global-set-key (kbd "C-c g") 'hydra-movement/body)
 
 (defhydra hydra-gist (:color blue)
