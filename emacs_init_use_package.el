@@ -111,6 +111,7 @@
   :config (progn
             (require 'helm-files)
 
+            ;; so helm adapts to your usage
             (helm-adaptive-mode 1)
 
             ;; window management
@@ -137,7 +138,8 @@
             ;; replace M-x with helm's version
             (global-set-key (kbd "M-x") 'helm-M-x)
             ;; find files with helm
-            (global-set-key (kbd "C-x C-f") 'helm-find-files)
+            ;; disabling for now, using ido for now
+            ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
             ;; replace C-x b with helm's version
             (global-set-key "\C-x\ b" 'helm-mini)
             (global-set-key "\C-x\ \C-r" 'helm-recentf)))
@@ -212,8 +214,6 @@
           (define-key global-map (kbd "M-'") 'ace-window)
           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
           (define-key global-map (kbd "C-x o") nil)))
-
-(use-package ace-jump-mode :ensure t)
 
 (use-package rainbow-mode :ensure t
   :config (progn
