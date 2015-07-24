@@ -1,8 +1,9 @@
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
-(use-package diminish :ensure t
-  :config (progn
-            (diminish 'visual-line-mode)))
+(diminish 'visual-line-mode)
 
 (use-package nlinum :ensure t
   :config (progn
@@ -21,8 +22,8 @@
 (use-package git-gutter :ensure t
   :config (progn
            (global-git-gutter-mode t)
-           (git-gutter:linum-setup)
-           (diminish 'git-gutter-mode)))
+           (git-gutter:linum-setup))
+  :diminish git-gutter-mode)
 
 (use-package recentf :ensure t
   :config (progn
@@ -45,8 +46,8 @@
            (add-to-list 'company-backends 'company-yasnippet t)
            (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
            (define-key company-active-map [tab] 'company-yasnippet-or-completion)
-           (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)
-           (diminish 'company-mode)))
+           (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+  :diminish company-mode)
 
 (use-package js2-mode :ensure t
   :config (progn
@@ -154,8 +155,7 @@
 
 (use-package flyspell :ensure t
   :bind ("C-c C-SPC" . ispell-word)
-  :config (progn
-            (diminish 'flyspell-mode)))
+  :diminish flyspell-mode)
 
 (use-package highlight-symbol :ensure t
   :config (progn
@@ -165,22 +165,20 @@
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
 (use-package highlight-current-line :ensure t
-  :config (progn
-            (diminish 'highlight-current-line-minor-mode)))
+  :diminish highlight-current-line-minor-mode)
 
 (use-package auto-highlight-symbol :ensure t
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (highlight-current-line-minor-mode t)
                                         (auto-highlight-symbol-mode t)
-                                        (flyspell-prog-mode)))
-            (diminish 'auto-highlight-symbol-mode)))
+                                        (flyspell-prog-mode))))
+  :diminish auto-highlight-symbol-mode)
 
 (use-package smartparens :ensure t :pin melpa-stable
   :config (show-smartparens-global-mode +1))
 
 (use-package eyebrowse :ensure t
-  :diminish eyebrowse-mode
   :init (progn
           (setq eyebrowse-wrap-around t
                 eyebrowse-new-workspace t)
@@ -192,8 +190,8 @@
             (global-undo-tree-mode 1)
             (defalias 'redo 'undo-tree-redo)
             (global-set-key (kbd "s-z") 'undo)
-            (global-set-key (kbd "M-z") 'redo)
-            (diminish 'undo-tree-mode)))
+            (global-set-key (kbd "M-z") 'redo))
+  :diminish undo-tree-mode)
 
 (use-package web-mode :ensure t
   :config (progn
@@ -216,8 +214,7 @@
           (define-key global-map (kbd "C-x o") nil)))
 
 (use-package rainbow-mode :ensure t
-  :config (progn
-               (diminish 'rainbow-mode)))
+  :diminish rainbow-mode)
 
 (use-package rainbow-delimiters :ensure t)
 
@@ -275,8 +272,8 @@
               (define-key slime-repl-mode-map
                 (read-kbd-macro paredit-backward-delete-key) nil))
             (add-hook 'slime-repl-mode-hook
-                      'override-slime-repl-bindings-with-paredit t)
-            (diminish 'paredit-mode)))
+                      'override-slime-repl-bindings-with-paredit t))
+  :diminish paredit-mode)
 
 (use-package cider :ensure t :pin melpa-stable
   :config (progn
@@ -326,10 +323,10 @@
 
 (use-package anzu :ensure t :pin melpa-stable
   :config (progn
-            (diminish 'anzu-mode)
             (global-anzu-mode)
             (set-face-attribute 'anzu-mode-line nil
-                                :foreground "white" :weight 'bold)))
+                                :foreground "white" :weight 'bold))
+  :diminish anzu-mode)
 
 (use-package bm :ensure t
   :config (progn
