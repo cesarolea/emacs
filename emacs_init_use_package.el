@@ -13,6 +13,7 @@
 (use-package moe-theme :ensure t
   :config (progn
             (powerline-moe-theme)
+            (moe-theme-set-color 'blue)
             (setq powerline-display-buffer-size nil)))
 
 (use-package popwin :ensure t
@@ -294,7 +295,8 @@
 (use-package exec-path-from-shell :ensure t)
 (use-package magit :ensure t
   :config (progn
-            (setq magit-last-seen-setup-instructions "1.4.0")))
+            (setq magit-last-seen-setup-instructions "1.4.0"))
+  :diminish magit-auto-revert-mode)
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
 
