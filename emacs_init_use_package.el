@@ -4,6 +4,7 @@
 (require 'bind-key)
 
 (diminish 'visual-line-mode)
+(diminish 'abbrev-mode)
 
 (use-package nlinum :ensure t
   :config (progn
@@ -14,6 +15,7 @@
   :config (progn
             (powerline-moe-theme)
             (moe-theme-set-color 'blue)
+            (setq show-paren-style 'expression)
             (setq powerline-display-buffer-size nil)))
 
 (use-package popwin :ensure t
