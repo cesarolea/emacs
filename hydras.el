@@ -142,8 +142,11 @@ _l_ List      _S_etup
 (defhydra hydra-bm (:color red :hint nil :idle 1.0)
   "Bookmarks"
   ("t" bm-toggle "Toggle")
+  ("T" bm-toggle "Toggle" :color blue)
   ("j" bm-next "Next")
   ("k" bm-previous "Previous")
   ("l" bm-show "Show local")
-  ("A" bm-show-all "Show all"))
+  ("A" bm-show-all "Show all")
+  ("x" bm-remove-all-current-buffer :color blue)
+  ("X" bm-remove-all-all-buffers :color blue))
 (global-set-key (kbd "C-c b") 'hydra-bm/body)

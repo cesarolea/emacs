@@ -330,6 +330,15 @@
 
 (use-package bm :ensure t
   :config (progn
+            (define-fringe-bitmap 'bm-marker-left [#xF8
+                                                   #xFC
+                                                   #xFE
+                                                   #x0F
+                                                   #x0F
+                                                   #xFE
+                                                   #xFC
+                                                   #xF8])
+            (setq bm-highlight-style 'bm-highlight-only-fringe)
             (setq-default bm-buffer-persistence t)
             (add-hook' after-init-hook 'bm-repository-load)
             (add-hook 'find-file-hooks 'bm-buffer-restore)
