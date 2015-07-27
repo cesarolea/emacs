@@ -68,4 +68,3 @@
 
 ; Set exec path from shell variables
 (exec-path-from-shell-initialize)
-(moe-theme-random-color)
