@@ -298,7 +298,8 @@
 (use-package magit :ensure t
   :config (progn
             (setq magit-last-seen-setup-instructions "1.4.0")
-            (global-set-key (kbd "<f10>") 'magit-status)))
+            (global-set-key (kbd "<f10>") 'magit-status)
+            (setq magit-push-always-verify nil)))
 
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
