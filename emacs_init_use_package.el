@@ -186,7 +186,8 @@
           (setq eyebrowse-wrap-around t
                 eyebrowse-new-workspace t)
           (eyebrowse-mode 1)
-          (eyebrowse-switch-to-window-config-0)))
+          (eyebrowse-switch-to-window-config-0))
+  :diminish eyebrowse-mode)
 
 (use-package undo-tree :ensure t
   :config (progn
