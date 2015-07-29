@@ -298,7 +298,9 @@
 (use-package magit :ensure t
   :config (progn
             (setq magit-last-seen-setup-instructions "1.4.0")
-            (global-set-key (kbd "<f10>") 'magit-status)))
+            (global-set-key (kbd "<f10>") 'magit-status)
+            (if (bound-and-true-p magit-auto-revert-mode)
+                (diminish 'magit-auto-revert-mode))))
 
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
