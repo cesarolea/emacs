@@ -18,7 +18,6 @@
 
 ; use a different ispell
 (setq-default ispell-program-name "/usr/local/bin/aspell")
-(setq-default ispell-extra-args "--run-together" "--run-together-limit=5" "--run-together-min=2")
 
 ; Turn off mouse interface early in startup to avoid momentary display
 ;; You really don't need these; trust me.
