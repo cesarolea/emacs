@@ -68,6 +68,7 @@ last capture    _k_ prev heading
                 _h_ next heading (same level)
                 _l_ prev heading (same level)
                 _u_p higher heading
+                _t_oggle
                 _g_o to
 "
   ("j" outline-next-visible-heading)
@@ -75,6 +76,7 @@ last capture    _k_ prev heading
   ("h" org-forward-heading-same-level)
   ("l" org-backward-heading-same-level)
   ("u" outline-up-heading)
+  ("t" org-cycle)
   ("g" org-goto :exit t))
 (global-set-key (kbd "C-c o") 'hydra-org/body)
 

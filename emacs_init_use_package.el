@@ -256,7 +256,10 @@
                   (quote (("t" "todo" entry (file "~/Sync/Org/refile.org")
                            "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
                           ("n" "note" entry (file "~/Sync/Org/refile.org")
-                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))))
+                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
+
+            (setq org-clock-persist 'history)
+            (org-clock-persistence-insinuate)))
 
 (use-package paredit :ensure t
   :config (progn
