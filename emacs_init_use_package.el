@@ -250,16 +250,11 @@
                 (setq exec-path (split-string path-from-shell path-separator))))
             (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
-
-            (setq org-default-notes-file "~/Sync/Org/refile.org")
-            (setq org-capture-templates
-                  (quote (("t" "todo" entry (file "~/Sync/Org/refile.org")
-                           "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                          ("n" "note" entry (file "~/Sync/Org/refile.org")
-                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
-
             (setq org-clock-persist 'history)
-            (org-clock-persistence-insinuate)))
+            (org-clock-persistence-insinuate)
+
+            (define-key org-mode-map (kbd "s-u") #'org-goto)
+            (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)))
 
 (use-package paredit :ensure t
   :config (progn

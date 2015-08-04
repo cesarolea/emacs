@@ -1,3 +1,10 @@
+; Turn off mouse interface early in startup to avoid momentary display
+(dolist (mode
+         '(tool-bar-mode                ; No toolbars, more room for text.
+           scroll-bar-mode              ; No scroll bars either.
+           tool-bar-mode))
+  (funcall mode 0))
+
 ;: OSX keybindings
 (setq mac-command-modifier 'super)
 (setq ns-function-modifier 'hyper)
@@ -18,12 +25,6 @@
 
 ; use a different ispell
 (setq-default ispell-program-name "/usr/local/bin/aspell")
-
-; Turn off mouse interface early in startup to avoid momentary display
-;; You really don't need these; trust me.
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ; default font
 (set-default-font "Inconsolata-13")
@@ -47,7 +48,6 @@
 (add-to-list 'package-pinned-packages '(powerline . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(hydra . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(anzu . "melpa-stable") t)
-;(add-to-list 'package-pinned-packages '(helm . "melpa-stable") t)
 
 (package-initialize)
 

@@ -13,3 +13,6 @@
 
 ;; Font also, for emacsclient
 (set-default-font "Inconsolata-13")
+
+;; refile target in minas
+(setq org-default-notes-file "/Volumes/Tomb/Sync/Org/refile.org")
