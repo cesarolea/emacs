@@ -84,6 +84,8 @@
             (ido-mode 1)
             (setq ido-everywhere t)
             (setq ido-use-faces t)
+            (setq ido-use-filename-at-point 'guess)
+            (setq ido-use-url-at-point nil)
 
             (defun recentf-ido-find-file ()
               "Find a recent file using ido."
@@ -316,9 +318,9 @@
             (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
             (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))))
 
-(use-package org-bullets :ensure t
-  :config (progn
-            (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+;; (use-package org-bullets :ensure t
+;;   :config (progn
+;;             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
 
 (use-package clean-aindent-mode :ensure t
   :config (progn
@@ -334,6 +336,7 @@
             (global-anzu-mode)
             (set-face-attribute 'anzu-mode-line nil
                                 :foreground "white" :weight 'bold))
+  :bind ("M-%" . anzu-query-replace)
   :diminish anzu-mode)
 
 (use-package bm :ensure t
@@ -354,3 +357,7 @@
             (add-hook 'kill-emacs-hook '(lambda nil
                                           (bm-buffer-save-all)
                                           (bm-repository-save)))))
+
+(use-package impatient-mode :ensure t
+  :config (progn
+            (setq httpd-port 8181)))
