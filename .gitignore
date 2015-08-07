@@ -1,4 +1,5 @@
 lisp/custom.el
+org-clock-save.el
 eshell/
 .#*
 .DS_Store

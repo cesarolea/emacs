@@ -84,6 +84,8 @@
             (ido-mode 1)
             (setq ido-everywhere t)
             (setq ido-use-faces t)
+            (setq ido-use-filename-at-point 'guess)
+            (setq ido-use-url-at-point nil)
 
             (defun recentf-ido-find-file ()
               "Find a recent file using ido."
@@ -250,13 +252,11 @@
                 (setq exec-path (split-string path-from-shell path-separator))))
             (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
+            (setq org-clock-persist 'history)
+            (org-clock-persistence-insinuate)
 
-            (setq org-default-notes-file "~/Sync/Org/refile.org")
-            (setq org-capture-templates
-                  (quote (("t" "todo" entry (file "~/Sync/Org/refile.org")
-                           "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                          ("n" "note" entry (file "~/Sync/Org/refile.org")
-                           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))))
+            (define-key org-mode-map (kbd "s-u") #'org-goto)
+            (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)))
 
 (use-package paredit :ensure t
   :config (progn
@@ -300,6 +300,7 @@
   :config (progn
             (setq magit-last-seen-setup-instructions "1.4.0")
             (global-set-key (kbd "<f10>") 'magit-status)
+            (add-to-list 'magit-no-confirm 'stage-all-changes)
             (setq magit-push-always-verify nil)
             (if (bound-and-true-p magit-auto-revert-mode)
                 (diminish 'magit-auto-revert-mode))))
@@ -331,6 +332,7 @@
             (global-anzu-mode)
             (set-face-attribute 'anzu-mode-line nil
                                 :foreground "white" :weight 'bold))
+  :bind ("M-%" . anzu-query-replace)
   :diminish anzu-mode)
 
 (use-package bm :ensure t
@@ -351,3 +353,7 @@
             (add-hook 'kill-emacs-hook '(lambda nil
                                           (bm-buffer-save-all)
                                           (bm-repository-save)))))
+
+(use-package impatient-mode :ensure t
+  :config (progn
+            (setq httpd-port 8181)))

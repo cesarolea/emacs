@@ -117,8 +117,7 @@
                             (flycheck-mode 1)
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
-                            (flyspell-mode 1)
-                            (projectile-mode 1)))
+                            (flyspell-mode 1)))
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
@@ -161,14 +160,7 @@ window."
 (global-set-key (kbd "<C-S-drag-mouse-1>") #'th/swap-window-buffers-by-dnd)
 
 ;; automatically indenting yanked text if in programming-modes
-(defvar yank-indent-modes '(emacs-lisp-mode
-                            c-mode c++-mode
-                            tcl-mode sql-mode
-                            perl-mode cperl-mode
-                            java-mode jde-mode
-                            lisp-interaction-mode
-                            LaTeX-mode TeX-mode js-mode
-                            js2-mode clojure-mode)
+(defvar yank-indent-modes '(prog-mode)
   "Modes in which to indent regions that are yanked (or yank-popped)")
 
 (defvar yank-advised-indent-threshold 1000

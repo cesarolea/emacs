@@ -11,3 +11,4 @@
 ;; Font and stuff
 (set-default-font "Inconsolata-13")
 
+(setq org-default-notes-file "~/Sync/Org/refile.org")
