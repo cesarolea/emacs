@@ -296,14 +296,17 @@
 
 (use-package dash :ensure t)
 (use-package exec-path-from-shell :ensure t)
-(use-package magit :ensure t
-  :config (progn
-            (setq magit-last-seen-setup-instructions "1.4.0")
-            (global-set-key (kbd "<f10>") 'magit-status)
-            (add-to-list 'magit-no-confirm 'stage-all-changes)
-            (setq magit-push-always-verify nil)
-            (if (bound-and-true-p magit-auto-revert-mode)
-                (diminish 'magit-auto-revert-mode))))
+
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  :config
+  (add-to-list 'magit-no-confirm 'stage-all-changes)
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (global-set-key (kbd "<f10>") 'magit-status)
+  (setq magit-push-always-verify nil)
+  (if (bound-and-true-p magit-auto-revert-mode)
+      (diminish 'magit-auto-revert-mode)))
 
 (use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
