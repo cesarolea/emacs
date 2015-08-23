@@ -358,8 +358,3 @@
 (use-package impatient-mode :ensure t
   :config (progn
             (setq httpd-port 8181)))
-
-(use-package company-emoji
-  :ensure t
-  :pin melpa-stable
-  :config (add-to-list 'company-backends 'company-emoji))

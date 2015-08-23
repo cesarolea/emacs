@@ -321,6 +321,7 @@ With a prefix argument N, (un)comment that many sexps."
 (add-hook 'prog-mode-hook (lambda ()
                             (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
-(set-fontset-font t 'unicode "Symbola" nil 'prepend)
-
 (global-set-key (kbd "M-SPC") 'shrink-whitespace)
+
+;; dired sane file sizes
+(setq dired-listing-switches "-alh")
