@@ -14,7 +14,7 @@
 Delete: _o_ther ace-_d_elete
 Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter right
   Move: _s_wap
-  Misc: _a_ce-window
+  Misc: _a_ce-window _+_:text increase _-_:text decrease _=_:text adjust
 "
   ("v" split-window-right)
   ("x" split-window-below)
@@ -37,7 +37,10 @@ Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter righ
   ("J" hydra-move-splitter-down)
   ("K" hydra-move-splitter-up)
   ("L" hydra-move-splitter-right)
-  ("a" ace-window "Ace window" :exit t))
+  ("a" ace-window "Ace window" :exit t)
+  ("+" text-scale-increase)
+  ("-" text-scale-decrease)
+  ("=" text-scale-adjust :exit t))
 (global-set-key (kbd "C-c w") 'hydra-window/body)
 
 (defhydra hydra-movement (:color blue)
