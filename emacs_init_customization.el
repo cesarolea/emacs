@@ -322,5 +322,3 @@ With a prefix argument N, (un)comment that many sexps."
                             (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
 (set-fontset-font t 'unicode "Symbola" nil 'prepend)
-
-(global-set-key (kbd "M-SPC") 'shrink-whitespace)
