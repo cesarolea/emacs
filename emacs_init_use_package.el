@@ -289,6 +289,18 @@
             (setq nrepl-hide-special-buffers t)
             (setq cider-show-error-buffer nil)))
 
+(use-package clj-refactor
+  :ensure t
+  :pin melpa-stable
+  :config (progn
+            (defun refactor-mode-hook ()
+              (clj-refactor-mode 1)
+              (yas-minor-mode 1)
+              (cljr-add-keybindings-with-prefix "C-c C-m")
+              (diminish 'clj-refactor-mode)
+              (diminish 'yas-minor-mode))
+            (add-hook 'clojure-mode-hook #'refactor-mode-hook)))
+
 (use-package ac-cider :ensure t :pin melpa-stable)
 
 (use-package discover-my-major :ensure t
@@ -362,3 +374,17 @@
 (use-package shrink-whitespace
   :ensure t
   :bind ("M-SPC" . shrink-whitespace))
+
+(use-package calfw
+  :ensure t
+  :config (progn
+            (require 'calfw-org)
+            (require 'calfw-ical)
+
+            (defun my-calendar ()
+              (interactive)
+              (cfw:open-calendar-buffer
+               :contents-sources
+               (list
+                (cfw:org-create-source "green3")
+                (cfw:ical-create-source "gcal" "https://www.google.com/calendar/ical/cesarolea%40gmail.com/private-608dbfd9a769792574aeab0fab06af1f/basic.ics" "IndianRed"))))))
