@@ -337,8 +337,8 @@
             (setq clean-aindent-is-simple-indent t)
             (define-key global-map (kbd "RET") 'newline-and-indent)))
 
-(use-package reveal-in-finder :ensure t
-  :bind ("C-c C-f" . reveal-in-finder))
+(use-package reveal-in-osx-finder :ensure t
+  :bind ("C-c C-f" . reveal-in-osx-finder))
 
 (use-package anzu :ensure t :pin melpa-stable
   :config (progn
