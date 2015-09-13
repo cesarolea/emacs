@@ -44,12 +44,25 @@
             (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
             (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)))
 
+(use-package yasnippet
+  :ensure t
+  :config (progn
+            (setq yas-prompt-functions '(yas-ido-prompt))))
+
+(use-package clojure-snippets :ensure t)
+
 (use-package company :ensure t
   :config (progn
-           (add-to-list 'company-backends 'company-yasnippet t)
-           (define-key company-active-map (kbd "TAB") 'company-yasnippet-or-completion)
-           (define-key company-active-map [tab] 'company-yasnippet-or-completion)
-           (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+            (defvar company-mode/enable-yas t
+              "Enable yasnippet for all backends.")
+            
+            (defun company-mode/backend-with-yas (backend)
+              (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+                  backend
+                (append (if (consp backend) backend (list backend))
+                        '(:with company-yasnippet))))
+
+            (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
@@ -302,6 +315,10 @@
             (add-hook 'clojure-mode-hook #'refactor-mode-hook)))
 
 (use-package ac-cider :ensure t :pin melpa-stable)
+
+(use-package align-cljlet
+  :ensure t
+  :bind ("C-c C-a" . align-cljlet))
 
 (use-package discover-my-major :ensure t
   :bind ("C-h C-m" . discover-my-major))
