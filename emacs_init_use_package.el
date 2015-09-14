@@ -6,10 +6,6 @@
 (diminish 'visual-line-mode)
 (diminish 'abbrev-mode)
 
-(use-package nlinum :ensure t
-  :config (progn
-            (add-hook 'prog-mode-hook 'nlinum-mode)))
-
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
   :config (progn
