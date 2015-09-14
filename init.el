@@ -1,3 +1,5 @@
+(setq tramp-ssh-controlmaster-options "")
+
 ; Turn off mouse interface early in startup to avoid momentary display
 (dolist (mode
          '(tool-bar-mode                ; No toolbars, more room for text.
