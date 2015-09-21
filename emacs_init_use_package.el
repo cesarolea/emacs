@@ -1,5 +1,6 @@
 (eval-when-compile
   (require 'use-package))
+
 (require 'diminish)
 (require 'bind-key)
 
@@ -14,15 +15,12 @@
             (setq show-paren-style 'expression)
             (setq powerline-display-buffer-size nil)))
 
+(use-package highlight-current-line :ensure t
+  :diminish highlight-current-line-minor-mode)
+
 (use-package popwin :ensure t
   :config (progn
            (popwin-mode 1)))
-
-(use-package git-gutter :ensure t
-  :config (progn
-           (global-git-gutter-mode t)
-           (git-gutter:linum-setup))
-  :diminish git-gutter-mode)
 
 (use-package recentf :ensure t
   :config (progn
@@ -63,8 +61,7 @@
 
 (use-package js2-mode :ensure t
   :config (progn
-           (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
-           ))
+           (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
 
 (use-package js-comint :ensure t
   :config (cond ((eq system-type 'darwin)
@@ -177,9 +174,6 @@
             (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
             (global-set-key (kbd "<f15>") 'highlight-symbol-next)
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
-
-(use-package highlight-current-line :ensure t
-  :diminish highlight-current-line-minor-mode)
 
 (use-package auto-highlight-symbol :ensure t
   :config (progn
@@ -401,3 +395,10 @@
                (list
                 (cfw:org-create-source "green3")
                 (cfw:ical-create-source "gcal" "https://www.google.com/calendar/ical/cesarolea%40gmail.com/private-608dbfd9a769792574aeab0fab06af1f/basic.ics" "IndianRed"))))))
+
+(use-package diff-hl
+  :ensure t
+  :config (progn
+            (add-hook 'prog-mode-hook (lambda ()
+                                        (diff-hl-mode 1)
+                                        (diff-hl-flydiff-mode 1)))))
