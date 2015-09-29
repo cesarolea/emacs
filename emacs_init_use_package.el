@@ -154,7 +154,8 @@
             ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
             ;; replace C-x b with helm's version
             (global-set-key "\C-x\ b" 'helm-mini)
-            (global-set-key "\C-x\ \C-r" 'helm-recentf)))
+            (global-set-key "\C-x\ \C-r" 'helm-recentf)
+            (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
   :config (helm-projectile-on))
@@ -400,5 +401,4 @@
   :ensure t
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
-                                        (diff-hl-mode 1)
-                                        (diff-hl-flydiff-mode 1)))))
+                                        (diff-hl-mode 1)))))
