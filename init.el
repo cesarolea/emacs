@@ -47,7 +47,6 @@
 (add-to-list 'package-pinned-packages '(cljr-helm . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(ac-cider . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(projectile . "melpa-stable") t)
-(add-to-list 'package-pinned-packages '(powerline . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(hydra . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(anzu . "melpa-stable") t)
 

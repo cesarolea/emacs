@@ -134,6 +134,15 @@
 
             ;;  Restore popwin-mode after a Helm session finishes.
             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+
+            (defun helm-buffer-ace-window (buffer)
+              "Use ‘ace-window’ to select a window to display BUFFER."
+              (ace-select-window)
+              (switch-to-buffer buffer))
+
+            (add-to-list 'helm-type-buffer-actions
+                         '("Switch to buffer in Ace window ‘C-c C-e'" . helm-buffer-ace-window)
+                         :append)
             
             (setq helm-idle-delay 0.1)
             (setq helm-input-idle-delay 0.1)
@@ -270,7 +279,6 @@
                                        (flyspell-mode 1)
                                        (nlinum-mode 0)
                                        (electric-pair-mode 1)))
-
             (defun set-exec-path-from-shell-PATH ()
               (let ((path-from-shell 
                      (replace-regexp-in-string "[[:space:]\n]*$" "" 
