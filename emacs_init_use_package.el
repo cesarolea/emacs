@@ -158,7 +158,30 @@
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
-  :config (helm-projectile-on))
+  :config (progn
+            (defun helm-find-ace-window (file)
+              "Use ‘ace-window' to select a window to display FILE."
+              (ace-select-window)
+              (find-file file))
+
+            (add-to-list 'helm-find-files-actions
+                         '("Find File in Ace window" . helm-find-ace-window)
+                         :append)
+
+            (defun helm-file-run-ace-window ()
+              (interactive)
+              (with-helm-alive-p
+                (helm-exit-and-execute-action 'helm-file-ace-window)))
+
+            ;;; For `helm-find-files'
+            (define-key helm-find-files-map (kbd "C-c C-e")
+              #'helm-file-run-ace-window)
+
+            ;; For file commands in `helm-projectile'
+            (define-key helm-projectile-find-file-map (kbd "C-c C-e")
+              #'helm-file-run-ace-window)
+
+            (helm-projectile-on)))
 
 (use-package flycheck :ensure t
   :config (progn
@@ -246,7 +269,7 @@
             (add-hook 'org-mode-hook (lambda ()
                                        (flyspell-mode 1)
                                        (nlinum-mode 0)
-                                       (electric-pair-mode 0)))
+                                       (electric-pair-mode 1)))
 
             (defun set-exec-path-from-shell-PATH ()
               (let ((path-from-shell 
