@@ -279,7 +279,6 @@
             (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
             (add-hook 'org-mode-hook (lambda ()
                                        (flyspell-mode 1)
-                                       (nlinum-mode 0)
                                        (electric-pair-mode 1)))
                                        
             (defun set-exec-path-from-shell-PATH ()
