@@ -56,7 +56,9 @@
                 (append (if (consp backend) backend (list backend))
                         '(:with company-yasnippet))))
 
-            (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+            (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+            (add-hook 'emacs-lisp-mode-hook 'company-mode))
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
@@ -279,6 +281,7 @@
                                        (flyspell-mode 1)
                                        (nlinum-mode 0)
                                        (electric-pair-mode 1)))
+                                       
             (defun set-exec-path-from-shell-PATH ()
               (let ((path-from-shell 
                      (replace-regexp-in-string "[[:space:]\n]*$" "" 
@@ -433,3 +436,13 @@
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
+
+(use-package company-emoji
+  :ensure t
+  :config (progn
+            ;; enable in org mode buffers
+            (add-hook 'org-mode-hook 'company-mode)
+            (add-hook 'org-mode-hook 'company-emoji-init)
+            ;; enable in git commit log buffers
+            (add-hook 'git-commit-mode-hook 'company-mode)
+            (add-hook 'git-commit-mode-hook 'company-emoji-init)))
