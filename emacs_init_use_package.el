@@ -80,14 +80,6 @@
                                (lambda (output)
                                  (replace-regexp-in-string "\033\\[[0-9]+[GKJ]" "" output)))))))))
 
-(use-package smex :ensure t
-  :config (progn
-            (smex-initialize)
-            (global-set-key (kbd "M-x") 'smex)
-            (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-            (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-            (setf smex-key-advice-ignore-menu-bar 1)))
-
 (use-package ido :ensure t
   :config (progn
             (ido-mode 1)
