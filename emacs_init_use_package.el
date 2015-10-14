@@ -58,7 +58,8 @@
 
             (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-            (add-hook 'emacs-lisp-mode-hook 'company-mode))
+            (add-hook 'emacs-lisp-mode-hook 'company-mode)
+            (global-set-key (kbd "C-'") 'company-complete))
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
