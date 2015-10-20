@@ -87,6 +87,9 @@
             (setq ido-use-faces t)
             (setq ido-use-filename-at-point 'guess)
             (setq ido-use-url-at-point nil)
+            (setq ido-enable-flex-matching t)
+            ;; restrict to current directory
+            (setq ido-auto-merge-work-directories-length -1)
 
             (defun recentf-ido-find-file ()
               "Find a recent file using ido."
@@ -113,6 +116,8 @@
             (setq projectile-require-project-root nil)
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
+
+(use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
 (use-package helm :ensure t
   :config (progn
