@@ -314,6 +314,14 @@
                       'override-slime-repl-bindings-with-paredit t))
   :diminish paredit-mode)
 
+(use-package clojure-mode
+  :ensure t
+  :mode (("\\.clj\\'" . clojure-mode)
+         ("\\.edn\\'" . clojure-mode))
+  :init
+  (add-hook 'clojure-mode-hook #'subword-mode)
+  (add-hook 'clojure-mode-hook #'eldoc-mode))
+
 (use-package cider :ensure t :pin melpa-stable
   :config (progn
             (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)          
@@ -321,8 +329,15 @@
             (add-hook 'cider-mode-hook #'company-mode)
             (add-hook 'clojure-mode-hook #'company-mode)
 
-            (setq nrepl-hide-special-buffers t)
-            (setq cider-show-error-buffer nil)))
+            (setq nrepl-hide-special-buffers t ; hide nrepl buffers from menu
+                  cider-show-error-buffer nil ; don't show error buffers
+                  nrepl-log-messages t ; useful for debugging
+                  cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+                  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
+                  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
+                  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+                  cider-repl-toggle-pretty-printing t)) ; REPL always pretty-prints results
+)
 
 (use-package clj-refactor
   :ensure t
@@ -443,3 +458,10 @@
             ;; enable in git commit log buffers
             (add-hook 'git-commit-mode-hook 'company-mode)
             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
+
+(use-package beacon
+  :ensure t
+  :config (progn
+            (beacon-mode 1)
+            (setq beacon-push-mark 35)
+            (setq beacon-color "#666600")))

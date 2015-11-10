@@ -339,3 +339,6 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;; set key binding
 (global-set-key (kbd "C-+") 'switch-to-previous-buffer)
+
+;; so minibuffer history is saved
+(savehist-mode 1)
