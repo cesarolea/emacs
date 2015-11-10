@@ -10,6 +10,7 @@
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
   :config (progn
+            (load-theme 'moe-dark t)
             (powerline-moe-theme)
             (moe-theme-set-color 'blue)
             (setq show-paren-style 'expression)

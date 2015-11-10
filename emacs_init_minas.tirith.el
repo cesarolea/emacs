@@ -1,7 +1,5 @@
 ; minas-tirith customization
 
-(load-theme 'moe-dark t)
-
 ;; set frame position
 (set-frame-size (selected-frame) 200 65)
 
