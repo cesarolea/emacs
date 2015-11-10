@@ -81,14 +81,6 @@
                                (lambda (output)
                                  (replace-regexp-in-string "\033\\[[0-9]+[GKJ]" "" output)))))))))
 
-(use-package smex :ensure t
-  :config (progn
-            (smex-initialize)
-            (global-set-key (kbd "M-x") 'smex)
-            (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-            (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-            (setf smex-key-advice-ignore-menu-bar 1)))
-
 (use-package ido :ensure t
   :config (progn
             (ido-mode 1)
@@ -96,6 +88,9 @@
             (setq ido-use-faces t)
             (setq ido-use-filename-at-point 'guess)
             (setq ido-use-url-at-point nil)
+            (setq ido-enable-flex-matching t)
+            ;; restrict to current directory
+            (setq ido-auto-merge-work-directories-length -1)
 
             (defun recentf-ido-find-file ()
               "Find a recent file using ido."
@@ -122,6 +117,8 @@
             (setq projectile-require-project-root nil)
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
+
+(use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
 (use-package helm :ensure t
   :config (progn
