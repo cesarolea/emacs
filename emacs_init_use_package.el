@@ -291,6 +291,11 @@
             (setq org-clock-persist 'history)
             (org-clock-persistence-insinuate)
 
+            ;; when evaluating, reinsert and preserve indentation
+            (setq org-src-preserve-indentation t)
+            ;; preserve native color scheme for target source code
+            (setq org-src-fontify-natively t)
+
             (define-key org-mode-map (kbd "s-u") #'org-goto)
             (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)))
 
@@ -415,7 +420,7 @@
                                                    #xF8])
             (setq bm-highlight-style 'bm-highlight-only-fringe)
             (setq-default bm-buffer-persistence t)
-            (add-hook' after-init-hook 'bm-repository-load)
+            (add-hook 'after-init-hook 'bm-repository-load)
             (add-hook 'find-file-hooks 'bm-buffer-restore)
             (add-hook 'kill-buffer-hook 'bm-buffer-save)
             (add-hook 'kill-emacs-hook '(lambda nil
@@ -465,4 +470,11 @@
   :config (progn
             (beacon-mode 1)
             (setq beacon-push-mark 35)
-            (setq beacon-color "#666600")))
+            (setq beacon-color "#666600"))
+  :diminish beacon-mode)
+
+(use-package buffer-flip
+  :ensure t
+  :config (progn
+            (key-chord-mode t)
+            (buffer-flip-mode)))

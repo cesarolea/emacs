@@ -70,6 +70,8 @@
 ; Set exec path from shell variables
 (exec-path-from-shell-initialize)
 
+(add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
+
 (set-fontset-font
  t 'symbol
  (font-spec :family "Apple Color Emoji") nil 'prepend)
