@@ -117,7 +117,9 @@
                             (flycheck-mode 1)
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
-                            (flyspell-mode 1)))
+                            (flyspell-mode 1)
+                            (visual-line-mode nil)
+                            (toggle-truncate-lines 1)))
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
