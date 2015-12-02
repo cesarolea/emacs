@@ -325,8 +325,11 @@
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
   :init
-  (add-hook 'clojure-mode-hook #'subword-mode)
-  (add-hook 'clojure-mode-hook #'eldoc-mode))
+  (add-hook 'clojure-mode-hook (lambda () (progn
+                                            (subword-mode t)
+                                            (diminish 'subword-mode))))
+  (add-hook 'clojure-mode-hook #'eldoc-mode)
+  (diminish 'eldoc-mode))
 
 (use-package cider :ensure t :pin melpa-stable
   :config (progn
