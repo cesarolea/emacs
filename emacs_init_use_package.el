@@ -10,11 +10,11 @@
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
   :config (progn
-            (load-theme 'moe-dark t)
-            (powerline-moe-theme)
-            (moe-theme-set-color 'blue)
-            (setq show-paren-style 'expression)
-            (setq powerline-display-buffer-size nil)))
+	    (load-theme 'moe-dark t)
+	    (powerline-moe-theme)
+	    (moe-theme-set-color 'blue)
+	    (setq show-paren-style 'expression)
+	    (setq powerline-display-buffer-size nil)))
 
 (use-package highlight-current-line :ensure t
   :diminish highlight-current-line-minor-mode)
@@ -25,61 +25,24 @@
 
 (use-package recentf :ensure t
   :config (progn
-            (recentf-mode 1)
-            (setq recentf-max-menu-items 25))
+	    (recentf-mode 1)
+	    (setq recentf-max-menu-items 25))
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
 (use-package saveplace :ensure t
   :init (progn
-          (setq save-place-file (concat user-emacs-directory "saveplace.el"))
-          (setq-default save-place t)))
-
-(use-package hippie-expand-slime :ensure t
-  :config (progn
-            (add-hook 'slime-mode-hook 'set-up-slime-hippie-expand)
-            (add-hook 'slime-repl-mode-hook 'set-up-slime-hippie-expand)))
-
-(use-package yasnippet
-  :ensure t
-  :config (progn
-            (setq yas-prompt-functions '(yas-ido-prompt))))
-
-(use-package clojure-snippets :ensure t)
+	  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
+	  (setq-default save-place t)))
 
 (use-package company :ensure t
   :config (progn
-            (defvar company-mode/enable-yas t
-              "Enable yasnippet for all backends.")
-            
-            (defun company-mode/backend-with-yas (backend)
-              (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-                  backend
-                (append (if (consp backend) backend (list backend))
-                        '(:with company-yasnippet))))
-
-            (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-
-            (add-hook 'emacs-lisp-mode-hook 'company-mode)
-            (global-set-key (kbd "C-'") 'company-complete))
+	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
+	    (global-set-key (kbd "C-'") 'company-complete))
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
   :config (progn
-           (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
-
-(use-package js-comint :ensure t
-  :config (cond ((eq system-type 'darwin)
-                (progn
-                  (setq inferior-js-program-command "/usr/local/bin/node -i")
-                  (add-hook 'inferior-js-mode-hook
-                            (lambda ()
-                              ;; We like nice colors
-                              (ansi-color-for-comint-mode-on)
-                              ;; Deal with some prompt nonsense
-                              (add-to-list
-                               'comint-preoutput-filter-functions
-                               (lambda (output)
-                                 (replace-regexp-in-string "\033\\[[0-9]+[GKJ]" "" output)))))))))
+            (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
 
 (use-package ido :ensure t
   :config (progn
@@ -181,7 +144,7 @@
             (defun helm-file-run-ace-window ()
               (interactive)
               (with-helm-alive-p
-                (helm-exit-and-execute-action 'helm-file-ace-window)))
+	       (helm-exit-and-execute-action 'helm-file-ace-window)))
 
             ;;; For `helm-find-files'
             (define-key helm-find-files-map (kbd "C-c C-e")
@@ -321,7 +284,6 @@
   :diminish paredit-mode)
 
 (use-package clojure-mode
-  :ensure t
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
   :init
@@ -331,47 +293,36 @@
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
-(use-package cider :ensure t :pin melpa-stable
+(use-package cider :pin melpa-stable
   :config (progn
-            (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)          
-            (add-hook 'cider-repl-mode-hook #'company-mode)
-            (add-hook 'cider-mode-hook #'company-mode)
-            (add-hook 'clojure-mode-hook #'company-mode)
+	    (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)          
+	    (add-hook 'cider-repl-mode-hook #'company-mode)
+	    (add-hook 'cider-mode-hook #'company-mode)
+	    (add-hook 'clojure-mode-hook #'company-mode)
+	    
+	    (setq nrepl-log-messages t ; useful for debugging
+		  cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+		  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
+		  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
+		  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+		  cider-repl-toggle-pretty-printing t) ; REPL always pretty-prints results
 
-            (setq nrepl-hide-special-buffers t ; hide nrepl buffers from menu
-                  cider-show-error-buffer nil ; don't show error buffers
-                  nrepl-log-messages t ; useful for debugging
-                  cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-                  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
-                  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
-                  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-                  cider-repl-toggle-pretty-printing t)) ; REPL always pretty-prints results
-)
+	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
-(use-package clj-refactor
-  :ensure t
-  :pin melpa-stable
-  :config (progn
-            (defun refactor-mode-hook ()
-              (clj-refactor-mode 1)
-              (yas-minor-mode 1)
-              (cljr-add-keybindings-with-prefix "C-c C-m")
-              (diminish 'clj-refactor-mode)
-              (diminish 'yas-minor-mode))
-            (add-hook 'clojure-mode-hook #'refactor-mode-hook)))
+;; (use-package clj-refactor
+;;   :ensure t
+;;   :pin melpa-stable
+;;   :config (progn
+;;             (defun refactor-mode-hook ()
+;;               (clj-refactor-mode 1)
+;;               (yas-minor-mode 1)
+;;               (cljr-add-keybindings-with-prefix "C-c C-m")
+;;               (diminish 'clj-refactor-mode)
+;;               (diminish 'yas-minor-mode))
+;;             (add-hook 'clojure-mode-hook #'refactor-mode-hook)))
 
-(use-package ac-cider :ensure t :pin melpa-stable)
-
-(use-package align-cljlet
-  :ensure t
-  :bind ("C-c C-a" . align-cljlet))
-
-(use-package discover-my-major :ensure t
-  :bind ("C-h C-m" . discover-my-major))
-
-(use-package dash :ensure t)
 (use-package exec-path-from-shell :ensure t)
-
+ 
 (use-package magit
   :ensure t
   :bind ("<f10>" . magit-status)
@@ -381,25 +332,12 @@
   (if (bound-and-true-p magit-auto-revert-mode)
       (diminish 'magit-auto-revert-mode)))
 
-(use-package multiple-cursors :ensure t)
 (use-package move-text :ensure t)
 
 (use-package hydra :ensure t :pin melpa-stable
   :config (load "~/.emacs.d/hydras.el"))
 
-(use-package gist :ensure t :pin melpa-stable)
-
-(use-package markdown-mode :ensure t
-  :config (progn
-            (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-            (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))))
-
-(use-package clean-aindent-mode :ensure t
-  :config (progn
-            (clean-aindent-mode 1)
-            (setq clean-aindent-is-simple-indent t)
-            (define-key global-map (kbd "RET") 'newline-and-indent)))
-
+ 
 (use-package reveal-in-osx-finder :ensure t
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
