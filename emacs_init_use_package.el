@@ -72,8 +72,9 @@
 (use-package flx-ido :ensure t
   :config (progn
             (flx-ido-mode 1)
-            (setq ido-enable-flex-matching t)
-            (setq ido-use-faces nil)))
+            (setq ido-enable-flex-matching t
+                  ido-use-faces t
+                  ido-use-filename-at-point t)))
 
 (use-package projectile :ensure t
   :config (progn
