@@ -44,7 +44,7 @@
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
 
-(use-package ido :ensure t
+(use-package ido
   :config (progn
             (ido-mode 1)
             (setq ido-everywhere t)
@@ -86,7 +86,7 @@
 
 (use-package helm :ensure t
   :config (progn
-            (require 'helm-files)
+            ;; (require 'helm-files)
 
             ;; so helm adapts to your usage
             (helm-adaptive-mode 1)
@@ -99,70 +99,38 @@
 
             ;;  Restore popwin-mode after a Helm session finishes.
             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
-
-            (defun helm-buffer-ace-window (buffer)
-              "Use ‘ace-window’ to select a window to display BUFFER."
-              (ace-select-window)
-              (switch-to-buffer buffer))
-
-            (add-to-list 'helm-type-buffer-actions
-                         '("Switch to buffer in Ace window ‘C-c C-e'" . helm-buffer-ace-window)
-                         :append)
             
-            (setq helm-idle-delay 0.1)
-            (setq helm-input-idle-delay 0.1)
-            (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
-            (setq helm-for-files-preferred-list
-                  '(helm-source-buffers-list
-                    helm-source-recentf
-                    helm-source-bookmarks
-                    helm-source-file-cache
-                    helm-source-files-in-current-dir
-                    helm-source-mac-spotlight))
-            (global-set-key "\C-x\ a" 'helm-for-files)
-            (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
-            ;; replace M-x with helm's version
-            (global-set-key (kbd "M-x") 'helm-M-x)
-            ;; find files with helm
-            ;; disabling for now, using ido for now
-            ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
-            ;; replace C-x b with helm's version
-            (global-set-key "\C-x\ b" 'helm-mini)
-            (global-set-key "\C-x\ \C-r" 'helm-recentf)
-            (global-set-key (kbd "<f9>") 'helm-bookmarks)))
+           (setq helm-idle-delay 0.1)
+           (setq helm-input-idle-delay 0.1)
+           (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
+           (setq helm-for-files-preferred-list
+                 '(helm-source-buffers-list
+                   helm-source-recentf
+                   helm-source-bookmarks
+                   helm-source-file-cache
+                   helm-source-files-in-current-dir
+                   helm-source-mac-spotlight))
+           (global-set-key "\C-x\ a" 'helm-for-files)
+           (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+           ;; replace M-x with helm's version
+           (global-set-key (kbd "M-x") 'helm-M-x)
+           ;; find files with helm
+           ;; disabling for now, using ido for now
+           ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+           ;; replace C-x b with helm's version
+           (global-set-key "\C-x\ b" 'helm-mini)
+           (global-set-key "\C-x\ \C-r" 'helm-recentf)
+           (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile :ensure t
-  :config (progn
-            (defun helm-find-ace-window (file)
-              "Use ‘ace-window' to select a window to display FILE."
-              (ace-select-window)
-              (find-file file))
-
-            (add-to-list 'helm-find-files-actions
-                         '("Find File in Ace window" . helm-find-ace-window)
-                         :append)
-
-            (defun helm-file-run-ace-window ()
-              (interactive)
-              (with-helm-alive-p
-	       (helm-exit-and-execute-action 'helm-file-ace-window)))
-
-            ;;; For `helm-find-files'
-            (define-key helm-find-files-map (kbd "C-c C-e")
-              #'helm-file-run-ace-window)
-
-            ;; For file commands in `helm-projectile'
-            (define-key helm-projectile-find-file-map (kbd "C-c C-e")
-              #'helm-file-run-ace-window)
-
-            (helm-projectile-on)))
+;; (use-package helm-projectile :ensure t
+;;   :config (progn (helm-projectile-on)))
 
 (use-package flycheck :ensure t
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
             (provide 'emacs_init_packages)))
 
-(use-package flyspell :ensure t
+(use-package flyspell
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
@@ -376,20 +344,6 @@
 (use-package shrink-whitespace
   :ensure t
   :bind ("M-SPC" . shrink-whitespace))
-
-(use-package calfw
-  :ensure t
-  :config (progn
-            (require 'calfw-org)
-            (require 'calfw-ical)
-
-            (defun my-calendar ()
-              (interactive)
-              (cfw:open-calendar-buffer
-               :contents-sources
-               (list
-                (cfw:org-create-source "green3")
-                (cfw:ical-create-source "gcal" "https://www.google.com/calendar/ical/cesarolea%40gmail.com/private-608dbfd9a769792574aeab0fab06af1f/basic.ics" "IndianRed"))))))
 
 (use-package diff-hl
   :ensure t

@@ -356,3 +356,13 @@ With a prefix argument N, (un)comment that many sexps."
   (define-key ediff-mode-map "k" 'ediff-previous-difference))
 
 (add-hook 'ediff-mode-hook 'ora-ediff-hook)
+
+;; When popping the mark, continue popping until the cursor
+;; actually moves
+(defadvice pop-to-mark-command (around ensure-new-position activate)
+  (let ((p (point)))
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+
+;; quickly pop the mark several times by typing C-u C-SPC C-SPC
+(setq set-mark-command-repeat-pop t)
