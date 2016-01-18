@@ -67,7 +67,8 @@
 (use-package ido-vertical-mode :ensure t
   :config (progn
             (ido-mode 1)
-            (ido-vertical-mode 1)))
+            (ido-vertical-mode 1)
+            (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
 
 (use-package flx-ido :ensure t
   :config (progn
