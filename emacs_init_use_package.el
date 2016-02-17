@@ -92,6 +92,9 @@
             ;; so helm adapts to your usage
             (helm-adaptive-mode 1)
 
+            ;; for helm-ag
+            ;; (helm-follow-mode-persistent t)
+
             ;; window management
             (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
             (add-hook 'helm-after-initialize-hook (lambda ()
@@ -103,6 +106,7 @@
             
            (setq helm-idle-delay 0.1)
            (setq helm-input-idle-delay 0.1)
+           (setq helm-follow-mode-persistent t)
            (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
            (setq helm-for-files-preferred-list
                  '(helm-source-buffers-list
@@ -123,8 +127,11 @@
            (global-set-key "\C-x\ \C-r" 'helm-recentf)
            (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-;; (use-package helm-projectile :ensure t
-;;   :config (progn (helm-projectile-on)))
+(use-package helm-projectile :ensure t
+  :config (progn (helm-projectile-on)))
+
+(use-package helm-ag :ensure t
+  :config (progn (setq helm-ag-fuzzy-match t)))
 
 (use-package flycheck :ensure t
   :config (progn
@@ -381,3 +388,16 @@
   :pin melpa-stable
   :config (progn
             (setq fci-rule-column 79)))
+
+(use-package smooth-scroll
+  :ensure t
+  :config (progn
+            (smooth-scroll-mode 1)
+            (setq smooth-scroll/vscroll-step-size 5)))
+
+(use-package org-bullets
+  :ensure t
+  :config (progn
+            (setq org-bullets-face-name (quote org-bullet-face))
+            (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+            (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
