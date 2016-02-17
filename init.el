@@ -59,7 +59,7 @@
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
-(load "~/.emacs.d/fireplace")
+(load "~/.emacs.d/lisp/fireplace")
 
 ;; load files depending on hostname
 (cond ((string= (substring system-name 0 9) "Galadriel")
