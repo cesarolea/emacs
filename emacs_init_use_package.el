@@ -237,7 +237,11 @@
             (setq org-src-fontify-natively t)
 
             (define-key org-mode-map (kbd "s-u") #'org-goto)
-            (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)))
+            (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+
+            ;; exporters
+            (require 'ox-md) ; markdown
+            ))
 
 (use-package paredit :ensure t
   :config (progn
