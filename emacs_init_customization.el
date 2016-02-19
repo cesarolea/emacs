@@ -107,6 +107,8 @@
 
 ;; scroll PDFs with the mouse wheel
 (setq doc-view-continuous t)
+;; so PDFs don't hurt my eyes
+(setq doc-view-resolution 300)
 
 ;; stop telling me the menu command key
 (setq suggest-key-bindings nil)

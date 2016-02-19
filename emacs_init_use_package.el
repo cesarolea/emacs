@@ -136,7 +136,8 @@
 (use-package flycheck :ensure t
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
-            (provide 'emacs_init_packages)))
+            (provide 'emacs_init_packages))
+  :diminish flycheck-mode)
 
 (use-package flyspell
   :bind ("C-c C-SPC" . ispell-word)
@@ -397,7 +398,8 @@
   :ensure t
   :config (progn
             (smooth-scroll-mode 1)
-            (setq smooth-scroll/vscroll-step-size 5)))
+            (setq smooth-scroll/vscroll-step-size 5))
+  :diminish smooth-scroll-mode)
 
 (use-package org-bullets
   :ensure t

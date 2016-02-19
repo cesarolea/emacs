@@ -1,3 +1,4 @@
+*.elc
 history
 lisp/custom.el
 org-clock-save.el
