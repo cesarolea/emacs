@@ -1,3 +1,5 @@
+(defvar root-dir "~/.emacs.d/")
+
 (global-set-key "\M-/" 'hippie-expand)
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
@@ -368,3 +370,9 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;; quickly pop the mark several times by typing C-u C-SPC C-SPC
 (setq set-mark-command-repeat-pop t)
+
+;; recompile emacs config
+(defun recompile-emacs-config (&optional FORCE)
+  "Recompile Emacs configuration."
+  (interactive)
+  (byte-recompile-directory root-dir 0 FORCE))
