@@ -29,10 +29,6 @@
 ; default font
 (set-default-font "Inconsolata-13")
 
-; sbcl
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-
 ; sources
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")

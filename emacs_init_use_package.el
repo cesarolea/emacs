@@ -133,6 +133,8 @@
 (use-package helm-ag :ensure t
   :config (progn (setq helm-ag-fuzzy-match t)))
 
+(use-package helm-descbinds :ensure t)
+
 (use-package flycheck :ensure t
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -291,17 +293,15 @@
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
-;; (use-package clj-refactor
-;;   :ensure t
-;;   :pin melpa-stable
-;;   :config (progn
-;;             (defun refactor-mode-hook ()
-;;               (clj-refactor-mode 1)
-;;               (yas-minor-mode 1)
-;;               (cljr-add-keybindings-with-prefix "C-c C-m")
-;;               (diminish 'clj-refactor-mode)
-;;               (diminish 'yas-minor-mode))
-;;             (add-hook 'clojure-mode-hook #'refactor-mode-hook)))
+(use-package clj-refactor
+  :ensure t
+  :pin melpa-stable
+  :config (progn
+            (defun refactor-mode-hook ()
+              (clj-refactor-mode 1)
+              (cljr-add-keybindings-with-prefix "C-c C-m"))
+            (add-hook 'clojure-mode-hook #'refactor-mode-hook))
+  :diminish clj-refactor-mode)
 
 (use-package exec-path-from-shell :ensure t)
  
