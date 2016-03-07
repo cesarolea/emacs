@@ -73,3 +73,8 @@
 (set-fontset-font
  t 'symbol
  (font-spec :family "Apple Color Emoji") nil 'prepend)
+
+(defun recompile-init ()
+  "Recompile init files"
+  (interactive)
+  (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
