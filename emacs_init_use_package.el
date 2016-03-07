@@ -7,6 +7,12 @@
 (diminish 'visual-line-mode)
 (diminish 'abbrev-mode)
 
+(eval-after-load "eldoc"
+  '(diminish 'eldoc-mode))
+
+(eval-after-load "autorevert"
+  '(diminish 'auto-revert-mode))
+
 (use-package powerline :ensure t)
 (use-package moe-theme :ensure t
   :config (progn
@@ -131,7 +137,17 @@
   :config (progn (helm-projectile-on)))
 
 (use-package helm-ag :ensure t
-  :config (progn (setq helm-ag-fuzzy-match t)))
+  :config (progn (setq helm-ag-fuzzy-match t)
+
+                 (defun helm-ag-projectile-root (&optional ARG)
+                   "Search from projectile-project-root` which defaults to current directory if no project."
+                   (interactive)
+                   (helm-ag (projectile-project-root)))
+
+                 (defun helm-do-ag-projectile-root (&optional ARG)
+                   "Search from projectile-project-root` which defaults to current directory if no project."
+                   (interactive)
+                   (helm-do-ag (projectile-project-root)))))
 
 (use-package helm-descbinds :ensure t)
 
