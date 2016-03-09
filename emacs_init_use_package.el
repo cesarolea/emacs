@@ -424,3 +424,10 @@
             (setq org-bullets-face-name (quote org-bullet-face))
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
+
+(use-package peep-dired
+  :ensure t
+  :config (progn
+            (setq peep-dired-cleanup-eagerly t)
+            (setq peep-dired-enable-on-directories t)
+            (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
