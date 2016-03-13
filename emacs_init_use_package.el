@@ -429,3 +429,10 @@
   :ensure t
   :config (progn
             (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js/js/reveal.js")))
+
+(use-package peep-dired
+  :ensure t
+  :config (progn
+            (setq peep-dired-cleanup-eagerly t)
+            (setq peep-dired-enable-on-directories t)
+            (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
