@@ -426,6 +426,11 @@
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
 
+(use-package ox-reveal
+  :ensure t
+  :config (progn
+            (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
+
 (use-package peep-dired
   :ensure t
   :config (progn
