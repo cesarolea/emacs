@@ -305,7 +305,8 @@
 		  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
 		  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
 		  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-		  cider-repl-toggle-pretty-printing t) ; REPL always pretty-prints results
+		  cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+      cider-repl-display-help-banner nil) ; don't display start banner
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
