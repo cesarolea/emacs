@@ -436,3 +436,5 @@
             (setq peep-dired-cleanup-eagerly t)
             (setq peep-dired-enable-on-directories t)
             (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
+
+(use-package dumb-jump :ensure t)

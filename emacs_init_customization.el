@@ -376,3 +376,6 @@ With a prefix argument N, (un)comment that many sexps."
   "Recompile Emacs configuration."
   (interactive)
   (byte-recompile-directory root-dir 0 FORCE))
+
+;; If all you use is magit anyway, this is not really a loss
+(remove-hook 'find-file-hooks 'vc-find-file-hook)
