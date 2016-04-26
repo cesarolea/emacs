@@ -258,6 +258,8 @@
             (define-key org-mode-map (kbd "s-u") #'org-goto)
             (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
 
+            (add-hook 'org-mode #'auto-fill-mode)
+
             ;; exporters
             (require 'ox-md) ; markdown
             ))
