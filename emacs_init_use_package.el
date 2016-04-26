@@ -295,7 +295,8 @@
 
 (use-package cider :pin melpa-stable
   :config (progn
-	    (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)          
+	    (add-hook 'cider-mode-hook 'eldoc-mode)
+      (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 	    (add-hook 'cider-repl-mode-hook #'company-mode)
 	    (add-hook 'cider-mode-hook #'company-mode)
 	    (add-hook 'clojure-mode-hook #'company-mode)
