@@ -92,7 +92,7 @@ _d_ecode region   _x_ml     _s_how filename of buffer
                         _t_oggle letter case"
   ("h" url-humanify)
   ("d" url-decode-region)
-  ("j" json-format)
+  ("j" json-pretty-print)
   ("x" xml-format)
   ("c" copy-file-name-to-clipboard)
   ("s" show-file-name-of-current-buffer)
