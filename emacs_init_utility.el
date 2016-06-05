@@ -37,12 +37,7 @@
 (define-key utility-map (kbd "H-d") 'url-decode-region)
 
 ;; format json
-(defun json-format ()
-  "Pretty Print a JSON text string."
-  (interactive)
-  (save-excursion
-    (shell-command-on-region (mark) (point) "python -c 'import sys,json; data=json.loads(sys.stdin.read()); print json.dumps(data,sort_keys=True,indent=4).decode(\"unicode_escape\").encode(\"utf8\",\"replace\")'" (buffer-name) t)))
-(define-key utility-map (kbd "H-j") 'json-format)
+(define-key utility-map (kbd "H-j") 'json-pretty-print)
 
 (defun xml-format (begin end)
   "Pretty format XML markup in region. You need to have 'nxml-mode'
