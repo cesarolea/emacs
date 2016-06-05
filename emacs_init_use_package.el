@@ -440,3 +440,9 @@
             (setq peep-dired-cleanup-eagerly t)
             (setq peep-dired-enable-on-directories t)
             (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
+
+(use-package origami
+  :ensure t
+  :config (progn
+            (add-hook 'prog-mode-hook 'origami-mode)
+            (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))

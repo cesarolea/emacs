@@ -51,6 +51,8 @@ Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter righ
   ("w" avy-goto-word-1 "Go to word"))
 (global-set-key (kbd "C-c g") 'hydra-movement/body)
 
+(global-set-key (kbd "M-.") 'avy-goto-char-2)
+
 (defhydra hydra-gist (:color blue)
   "gists"
   ("l" gist-list "List gists")
@@ -142,7 +144,7 @@ _l_ List      _S_etup
   ("B" flycheck-buffer)
   ("D" flycheck-disable-checker :color blue)
   ("S" flycheck-verify-setup :color blue))
-(global-set-key (kbd "C-c f") 'hydra-flycheck/body)
+(global-set-key (kbd "C-c k") 'hydra-flycheck/body)
 
 (defhydra hydra-bm (:color red :hint nil :idle 1.0)
   "Bookmarks"
@@ -155,3 +157,22 @@ _l_ List      _S_etup
   ("x" bm-remove-all-current-buffer :color blue)
   ("X" bm-remove-all-all-buffers :color blue))
 (global-set-key (kbd "C-c b") 'hydra-bm/body)
+
+(defhydra hydra-origami (:color red :hint nil)
+    "
+Code Folds^       ^Navigation^
+---------------------------------
+_t_ Toggle       _j_ Move to next
+_T_ Toggle All   _k_ Move to previous
+_u_ undo
+_r_ redo
+_R_ Reset
+"
+  ("t" origami-recursively-toggle-node)
+  ("T" origami-toggle-all-nodes)
+  ("u" origami-undo)
+  ("r" origami-redo)
+  ("j" origami-next-fold)
+  ("k" origami-previous-fold)
+  ("R" origami-reset))
+(global-set-key (kbd "C-c f") 'hydra-origami/body)
