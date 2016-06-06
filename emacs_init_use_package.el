@@ -110,31 +110,42 @@
             ;;  Restore popwin-mode after a Helm session finishes.
             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
             
-           (setq helm-idle-delay 0.1)
-           (setq helm-input-idle-delay 0.1)
-           (setq helm-follow-mode-persistent t)
-           (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
-           (setq helm-for-files-preferred-list
-                 '(helm-source-buffers-list
-                   helm-source-recentf
-                   helm-source-bookmarks
-                   helm-source-file-cache
-                   helm-source-files-in-current-dir
-                   helm-source-mac-spotlight))
-           (global-set-key "\C-x\ a" 'helm-for-files)
-           (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
-           ;; replace M-x with helm's version
-           (global-set-key (kbd "M-x") 'helm-M-x)
-           ;; find files with helm
-           ;; disabling for now, using ido for now
-           ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
-           ;; replace C-x b with helm's version
-           (global-set-key "\C-x\ b" 'helm-mini)
-           (global-set-key "\C-x\ \C-r" 'helm-recentf)
-           (global-set-key (kbd "<f9>") 'helm-bookmarks)))
+            (setq helm-idle-delay 0.1)
+            (setq helm-input-idle-delay 0.1)
+            (setq helm-follow-mode-persistent t)
+            (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
+            (setq helm-for-files-preferred-list
+                  '(helm-source-buffers-list
+                    helm-source-recentf
+                    helm-source-bookmarks
+                    helm-source-file-cache
+                    helm-source-files-in-current-dir
+                    helm-source-mac-spotlight))
+            (global-set-key "\C-x\ a" 'helm-for-files)
+            (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+            ;; replace M-x with helm's version
+            (global-set-key (kbd "M-x") 'helm-M-x)
+            ;; find files with helm
+            ;; disabling for now, using ido for now
+            ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+            ;; replace C-x b with helm's version
+            (global-set-key "\C-x\ b" 'helm-mini)
+            (global-set-key "\C-x\ \C-r" 'helm-recentf)
+            (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
-  :config (progn (helm-projectile-on)))
+  :config (progn
+            (defun contextual-helm-projectile ()
+              (if (and (buffer-file-name)
+                       (projectile-project-p))
+                  (progn
+                    (global-unset-key "\C-x\ a")
+                    (global-set-key "\C-x\ a" 'helm-projectile))
+                (progn
+                  (global-unset-key "\C-x\ a")
+                  (global-set-key "\C-x\ a" 'helm-for-files))))
+            (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+            (helm-projectile-on)))
 
 (use-package helm-ag :ensure t
   :config (progn (setq helm-ag-fuzzy-match t)
@@ -446,3 +457,7 @@
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
+
+(use-package popup-switcher
+  :ensure t
+  :config (global-set-key (kbd "<f6>") 'psw-switch-buffer))
