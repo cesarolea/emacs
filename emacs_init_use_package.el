@@ -446,3 +446,5 @@
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
+
+(use-package git-timemachine :ensure t)
