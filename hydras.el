@@ -158,7 +158,7 @@ _l_ List      _S_etup
   ("X" bm-remove-all-all-buffers :color blue))
 (global-set-key (kbd "C-c b") 'hydra-bm/body)
 
-(defhydra hydra-origami (:color red :hint nil)
+(defhydra hydra-origami (:color red :hint nil :timeout)
     "
 Code Folds^       ^Navigation^
 ---------------------------------
