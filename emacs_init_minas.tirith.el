@@ -7,7 +7,7 @@
 ;; (load-theme 'moe-dark t)
 
 ;; set highlight line
-(set-face-background 'highlight-current-line-face "gray17")
+;; (set-face-background 'highlight-current-line-face "gray17")
 
 ;; Font also, for emacsclient
 (set-default-font "Inconsolata-13")
