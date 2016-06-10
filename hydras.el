@@ -91,6 +91,7 @@ URL^             ^Format^  ^Misc^
 --------------------------------------------------------
 _h_umanify        _j_son    _c_opy filename to clipboard
 _d_ecode region   _x_ml     _s_how filename of buffer
+                        _i_nsert filename to buffer
                         _t_oggle letter case"
   ("h" url-humanify)
   ("d" url-decode-region)
@@ -98,7 +99,8 @@ _d_ecode region   _x_ml     _s_how filename of buffer
   ("x" xml-format)
   ("c" copy-file-name-to-clipboard)
   ("s" show-file-name-of-current-buffer)
-  ("t" toggle-letter-case :color red))
+  ("t" toggle-letter-case :color red)
+  ("i" bjm/insert-file-name))
 (global-set-key (kbd "C-c u") 'hydra-utility/body)
 
 (defhydra hydra-eyebrowse (:color blue :hint nil)
