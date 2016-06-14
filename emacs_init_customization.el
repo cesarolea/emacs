@@ -332,7 +332,7 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;; 80 column indicator fill
 (setq-default
- whitespace-line-column 80
+ whitespace-line-column 90
  whitespace-style       '(face lines-tail))
 
 (add-hook 'prog-mode-hook #'whitespace-mode)

@@ -427,12 +427,6 @@
             (key-chord-mode t)
             (buffer-flip-mode)))
 
-(use-package fill-column-indicator
-  :ensure t
-  :pin melpa-stable
-  :config (progn
-            (setq fci-rule-column 79)))
-
 (use-package smooth-scroll
   :ensure t
   :config (progn
