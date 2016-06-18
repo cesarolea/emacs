@@ -28,6 +28,9 @@
 (require 'moe-theme)
 (load-theme 'moe-dracula t)
 (powerline-moe-theme)
+(moe-theme-set-color 'dracula)
+(set-background-color "#282a36")
+(set-foreground-color "#c6c6c6")
 
 (use-package highlight-current-line :ensure t
   :diminish highlight-current-line-minor-mode)
@@ -330,6 +333,9 @@
       cider-repl-display-help-banner nil) ; don't display start banner
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
+
+(use-package helm-cider :ensure t
+  :config (helm-cider-mode 1))
 
 (use-package clj-refactor
   :ensure t
