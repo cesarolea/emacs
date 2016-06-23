@@ -27,7 +27,10 @@
 (add-to-list 'load-path "~/workspace/moe-theme.el")
 (require 'moe-theme)
 (load-theme 'moe-dracula t)
+(moe-theme-set-color 'dracula)
 (powerline-moe-theme)
+(set-background-color "#282a36")
+(set-foreground-color "#c6c6c6")
 
 (use-package highlight-current-line :ensure t
   :diminish highlight-current-line-minor-mode)
@@ -464,3 +467,9 @@
 (use-package popup-switcher
   :ensure t
   :config (global-set-key (kbd "<f6>") 'psw-switch-buffer))
+
+(use-package swiper :ensure t)
+
+(use-package swiper-helm
+  :ensure t
+  :config (global-set-key "\C-s" 'swiper))
