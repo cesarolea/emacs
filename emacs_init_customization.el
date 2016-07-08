@@ -379,3 +379,26 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;; If all you use is magit anyway, this is not really a loss
 (remove-hook 'find-file-hooks 'vc-find-file-hook)
+
+(defun modi/switch-to-scratch-and-back (arg)
+  "Toggle between *scratch-MODE* buffer and the current buffer.
+If a scratch buffer does not exist, create it with the major mode set to that
+of the buffer from where this function is called.
+
+        COMMAND -> Open/switch to a scratch buffer in the current buffer's major mode
+    C-0 COMMAND -> Open/switch to a scratch buffer in `fundamental-mode'
+    C-u COMMAND -> Open/switch to a scratch buffer in `org-mode'
+C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
+  (interactive "p")
+  (if (and (= arg 1) ; no prefix
+           (string-match-p "\\*scratch" (buffer-name)))
+      (switch-to-buffer (other-buffer))
+    (let ((mode-str (cl-case arg
+                      (0  "fundamental-mode") ; C-0
+                      (4  "org-mode") ; C-u
+                      (16 "emacs-lisp-mode") ; C-u C-u
+                      (t  (format "%s" major-mode))))) ; no prefix
+      (switch-to-buffer (get-buffer-create
+                         (concat "*scratch-" mode-str "*")))
+      (funcall (intern mode-str)))))
+(global-set-key (kbd "<f8>") 'modi/switch-to-scratch-and-back)
