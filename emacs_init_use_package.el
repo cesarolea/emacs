@@ -476,4 +476,8 @@
 
 (use-package swiper-helm
   :ensure t
-  :config (global-set-key "\C-s" 'swiper))
+  :config (progn (global-set-key "\C-s" 'swiper)
+                 (global-set-key "\C-r" 'swiper)))
+
+(use-package crux :ensure t
+  :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
