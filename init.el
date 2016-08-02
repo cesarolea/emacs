@@ -55,7 +55,8 @@
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
-(load "~/.emacs.d/lisp/fireplace")
+;; no need since it is already in melpa
+; (load "~/.emacs.d/lisp/fireplace")
 
 ;; load files depending on hostname
 (cond ((compare-strings (message (substring system-name 0 9)) nil nil "Galadriel" nil nil t)

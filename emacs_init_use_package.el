@@ -331,7 +331,9 @@
 		  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
 		  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
 		  cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
-      cider-repl-display-help-banner nil) ; don't display start banner
+      cider-repl-display-help-banner nil ; don't display start banner
+      nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+      ) 
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
@@ -482,3 +484,5 @@
 
 (use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
+
+(use-package fireplace :ensure t)
