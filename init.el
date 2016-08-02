@@ -58,7 +58,7 @@
 (load "~/.emacs.d/lisp/fireplace")
 
 ;; load files depending on hostname
-(cond ((string= (message (substring system-name 0 9)) "Galadriel")
+(cond ((compare-strings (message (substring system-name 0 9)) nil nil "Galadriel" nil nil t)
        (load "~/.emacs.d/emacs_init_galadriel.local.el"))
       (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
 

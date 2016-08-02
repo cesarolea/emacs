@@ -356,6 +356,7 @@
   :config
   (setq magit-last-seen-setup-instructions "1.4.0")
   (setq magit-push-always-verify nil)
+  (setq magit-branch-read-upstream-first t)
   (if (bound-and-true-p magit-auto-revert-mode)
       (diminish 'magit-auto-revert-mode))
   :diminish magit-mode)
