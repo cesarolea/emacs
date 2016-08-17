@@ -55,13 +55,10 @@
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
-;; no need since it is already in melpa
-; (load "~/.emacs.d/lisp/fireplace")
-
 ;; load files depending on hostname
-(cond ((compare-strings (message (substring system-name 0 9)) nil nil "Galadriel" nil nil t)
-       (load "~/.emacs.d/emacs_init_galadriel.local.el"))
-      (t (load "~/.emacs.d/emacs_init_minas.tirith.el")))
+(if (string= (downcase (substring system-name 0 9)) "galadriel")
+    (load "~/.emacs.d/emacs_init_galadriel.local.el")
+  (load "~/.emacs.d/emacs_init_minas.tirith.el"))
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
