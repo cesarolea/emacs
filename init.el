@@ -35,8 +35,7 @@
                          ("gnu"       . "http://elpa.gnu.org/packages/")
                          ("melpa-stable" . "http://stable.melpa.org/packages/")
                          ("melpa"     . "http://melpa.org/packages/")
-                         ("tromey"    . "http://tromey.com/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+                         ("tromey"    . "http://tromey.com/elpa/")))
 
 (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (add-to-list 'package-pinned-packages '(clj-refactor . "melpa-stable") t)
