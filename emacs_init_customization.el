@@ -402,3 +402,12 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
                          (concat "*scratch-" mode-str "*")))
       (funcall (intern mode-str)))))
 (global-set-key (kbd "<f8>") 'modi/switch-to-scratch-and-back)
+
+(defun buffer-too-big-p ()
+  (or (> (buffer-size) (* 5000 80))
+      (> (line-number-at-pos (point-max)) 5000)))
+
+(add-hook 'prog-mode-hook
+          (lambda ()
+            ;; turn off `linum-mode' when there are more than 5000 lines
+            (if (buffer-too-big-p) (linum-mode -1))))
