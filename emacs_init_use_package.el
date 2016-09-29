@@ -423,13 +423,13 @@
             (add-hook 'git-commit-mode-hook 'company-mode)
             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
-(use-package beacon
-  :ensure t
-  :config (progn
-            (beacon-mode 1)
-            (setq beacon-push-mark 35)
-            (setq beacon-color "#ffb86c"))
-  :diminish beacon-mode)
+;; (use-package beacon
+;;   :ensure t
+;;   :config (progn
+;;             (beacon-mode 1)
+;;             (setq beacon-push-mark 35)
+;;             (setq beacon-color "#ffb86c"))
+;;   :diminish beacon-mode)
 
 (use-package buffer-flip
   :ensure t
