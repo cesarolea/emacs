@@ -115,7 +115,11 @@
 ;; stop telling me the menu command key
 (setq suggest-key-bindings nil)
 
-;; which buffers should have lines (all major modes for programming)
+(defun buffer-too-big-p ()
+  (or (> (buffer-size) (* 5000 80))
+      (> (line-number-at-pos (point-max)) 5000)))
+
+;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
                             (linum-mode 1)
                             (flycheck-mode 1)
@@ -123,7 +127,13 @@
                             (rainbow-mode 1)
                             (flyspell-mode 1)
                             (visual-line-mode 0)
-                            (toggle-truncate-lines 1)))
+                            (toggle-truncate-lines 1)
+                            (lambda ()
+                              ;; turn off `linum-mode' when there are more than 5000 lines
+                              (if (buffer-too-big-p) (linum-mode -1)))
+                            (whitespace-mode 1)
+                            (lambda ()
+                              (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp))))
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
@@ -324,9 +334,6 @@ With a prefix argument N, (un)comment that many sexps."
     (dotimes (_ (or n 1))
       (comment-sexp--raw))))
 
-(add-hook 'prog-mode-hook (lambda ()
-                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
-
 ;; dired sane file sizes
 (setq dired-listing-switches "-alh")
 
@@ -334,8 +341,6 @@ With a prefix argument N, (un)comment that many sexps."
 (setq-default
  whitespace-line-column 90
  whitespace-style       '(face lines-tail))
-
-(add-hook 'prog-mode-hook #'whitespace-mode)
 
 ;; switch between two most recent buffers
 (defun switch-to-previous-buffer ()
@@ -403,11 +408,6 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
       (funcall (intern mode-str)))))
 (global-set-key (kbd "<f8>") 'modi/switch-to-scratch-and-back)
 
-(defun buffer-too-big-p ()
-  (or (> (buffer-size) (* 5000 80))
-      (> (line-number-at-pos (point-max)) 5000)))
-
-(add-hook 'prog-mode-hook
-          (lambda ()
-            ;; turn off `linum-mode' when there are more than 5000 lines
-            (if (buffer-too-big-p) (linum-mode -1))))
+;; Search for equivalent unicode characters when searching
+;; for ascii chars
+(setq search-default-mode #'char-fold-to-regexp)
