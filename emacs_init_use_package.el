@@ -41,6 +41,7 @@
            (popwin-mode 1)))
 
 (use-package recentf :ensure t
+  :defer 5
   :config (progn
 	    (recentf-mode 1)
 	    (setq recentf-max-menu-items 25))
@@ -52,6 +53,7 @@
 	  (setq-default save-place t)))
 
 (use-package company :ensure t
+  :defer 5
   :config (progn
 	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
 	    (global-set-key (kbd "C-'") 'company-complete))
@@ -95,6 +97,7 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile :ensure t
+  :defer 5
   :config (progn
             (setq projectile-require-project-root nil)
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
@@ -145,6 +148,7 @@
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
+  :defer 5
   :config (progn
             (defun contextual-helm-projectile ()
               (if (and (buffer-file-name)
@@ -174,16 +178,19 @@
 (use-package helm-descbinds :ensure t)
 
 (use-package flycheck :ensure t
+  :defer 5
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
             (provide 'emacs_init_packages))
   :diminish flycheck-mode)
 
 (use-package flyspell
+  :defer 5
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
 (use-package highlight-symbol :ensure t
+  :defer 5
   :config (progn
             (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
             (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
@@ -191,6 +198,7 @@
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
 (use-package auto-highlight-symbol :ensure t
+  :defer 5
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (highlight-current-line-minor-mode t)
@@ -218,6 +226,7 @@
   :diminish undo-tree-mode)
 
 (use-package web-mode :ensure t
+  :defer 5
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
             (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -238,6 +247,7 @@
           (define-key global-map (kbd "C-x o") nil)))
 
 (use-package rainbow-mode :ensure t
+  :defer 5
   :diminish rainbow-mode)
 
 (use-package rainbow-delimiters :ensure t)
@@ -370,6 +380,7 @@
 
  
 (use-package reveal-in-osx-finder :ensure t
+  :defer 5
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
 (use-package anzu :ensure t :pin melpa-stable
@@ -400,6 +411,7 @@
                                           (bm-repository-save)))))
 
 (use-package impatient-mode :ensure t
+  :defer 5
   :config (progn
             (setq httpd-port 8181)))
 
@@ -413,15 +425,15 @@
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
 
-(use-package company-emoji
-  :ensure t
-  :config (progn
-            ;; enable in org mode buffers
-            (add-hook 'org-mode-hook 'company-mode)
-            (add-hook 'org-mode-hook 'company-emoji-init)
-            ;; enable in git commit log buffers
-            (add-hook 'git-commit-mode-hook 'company-mode)
-            (add-hook 'git-commit-mode-hook 'company-emoji-init)))
+;; (use-package company-emoji
+;;   :ensure t
+;;   :config (progn
+;;             ;; enable in org mode buffers
+;;             (add-hook 'org-mode-hook 'company-mode)
+;;             (add-hook 'org-mode-hook 'company-emoji-init)
+;;             ;; enable in git commit log buffers
+;;             (add-hook 'git-commit-mode-hook 'company-mode)
+;;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
 ;; (use-package beacon
 ;;   :ensure t
@@ -452,18 +464,20 @@
             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
 
 (use-package ox-reveal
+  :defer 5
   :ensure t
   :config (progn
             (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
-(use-package peep-dired
-  :ensure t
-  :config (progn
-            (setq peep-dired-cleanup-eagerly t)
-            (setq peep-dired-enable-on-directories t)
-            (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
+;; (use-package peep-dired
+;;   :ensure t
+;;   :config (progn
+;;             (setq peep-dired-cleanup-eagerly t)
+;;             (setq peep-dired-enable-on-directories t)
+;;             (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
 
 (use-package origami
+  :defer 5
   :ensure t
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
@@ -472,6 +486,7 @@
 (use-package git-timemachine :ensure t)
 
 (use-package popup-switcher
+  :defer 5
   :ensure t
   :config (global-set-key (kbd "<f6>") 'psw-switch-buffer))
 
@@ -485,4 +500,5 @@
 (use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
-(use-package fireplace :ensure t)
+(use-package fireplace :ensure t
+  :defer 5)

@@ -411,3 +411,18 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;; Search for equivalent unicode characters when searching
 ;; for ascii chars
 (setq search-default-mode #'char-fold-to-regexp)
+
+;; delete region when start typing
+(delete-selection-mode 1)
+
+;; increase garbage collection threshold
+(setq gc-cons-threshold (* 100 1024 1024)) ;; 100 mb
+
+;; Allow font-lock-mode to do background parsing
+(setq jit-lock-defer-time nil
+      jit-lock-stealth-nice 0.1
+      jit-lock-stealth-time 0.2
+      jit-lock-stealth-verbose nil)
+
+;; If you change buffer, or focus, disable the current buffer’s mark
+(transient-mark-mode 1)
