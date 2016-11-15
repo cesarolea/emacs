@@ -323,7 +323,8 @@
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
-                                            (diminish 'subword-mode))))
+                                            (diminish 'subword-mode)
+                                            (cider-hydra-mode 1))))
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
@@ -346,6 +347,8 @@
       ) 
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
+
+(use-package cider-hydra :ensure t)
 
 (use-package helm-cider :ensure t
   :config (helm-cider-mode 1))
@@ -500,5 +503,4 @@
 (use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
-(use-package fireplace :ensure t
-  :defer 5)
+(use-package fireplace :ensure t :defer 10)
