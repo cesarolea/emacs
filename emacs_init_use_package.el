@@ -53,9 +53,9 @@
 	  (setq-default save-place t)))
 
 (use-package company :ensure t
-  :defer 5
   :config (progn
 	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
+      (add-to-list 'company-backends 'company-restclient)
 	    (global-set-key (kbd "C-'") 'company-complete))
   :diminish company-mode)
 
@@ -506,3 +506,13 @@
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
 (use-package fireplace :ensure t :defer 10)
+
+(use-package restclient :ensure t)
+
+(use-package company-restclient
+  :ensure t
+  :defer 5
+  :config (progn
+            (add-hook 'restclient-mode-hook #'company-mode)))
+
+(use-package restclient-helm :ensure t :defer 5)
