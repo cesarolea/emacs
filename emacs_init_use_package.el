@@ -286,6 +286,8 @@
             (setq org-src-preserve-indentation t)
             ;; preserve native color scheme for target source code
             (setq org-src-fontify-natively t)
+            ;; smart quotes on export
+            (setq org-export-with-smart-quotes t)
 
             (define-key org-mode-map (kbd "s-u") #'org-goto)
             (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
