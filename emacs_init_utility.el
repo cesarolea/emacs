@@ -130,4 +130,10 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
       (downcase-region p1 p2) (put this-command 'state "all lower")) )
     ) )
 (global-set-key (kbd "M-c") 'toggle-letter-case)
+
+(defun my/org-days-between (start end)
+  "Number of days between START and END (exclusive).
+This includes START but not END."
+  (- (calendar-absolute-from-gregorian (org-date-to-gregorian end))
+     (calendar-absolute-from-gregorian (org-date-to-gregorian start))))
 ;;; emacs_init_utility.el ends here
