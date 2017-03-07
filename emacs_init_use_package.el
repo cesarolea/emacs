@@ -516,3 +516,5 @@
             (add-hook 'restclient-mode-hook #'company-mode)))
 
 (use-package restclient-helm :ensure t :defer 5)
+
+(use-package terraform-mode :ensure t :defer 5)
