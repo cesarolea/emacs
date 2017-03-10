@@ -14,26 +14,28 @@
   '(diminish 'auto-revert-mode))
 
 (use-package powerline :ensure t)
-;; (use-package moe-theme :ensure t
-;;   :config (progn
-;;             (load-theme 'moe-dark t)
-;;             (powerline-moe-theme)
-;;             (moe-theme-set-color 'blue)
-;;             (setq show-paren-style 'expression)
-;;             (setq powerline-display-buffer-size nil)
-;;             (setq moe-theme-highlight-buffer-id t)))
+(use-package moe-theme :ensure t
+  :config (progn
+            (load-theme 'moe-dark t)
+            (powerline-moe-theme)
+            (moe-theme-set-color 'blue)
+            (setq show-paren-style 'expression)
+            (setq powerline-display-buffer-size nil)
+            (setq moe-theme-highlight-buffer-id t)))
 
-(add-to-list 'custom-theme-load-path "~/workspace/moe-theme.el")
-(add-to-list 'load-path "~/workspace/moe-theme.el")
+;; (add-to-list 'custom-theme-load-path "~/workspace/moe-theme.el")
+;; (add-to-list 'load-path "~/workspace/moe-theme.el")
 (require 'moe-theme)
-(load-theme 'moe-dracula t)
-(moe-theme-set-color 'dracula)
+;; (load-theme 'moe-dracula t)
+;; (moe-theme-set-color 'dracula)
 (powerline-moe-theme)
-(moe-theme-set-color 'dracula)
+;; (moe-theme-set-color 'dracula)
 (set-background-color "#282a36")
 (set-foreground-color "#c6c6c6")
 
 (use-package highlight-current-line :ensure t
+  :config (progn
+              (set-face-background 'highlight-current-line-face "gray22"))
   :diminish highlight-current-line-minor-mode)
 
 (use-package popwin :ensure t
