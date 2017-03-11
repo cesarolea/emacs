@@ -6,4 +6,4 @@
  '(package-selected-packages
    (quote
     (swiper web-mode use-package undo-tree smooth-scroll smartparens shrink-whitespace reveal-in-osx-finder rainbow-mode rainbow-delimiters powerline popwin popup-switcher ox-reveal origami org-bullets move-text magit js2-mode impatient-mode ido-vertical-mode highlight-symbol highlight-current-line helm-projectile helm-flx helm-descbinds helm-cider helm-ag git-timemachine flycheck flx-ido fancy-battery eyebrowse expand-region exec-path-from-shell diff-hl company clj-refactor cider-hydra buffer-flip bm auto-highlight-symbol anzu ace-window))))
- '(package-selected-packages (quote (terraform-mode use-package))))
+ '(package-selected-packages (quote (terraform-mode use-package)))
