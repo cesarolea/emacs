@@ -520,3 +520,10 @@
 (use-package restclient-helm :ensure t :defer 5)
 
 (use-package terraform-mode :ensure t :defer 5)
+
+(use-package dumb-jump
+  :ensure t
+  :config (progn
+            (dumb-jump-mode t)
+            (global-set-key (kbd "<f12>") 'dumb-jump-go)
+            (setq dumb-jump-selector 'helm)))
