@@ -99,7 +99,6 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile :ensure t
-  :defer 5
   :config (progn
             (setq projectile-require-project-root nil)
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
@@ -113,9 +112,6 @@
 
             ;; so helm adapts to your usage
             (helm-adaptive-mode 1)
-
-            ;; for helm-ag
-            ;; (helm-follow-mode-persistent t)
 
             ;; window management
             (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
@@ -141,16 +137,12 @@
             (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
             ;; replace M-x with helm's version
             (global-set-key (kbd "M-x") 'helm-M-x)
-            ;; find files with helm
-            ;; disabling for now, using ido for now
-            ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
             ;; replace C-x b with helm's version
             (global-set-key "\C-x\ b" 'helm-mini)
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
-  :defer 5
   :config (progn
             (defun contextual-helm-projectile ()
               (if (and (buffer-file-name)
@@ -161,6 +153,7 @@
                 (progn
                   (global-unset-key "\C-x\ a")
                   (global-set-key "\C-x\ a" 'helm-for-files))))
+            (contextual-helm-projectile)
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
             (helm-projectile-on)))
 
