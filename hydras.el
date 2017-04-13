@@ -51,6 +51,8 @@ Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter righ
   ("w" avy-goto-word-1 "Go to word"))
 (global-set-key (kbd "C-c g") 'hydra-movement/body)
 
+(global-set-key (kbd "C-x w") 'avy-goto-word-1)
+(global-set-key (kbd "C-x g") 'avy-goto-line)
 (global-set-key (kbd "M-.") 'avy-goto-char-2)
 
 (defhydra hydra-gist (:color blue)
