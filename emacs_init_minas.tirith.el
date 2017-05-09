@@ -10,7 +10,7 @@
 ;; (set-face-background 'highlight-current-line-face "gray17")
 
 ;; Font also, for emacsclient
-(set-default-font "Inconsolata-13")
+(set-default-font "Inconsolata-16")
 
 ;; refile target in minas
 (setq org-default-notes-file "/Volumes/Tomb/Sync/Org/refile.org")

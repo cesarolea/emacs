@@ -520,3 +520,10 @@
             (dumb-jump-mode t)
             (global-set-key (kbd "<f12>") 'dumb-jump-go)
             (setq dumb-jump-selector 'helm)))
+
+(use-package highlight-indent-guides
+  :ensure t
+  :config (progn
+            (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+            (setq highlight-indent-guides-method 'character)
+            (setq highlight-indent-guides-character ?\|)))
