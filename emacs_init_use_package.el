@@ -483,7 +483,9 @@
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
 
-(use-package git-timemachine :ensure t)
+(use-package git-timemachine
+  :ensure t
+  :defer 5)
 
 (use-package popup-switcher
   :defer 5
