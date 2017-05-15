@@ -65,38 +65,38 @@
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
 
-(use-package ido
-  :config (progn
-            (ido-mode 1)
-            (setq ido-everywhere t)
-            (setq ido-use-faces t)
-            (setq ido-use-filename-at-point 'guess)
-            (setq ido-use-url-at-point nil)
-            (setq ido-enable-flex-matching t)
-            ;; restrict to current directory
-            (setq ido-auto-merge-work-directories-length -1)
+;; (use-package ido
+;;   :config (progn
+;;             (ido-mode 1)
+;;             (setq ido-everywhere t)
+;;             (setq ido-use-faces t)
+;;             (setq ido-use-filename-at-point 'guess)
+;;             (setq ido-use-url-at-point nil)
+;;             (setq ido-enable-flex-matching t)
+;;             ;; restrict to current directory
+;;             (setq ido-auto-merge-work-directories-length -1)
 
-            (defun recentf-ido-find-file ()
-              "Find a recent file using ido."
-              (interactive)
-              (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-                (when file
-                  (find-file file))))
+;;             (defun recentf-ido-find-file ()
+;;               "Find a recent file using ido."
+;;               (interactive)
+;;               (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+;;                 (when file
+;;                   (find-file file))))
             
-            (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
+;;             (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
 
-(use-package ido-vertical-mode :ensure t
-  :config (progn
-            (ido-mode 1)
-            (ido-vertical-mode 1)
-            (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
+;; (use-package ido-vertical-mode :ensure t
+;;   :config (progn
+;;             (ido-mode 1)
+;;             (ido-vertical-mode 1)
+;;             (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
 
-(use-package flx-ido :ensure t
-  :config (progn
-            (flx-ido-mode 1)
-            (setq ido-enable-flex-matching t
-                  ido-use-faces t
-                  ido-use-filename-at-point t)))
+;; (use-package flx-ido :ensure t
+;;   :config (progn
+;;             (flx-ido-mode 1)
+;;             (setq ido-enable-flex-matching t
+;;                   ido-use-faces t
+;;                   ido-use-filename-at-point t)))
 
 (use-package projectile :ensure t
   :config (progn
@@ -104,7 +104,7 @@
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
 
-(use-package helm-flx :ensure t :config (helm-flx-mode +1))
+;; (use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
 (use-package helm :ensure t
   :config (progn
@@ -142,35 +142,35 @@
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile :ensure t
-  :config (progn
-            (defun contextual-helm-projectile ()
-              (if (and (buffer-file-name)
-                       (projectile-project-p))
-                  (progn
-                    (global-unset-key "\C-x\ a")
-                    (global-set-key "\C-x\ a" 'helm-projectile))
-                (progn
-                  (global-unset-key "\C-x\ a")
-                  (global-set-key "\C-x\ a" 'helm-for-files))))
-            (contextual-helm-projectile)
-            (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
-            (helm-projectile-on)))
+;; (use-package helm-projectile :ensure t
+;;   :config (progn
+;;             (defun contextual-helm-projectile ()
+;;               (if (and (buffer-file-name)
+;;                        (projectile-project-p))
+;;                   (progn
+;;                     (global-unset-key "\C-x\ a")
+;;                     (global-set-key "\C-x\ a" 'helm-projectile))
+;;                 (progn
+;;                   (global-unset-key "\C-x\ a")
+;;                   (global-set-key "\C-x\ a" 'helm-for-files))))
+;;             (contextual-helm-projectile)
+;;             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+;;             (helm-projectile-on)))
 
-(use-package helm-ag :ensure t
-  :config (progn (setq helm-ag-fuzzy-match t)
+;; (use-package helm-ag :ensure t
+;;   :config (progn (setq helm-ag-fuzzy-match t)
 
-                 (defun helm-ag-projectile-root (&optional ARG)
-                   "Search from projectile-project-root` which defaults to current directory if no project."
-                   (interactive)
-                   (helm-ag (projectile-project-root)))
+;;                  (defun helm-ag-projectile-root (&optional ARG)
+;;                    "Search from projectile-project-root` which defaults to current directory if no project."
+;;                    (interactive)
+;;                    (helm-ag (projectile-project-root)))
 
-                 (defun helm-do-ag-projectile-root (&optional ARG)
-                   "Search from projectile-project-root` which defaults to current directory if no project."
-                   (interactive)
-                   (helm-do-ag (projectile-project-root)))))
+;;                  (defun helm-do-ag-projectile-root (&optional ARG)
+;;                    "Search from projectile-project-root` which defaults to current directory if no project."
+;;                    (interactive)
+;;                    (helm-do-ag (projectile-project-root)))))
 
-(use-package helm-descbinds :ensure t)
+;; (use-package helm-descbinds :ensure t)
 
 (use-package flycheck :ensure t
   :defer 5
@@ -347,8 +347,8 @@
 
 (use-package cider-hydra :ensure t)
 
-(use-package helm-cider :ensure t
-  :config (helm-cider-mode 1))
+;; (use-package helm-cider :ensure t
+;;   :config (helm-cider-mode 1))
 
 (use-package clj-refactor
   :ensure t
@@ -494,10 +494,10 @@
 
 (use-package swiper :ensure t)
 
-(use-package swiper-helm
-  :ensure t
-  :config (progn (global-set-key "\C-s" 'swiper)
-                 (global-set-key "\C-r" 'swiper)))
+;; (use-package swiper-helm
+;;   :ensure t
+;;   :config (progn (global-set-key "\C-s" 'swiper)
+;;                  (global-set-key "\C-r" 'swiper)))
 
 (use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
@@ -512,7 +512,7 @@
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)))
 
-(use-package restclient-helm :ensure t :defer 5)
+;; (use-package restclient-helm :ensure t :defer 5)
 
 (use-package terraform-mode :ensure t :defer 5)
 
