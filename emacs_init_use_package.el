@@ -106,6 +106,32 @@
 
 ;; (use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
+(use-package smex :ensure t)
+
+;; installing counsel will bring ivy and swiper as dependencies
+(use-package counsel :ensure t
+  :config (progn
+            (global-set-key (kbd "M-x") 'counsel-M-x)
+            (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+            (global-set-key (kbd "C-x C-r") 'counsel-recentf)
+            (global-set-key (kbd "C-c y") 'counsel-yank-pop)))
+
+(use-package counsel-projectile :ensure t)
+
+(use-package ivy :demand
+  :diminish (ivy-mmode . "")
+  :config
+  (ivy-mode 1)
+  ;; number of result lines to display
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "%d/%d "
+        ivy-height 10
+        ivy-initial-inputs-alist nil)
+  ;; configure regexp engine.
+  (setq ivy-re-builders-alist
+	;; allow input not in order
+        '((t   . ivy--regex-ignore-order))))
+
 (use-package helm :ensure t
   :config (progn
             ;; (require 'helm-files)
@@ -136,10 +162,10 @@
             (global-set-key "\C-x\ a" 'helm-for-files)
             (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
             ;; replace M-x with helm's version
-            (global-set-key (kbd "M-x") 'helm-M-x)
+            ;; (global-set-key (kbd "M-x") 'helm-M-x)
             ;; replace C-x b with helm's version
-            (global-set-key "\C-x\ b" 'helm-mini)
-            (global-set-key "\C-x\ \C-r" 'helm-recentf)
+            ;; (global-set-key "\C-x\ b" 'helm-mini)
+            ;; (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 ;; (use-package helm-projectile :ensure t
@@ -492,7 +518,10 @@
   :ensure t
   :config (global-set-key (kbd "<f6>") 'psw-switch-buffer))
 
-(use-package swiper :ensure t)
+(use-package swiper :ensure t
+  :config (progn
+            (global-set-key (kbd "C-s") 'swiper)
+            (global-set-key (kbd "C-r") 'swiper)))
 
 ;; (use-package swiper-helm
 ;;   :ensure t
