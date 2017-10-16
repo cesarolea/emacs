@@ -145,7 +145,7 @@
 			    (electric-pair-mode 0)
 			    (linum-mode 0)
 			    (flycheck-mode 0)
-          (lambda () (set-input-method "latin-postfix"))))
+          (set-input-method "latin-postfix")))
 
 ;; which function
 (which-function-mode)
