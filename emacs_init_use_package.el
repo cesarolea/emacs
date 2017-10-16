@@ -1,3 +1,24 @@
+;; use straight.el for retrieving packages
+;(let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
+;      (bootstrap-version 2))
+;  (unless (file-exists-p bootstrap-file)
+;    (with-current-buffer
+;        (url-retrieve-synchronously
+;         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+;         'silent 'inhibit-cookies)
+;      (goto-char (point-max))
+;      (eval-print-last-sexp)))
+;  (load bootstrap-file nil 'nomessage))
+
+;; install use-package with straight.el
+;(straight-use-package 'use-package)
+
+;; Now use-package will use straight.el to automatically install missing packages if you provide :ensure t
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
 
@@ -57,7 +78,6 @@
 (use-package company :ensure t
   :config (progn
 	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
-      (add-to-list 'company-backends 'company-restclient)
 	    (global-set-key (kbd "C-'") 'company-complete))
   :diminish company-mode)
 
@@ -159,12 +179,10 @@
 
 (use-package helm-ag :ensure t
   :config (progn (setq helm-ag-fuzzy-match t)
-
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
                    (interactive)
                    (helm-ag (projectile-project-root)))
-
                  (defun helm-do-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
                    (interactive)
@@ -242,8 +260,8 @@
           (define-key global-map (kbd "C-x o") nil)))
 
 (use-package rainbow-mode :ensure t
-  :defer 5
-  :diminish rainbow-mode)
+ :defer 5
+ :diminish rainbow-mode)
 
 (use-package rainbow-delimiters :ensure t)
 
@@ -253,6 +271,7 @@
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package org
+  :ensure t
   :config (progn
             (global-set-key "\C-cl" 'org-store-link)
             (global-set-key "\C-cc" 'org-capture)
@@ -290,8 +309,13 @@
             (add-hook 'org-mode #'auto-fill-mode)
 
             ;; exporters
-            (require 'ox-md) ; markdown
+            (require 'ox-md)     ; markdown
+            (require 'ox-reveal) ; nice presentations
             ))
+
+(use-package ox-reveal
+  :ensure t
+  :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
 (use-package paredit :ensure t
   :config (progn
@@ -359,8 +383,6 @@
               (cljr-add-keybindings-with-prefix "C-c C-m"))
             (add-hook 'clojure-mode-hook #'refactor-mode-hook))
   :diminish clj-refactor-mode)
-
-(use-package exec-path-from-shell :ensure t)
  
 (use-package magit
   :ensure t
@@ -425,23 +447,23 @@
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
 
-;; (use-package company-emoji
-;;   :ensure t
-;;   :config (progn
-;;             ;; enable in org mode buffers
-;;             (add-hook 'org-mode-hook 'company-mode)
-;;             (add-hook 'org-mode-hook 'company-emoji-init)
-;;             ;; enable in git commit log buffers
-;;             (add-hook 'git-commit-mode-hook 'company-mode)
-;;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
+; (use-package company-emoji
+;   :ensure t
+;   :config (progn
+;             ;; enable in org mode buffers
+;             (add-hook 'org-mode-hook 'company-mode)
+;             (add-hook 'org-mode-hook 'company-emoji-init)
+;             ;; enable in git commit log buffers
+;             (add-hook 'git-commit-mode-hook 'company-mode)
+;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
 ;; (use-package beacon
-;;   :ensure t
-;;   :config (progn
-;;             (beacon-mode 1)
-;;             (setq beacon-push-mark 35)
-;;             (setq beacon-color "#ffb86c"))
-;;   :diminish beacon-mode)
+;   :ensure t
+;   :config (progn
+;             (beacon-mode 1)
+;             (setq beacon-push-mark 35)
+;             (setq beacon-color "#ffb86c"))
+;   :diminish beacon-mode)
 
 (use-package buffer-flip
   :ensure t
@@ -462,19 +484,6 @@
             (setq org-bullets-face-name (quote org-bullet-face))
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
-
-(use-package ox-reveal
-  :defer 5
-  :ensure t
-  :config (progn
-            (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
-
-;; (use-package peep-dired
-;;   :ensure t
-;;   :config (progn
-;;             (setq peep-dired-cleanup-eagerly t)
-;;             (setq peep-dired-enable-on-directories t)
-;;             (setq peep-dired-ignored-extensions '("mkv" "iso" "mp4"))))
 
 (use-package origami
   :defer 5
@@ -510,9 +519,10 @@
   :ensure t
   :defer 5
   :config (progn
-            (add-hook 'restclient-mode-hook #'company-mode)))
+            (add-hook 'restclient-mode-hook #'company-mode)
+            (add-to-list 'company-backends 'company-restclient)))
 
-(use-package restclient-helm :ensure t :defer 5)
+ (use-package restclient-helm :ensure t :defer 5)
 
 (use-package terraform-mode :ensure t :defer 5)
 
@@ -529,3 +539,25 @@
             (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
             (setq highlight-indent-guides-method 'character)
             (setq highlight-indent-guides-character ?\|)))
+
+(use-package tramp
+  :defer 5
+  :config
+  ;; Turn off auto-save for tramp files
+  (defun tramp-set-auto-save ()
+    (auto-save-mode -1))
+  (with-eval-after-load 'tramp-cache
+    (setq tramp-persistency-file-name "~/.emacs.d/tramp"))
+  (setq tramp-default-method "ssh"
+        tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
+        tramp-adb-program "adb"
+        ;; use the settings in ~/.ssh/config instead of Tramp's
+        tramp-use-ssh-controlmaster-options nil
+        backup-enable-predicate
+        (lambda (name)
+          (and (normal-backup-enable-predicate name)
+               (not (let ((method (file-remote-p name 'method)))
+                      (when (stringp method)
+                        (member method '("su" "sudo")))))))))
+
+(use-package exec-path-from-shell :ensure t)
