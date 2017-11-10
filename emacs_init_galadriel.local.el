@@ -7,6 +7,6 @@
 ;; (set-face-background 'highlight-current-line-face "gray17")
 
 ;; Font and stuff
-(set-default-font "Inconsolata-13")
+(set-default-font "Inconsolata-14")
 
 (setq org-default-notes-file "~/Sync/Org/refile.org")
