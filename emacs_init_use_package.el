@@ -457,14 +457,6 @@
 ;             (add-hook 'git-commit-mode-hook 'company-mode)
 ;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
-;; (use-package beacon
-;   :ensure t
-;   :config (progn
-;             (beacon-mode 1)
-;             (setq beacon-push-mark 35)
-;             (setq beacon-color "#ffb86c"))
-;   :diminish beacon-mode)
-
 (use-package buffer-flip
   :ensure t
   :config (progn
@@ -533,12 +525,12 @@
             (global-set-key (kbd "<f12>") 'dumb-jump-go)
             (setq dumb-jump-selector 'helm)))
 
-(use-package highlight-indent-guides
-  :ensure t
-  :config (progn
-            (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-            (setq highlight-indent-guides-method 'character)
-            (setq highlight-indent-guides-character ?\|)))
+;; (use-package highlight-indent-guides
+;;   :ensure t
+;;   :config (progn
+;;             (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;;             (setq highlight-indent-guides-method 'character)
+;;             (setq highlight-indent-guides-character ?\|)))
 
 (use-package tramp
   :defer 5
