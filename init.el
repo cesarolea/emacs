@@ -75,3 +75,4 @@
   "Recompile init files"
   (interactive)
   (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+(put 'dired-find-alternate-file 'disabled nil)
