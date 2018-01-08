@@ -40,7 +40,8 @@
             (load-theme 'moe-dark t)
             (powerline-moe-theme)
             (moe-theme-set-color 'blue)
-            (setq show-paren-style 'expression)
+            (show-paren-mode 1)
+            (setq show-paren-style 'parenthesis)
             (setq powerline-display-buffer-size nil)
             (setq moe-theme-highlight-buffer-id t)))
 
@@ -58,6 +59,8 @@
   :config (progn
               (set-face-background 'highlight-current-line-face "gray22"))
   :diminish highlight-current-line-minor-mode)
+
+
 
 (use-package popwin :ensure t
   :config (progn
@@ -457,14 +460,6 @@
 ;             (add-hook 'git-commit-mode-hook 'company-mode)
 ;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
-;; (use-package beacon
-;   :ensure t
-;   :config (progn
-;             (beacon-mode 1)
-;             (setq beacon-push-mark 35)
-;             (setq beacon-color "#ffb86c"))
-;   :diminish beacon-mode)
-
 (use-package buffer-flip
   :ensure t
   :config (progn
@@ -532,13 +527,6 @@
             (dumb-jump-mode t)
             (global-set-key (kbd "<f12>") 'dumb-jump-go)
             (setq dumb-jump-selector 'helm)))
-
-(use-package highlight-indent-guides
-  :ensure t
-  :config (progn
-            (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-            (setq highlight-indent-guides-method 'character)
-            (setq highlight-indent-guides-character ?\|)))
 
 (use-package tramp
   :defer 5
