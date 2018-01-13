@@ -145,7 +145,7 @@
 			    (electric-pair-mode 0)
 			    (linum-mode 0)
 			    (flycheck-mode 0)
-          ;(set-input-method "latin-postfix")
+          ;(set-input-method "spanish-prefix")
           ))
 
 ;; which function
