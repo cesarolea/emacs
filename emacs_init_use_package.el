@@ -549,3 +549,9 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package exec-path-from-shell :ensure t)
+
+(use-package atomic-chrome :ensure t
+  :defer 5
+  :config
+  (setq atomic-chrome-buffer-open-style 'frame)
+  (atomic-chrome-start-server))
