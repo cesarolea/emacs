@@ -2,11 +2,6 @@
 
 ;; set frame size
 (set-frame-size (selected-frame) 140 45)
-
-;; set highlight line
-;; (set-face-background 'highlight-current-line-face "gray17")
-
-;; Font and stuff
-(set-default-font "Inconsolata-14")
+(set-face-attribute 'default nil :height 160)
 
 (setq org-default-notes-file "~/Sync/Org/refile.org")
