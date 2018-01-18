@@ -553,5 +553,6 @@
 (use-package atomic-chrome :ensure t
   :defer 5
   :config
-  (setq atomic-chrome-buffer-open-style 'frame)
+  (setq atomic-chrome-url-major-mode-alist
+        '(("flotiya\\.local" . js2-mode)))
   (atomic-chrome-start-server))
