@@ -37,16 +37,14 @@
 (use-package zerodark-theme :ensure t
   :config
   (load-theme 'zerodark t)
-  (zerodark-setup-modeline-format))
+  (zerodark-setup-modeline-format)
+  (global-hl-line-mode 1))
 
-(use-package highlight-current-line :ensure t
-  :config (progn
-              (set-face-background 'highlight-current-line-face "gray22"))
-  :diminish highlight-current-line-minor-mode)
+(use-package exec-path-from-shell :ensure t
+  :config (exec-path-from-shell-initialize))
 
 (use-package popwin :ensure t
-  :config (progn
-           (popwin-mode 1)))
+  :config (popwin-mode 1))
 
 (use-package recentf :ensure t
   :defer 5
@@ -255,6 +253,10 @@
             (global-set-key (kbd "C-=") 'er/expand-region)
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
+(use-package ox-reveal
+  :ensure t
+  :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
+
 (use-package org
   :ensure t
   :config (progn
@@ -297,10 +299,6 @@
             (require 'ox-md)     ; markdown
             (require 'ox-reveal) ; nice presentations
             ))
-
-(use-package ox-reveal
-  :ensure t
-  :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
 (use-package paredit :ensure t
   :config (progn
@@ -531,8 +529,6 @@
                (not (let ((method (file-remote-p name 'method)))
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
-
-(use-package exec-path-from-shell :ensure t)
 
 (use-package atomic-chrome :ensure t
   :defer 5
