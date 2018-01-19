@@ -356,7 +356,9 @@
 
 (use-package cider-hydra :ensure t)
 
-(use-package helm-cider :ensure t
+(use-package helm-cider
+  :ensure t
+  :pin melpa-stable
   :config (helm-cider-mode 1))
 
 (use-package clj-refactor
