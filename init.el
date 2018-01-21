@@ -47,7 +47,7 @@
 (load "~/.emacs.d/emacs_init_keymaps.el")
 
 ;; load files depending on hostname
-; (load "~/.emacs.d/emacs_init_galadriel.local.el")
+(load "~/.emacs.d/emacs_init_galadriel.local.el")
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
@@ -55,7 +55,7 @@
 ; Set exec path from shell variables
 (exec-path-from-shell-initialize)
 
-; (add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
+(add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
 
 (set-fontset-font
  t 'symbol
