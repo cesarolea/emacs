@@ -197,7 +197,6 @@
   :defer 5
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
-                                        (highlight-current-line-minor-mode t)
                                         (auto-highlight-symbol-mode t)
                                         (flyspell-prog-mode))))
   :diminish auto-highlight-symbol-mode)
