@@ -128,6 +128,7 @@
                             (flyspell-mode 1)
                             (visual-line-mode 0)
                             (toggle-truncate-lines 1)
+                            (show-paren-mode t)
                             (lambda ()
                               ;; turn off `linum-mode' when there are more than 5000 lines
                               (if (buffer-too-big-p) (linum-mode -1)))
