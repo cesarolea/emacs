@@ -532,6 +532,13 @@
 (use-package atomic-chrome :ensure t
   :defer 5
   :config
+  (setq atomic-chrome-default-major-mode 'text-mode)
+  (setq atomic-chrome-buffer-open-style 'frame)
   (setq atomic-chrome-url-major-mode-alist
-        '(("flotiya\\.local" . js2-mode)))
-  (atomic-chrome-start-server))
+        '(("flotiya\\.local" . js2-mode)
+          ("phabricator" . text-mode)))
+  (atomic-chrome-start-server)
+  :diminish AtomicChrome)
+
+(use-package mic-paren :ensure t
+  :config (paren-activate))
