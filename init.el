@@ -26,9 +26,6 @@
 ; use a different ispell
 (setq-default ispell-program-name "/usr/local/bin/aspell")
 
-; default font
-(set-frame-font "Inconsolata-13")
-
 ; sources
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
