@@ -541,7 +541,3 @@
           ("phabricator" . text-mode)))
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
-
-(use-package mic-paren :ensure t
-  :config
-  (paren-activate))
