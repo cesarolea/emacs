@@ -203,7 +203,8 @@
   :diminish auto-highlight-symbol-mode)
 
 (use-package smartparens :ensure t :pin melpa-stable
-  :config (show-smartparens-global-mode +1))
+  :config ;(show-smartparens-global-mode +1)
+  )
 
 (use-package eyebrowse :ensure t
   :init (progn
@@ -542,4 +543,5 @@
   :diminish AtomicChrome)
 
 (use-package mic-paren :ensure t
-  :config (paren-activate))
+  :config
+  (paren-activate))
