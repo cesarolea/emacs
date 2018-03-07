@@ -5,6 +5,19 @@
            tool-bar-mode))
   (funcall mode 0))
 
+; Avoid garbage collection during startup
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+
+(defvar doom--file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+
+; Package.el initialization is expensive, so disable it! package.el is sneaky though,
+; it will initialize itself if you’re not careful. Not on my watch, criminal scum!
+(setq package-enable-at-startup nil ; don't auto-initialize!
+      ;; don't add that `custom-set-variables' block to my initl!
+      package--init-file-ensured t)
+
 ;: OSX keybindings
 (setq mac-command-modifier 'super)
 (setq ns-function-modifier 'hyper)
@@ -63,3 +76,10 @@
   (interactive)
   (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
 (put 'dired-find-alternate-file 'disabled nil)
+
+; Reset GC as late as possible;
+(add-hook 'emacs-startup-hook
+          '(lambda ()
+             (setq gc-cons-threshold 16777216)
+             (setq gc-cons-percentage 0.1)
+             (setq file-name-handler-alist doom--file-name-handler-alist)))

@@ -538,7 +538,6 @@
   :defer 5
   :config
   (setq atomic-chrome-default-major-mode 'text-mode)
-  (setq atomic-chrome-buffer-open-style 'frame)
   (setq atomic-chrome-url-major-mode-alist
         '(("flotiya\\.local" . js2-mode)
           ("phabricator" . text-mode)))

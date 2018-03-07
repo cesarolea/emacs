@@ -430,12 +430,5 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;; If you change buffer, or focus, disable the current buffer’s mark
 (transient-mark-mode 1)
 
-;; put fortune in scratch buffer
-(setq initial-scratch-message 
-      (format 
-       ";; %s\n\n" 
-       (replace-regexp-in-string  
-        "\n" "\n;; " ; comment each line
-        (replace-regexp-in-string 
-         "\n$" ""    ; remove trailing linebreak
-         (shell-command-to-string "fortune")))))
+;; reduce lag when scrolling down
+(setq auto-window-vscroll nil)
