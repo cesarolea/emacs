@@ -170,7 +170,9 @@
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
             (helm-projectile-on)))
 
-(use-package helm-ag :ensure t :pin melpa-stable
+(use-package helm-ag
+  :ensure t
+  :pin melpa-stable
   :config (progn (setq helm-ag-fuzzy-match t)
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
@@ -455,10 +457,10 @@
 (use-package buffer-flip
   :ensure t
   :chords (("u8" . buffer-flip))
-  :bind  (:map buffer-flip-map
-               ( "8" .   buffer-flip-forward) 
-               ( "*" .   buffer-flip-backward) 
-               ( "C-g" . buffer-flip-abort)))
+  :bind (:map buffer-flip-map
+              ( "8" .   buffer-flip-forward) 
+              ( "*" .   buffer-flip-backward) 
+              ( "C-g" . buffer-flip-abort)))
 
 (use-package smooth-scroll
   :ensure t
