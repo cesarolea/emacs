@@ -34,6 +34,10 @@
 (eval-after-load "autorevert"
   '(diminish 'auto-revert-mode))
 
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
+
 (use-package zerodark-theme :ensure t
   :config
   (load-theme 'zerodark t)
@@ -164,7 +168,9 @@
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
             (helm-projectile-on)))
 
-(use-package helm-ag :ensure t
+(use-package helm-ag
+  :ensure t
+  :pin melpa-stable
   :config (progn (setq helm-ag-fuzzy-match t)
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
@@ -448,9 +454,11 @@
 
 (use-package buffer-flip
   :ensure t
-  :config (progn
-            (key-chord-mode t)
-            (buffer-flip-mode)))
+  :chords (("u8" . buffer-flip))
+  :bind (:map buffer-flip-map
+              ( "8" .   buffer-flip-forward) 
+              ( "*" .   buffer-flip-backward) 
+              ( "C-g" . buffer-flip-abort)))
 
 (use-package smooth-scroll
   :ensure t
