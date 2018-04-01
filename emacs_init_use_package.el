@@ -34,6 +34,10 @@
 (eval-after-load "autorevert"
   '(diminish 'auto-revert-mode))
 
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
+
 (use-package zerodark-theme :ensure t
   :config
   (load-theme 'zerodark t)
@@ -113,7 +117,7 @@
 
 (use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
-(use-package helm :ensure t
+(use-package helm :ensure t :pin melpa-stable
   :config (progn
             ;; (require 'helm-files)
 
@@ -149,22 +153,24 @@
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile :ensure t
+(use-package helm-projectile :ensure t :pin melpa-stable
   :config (progn
             (defun contextual-helm-projectile ()
               (if (and (buffer-file-name)
                        (projectile-project-p))
                   (progn
                     (global-unset-key "\C-x\ a")
-                    (global-set-key "\C-x\ a" 'helm-projectile))
+                    (global-set-key "\C-x\ a" 'helm-projectile)
+                    )
                 (progn
                   (global-unset-key "\C-x\ a")
-                  (global-set-key "\C-x\ a" 'helm-for-files))))
+                  (global-set-key "\C-x\ a" 'helm-for-files)
+                  )))
             (contextual-helm-projectile)
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
             (helm-projectile-on)))
 
-(use-package helm-ag :ensure t
+(use-package helm-ag :ensure t :pin melpa-stable
   :config (progn (setq helm-ag-fuzzy-match t)
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
@@ -448,9 +454,11 @@
 
 (use-package buffer-flip
   :ensure t
-  :config (progn
-            (key-chord-mode t)
-            (buffer-flip-mode)))
+  :chords (("u8" . buffer-flip))
+  :bind  (:map buffer-flip-map
+               ( "8" .   buffer-flip-forward) 
+               ( "*" .   buffer-flip-backward) 
+               ( "C-g" . buffer-flip-abort)))
 
 (use-package smooth-scroll
   :ensure t
@@ -535,7 +543,7 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package atomic-chrome :ensure t
-  :defer 5
+  :defer 10
   :config
   (setq atomic-chrome-default-major-mode 'text-mode)
   (setq atomic-chrome-url-major-mode-alist
@@ -543,3 +551,7 @@
           ("phabricator" . text-mode)))
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
+
+(use-package dockerfile-mode
+  :defer 10
+  :diminish Dockerfile)
