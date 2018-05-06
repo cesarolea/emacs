@@ -166,6 +166,7 @@
                   (global-set-key "\C-x\ a" 'helm-for-files))))
             (contextual-helm-projectile)
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+            (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
             (helm-projectile-on)))
 
 (use-package helm-ag

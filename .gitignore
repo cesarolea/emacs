@@ -30,3 +30,4 @@ semanticdb/
 var/
 helm-adaptive-history
 games/
+projectile.cache
