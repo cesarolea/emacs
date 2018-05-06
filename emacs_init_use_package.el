@@ -117,7 +117,7 @@
 
 (use-package helm-flx :ensure t :config (helm-flx-mode +1))
 
-(use-package helm :ensure t
+(use-package helm :ensure t :pin melpa-stable
   :config (progn
             ;; (require 'helm-files)
 
@@ -153,17 +153,19 @@
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile :ensure t
+(use-package helm-projectile :ensure t :pin melpa-stable
   :config (progn
             (defun contextual-helm-projectile ()
               (if (and (buffer-file-name)
                        (projectile-project-p))
                   (progn
                     (global-unset-key "\C-x\ a")
-                    (global-set-key "\C-x\ a" 'helm-projectile))
+                    (global-set-key "\C-x\ a" 'helm-projectile)
+                    )
                 (progn
                   (global-unset-key "\C-x\ a")
-                  (global-set-key "\C-x\ a" 'helm-for-files))))
+                  (global-set-key "\C-x\ a" 'helm-for-files)
+                  )))
             (contextual-helm-projectile)
             (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
             (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
@@ -544,7 +546,7 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package atomic-chrome :ensure t
-  :defer 5
+  :defer 10
   :config
   (setq atomic-chrome-default-major-mode 'text-mode)
   (setq atomic-chrome-url-major-mode-alist
@@ -552,3 +554,7 @@
           ("phabricator" . text-mode)))
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
+
+(use-package dockerfile-mode
+  :defer 10
+  :diminish Dockerfile)
