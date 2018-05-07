@@ -557,3 +557,7 @@
 (use-package dockerfile-mode
   :defer 10
   :diminish Dockerfile)
+
+(use-package yaml-mode
+  :defer 10
+  :diminish YAML)
