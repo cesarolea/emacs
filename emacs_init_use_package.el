@@ -555,10 +555,6 @@
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
 
-(use-package dockerfile-mode
-  :defer 10
-  :diminish Dockerfile)
+(use-package dockerfile-mode :ensure t :defer 10)
 
-(use-package yaml-mode
-  :defer 10
-  :diminish YAML)
+(use-package yaml-mode :ensure t :defer 10)
