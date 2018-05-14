@@ -56,20 +56,21 @@
 
 (use-package recentf :ensure t
   :defer 5
-  :config (progn
-	    (recentf-mode 1)
-	    (setq recentf-max-menu-items 25))
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
 (use-package saveplace :ensure t
-  :init (progn
-	  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
-	  (setq-default save-place t)))
+  :init
+  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
+  (setq-default save-place t))
 
 (use-package company :ensure t
-  :config (progn
-	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
-	    (global-set-key (kbd "C-'") 'company-complete))
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (global-set-key (kbd "C-'") 'company-complete)
+  (global-company-mode)
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
