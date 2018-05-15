@@ -14,6 +14,7 @@
 ;(straight-use-package 'use-package)
 
 ;; Now use-package will use straight.el to automatically install missing packages if you provide :ensure t
+(defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -56,20 +57,53 @@
 
 (use-package recentf :ensure t
   :defer 5
-  :config (progn
-	    (recentf-mode 1)
-	    (setq recentf-max-menu-items 25))
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
 (use-package saveplace :ensure t
-  :init (progn
-	  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
-	  (setq-default save-place t)))
+  :init
+  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
+  (setq-default save-place t))
+
+(use-package savehist
+  :config
+  (setq savehist-additional-variables
+        ;; search entries
+        '(search-ring regexp-search-ring)
+        ;; save every minute
+        savehist-autosave-interval 60
+        ;; keep the home clean
+        savehist-file (expand-file-name "savehist" cesaro-savefile-dir))
+  (savehist-mode +1))
+
+(use-package windmove
+  :config
+  ;; use shift + arrow keys to switch between visible buffers
+  (windmove-default-keybindings))
+
+(use-package dired
+  :config
+  ;; dired - reuse current buffer by pressing 'a'
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; always delete and copy recursively
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+
+  ;; if there is a dired buffer displayed in the next window, use its
+  ;; current subdir, instead of the current subdir of this dired buffer
+  (setq dired-dwim-target t)
+
+  ;; enable some really cool extensions like C-x C-j(dired-jump)
+  (require 'dired-x))
 
 (use-package company :ensure t
-  :config (progn
-	    (add-hook 'emacs-lisp-mode-hook 'company-mode)
-	    (global-set-key (kbd "C-'") 'company-complete))
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (global-set-key (kbd "C-'") 'company-complete)
+  (global-company-mode)
   :diminish company-mode)
 
 (use-package js2-mode :ensure t
@@ -93,7 +127,7 @@
               (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
                 (when file
                   (find-file file))))
-            
+
             (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
 
 (use-package ido-vertical-mode :ensure t
@@ -132,7 +166,7 @@
 
             ;;  Restore popwin-mode after a Helm session finishes.
             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
-            
+
             (setq helm-idle-delay 0.1)
             (setq helm-input-idle-delay 0.1)
             (setq helm-follow-mode-persistent t)
@@ -226,12 +260,17 @@
           (eyebrowse-switch-to-window-config-0))
   :diminish eyebrowse-mode)
 
-(use-package undo-tree :ensure t
-  :config (progn
-            (global-undo-tree-mode 1)
-            (defalias 'redo 'undo-tree-redo)
-            (global-set-key (kbd "s-z") 'undo)
-            (global-set-key (kbd "M-z") 'redo))
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode 1)
+  (defalias 'redo 'undo-tree-redo)
+  (global-set-key (kbd "s-z") 'undo)
+  (global-set-key (kbd "M-z") 'redo)
+  ;; autosave the undo-tree history
+  (setq undo-tree-history-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq undo-tree-auto-save-history t)
   :diminish undo-tree-mode)
 
 (use-package web-mode :ensure t
@@ -284,10 +323,10 @@
             (add-hook 'org-mode-hook (lambda ()
                                        (flyspell-mode 1)
                                        (electric-pair-mode 1)))
-                                       
+
             (defun set-exec-path-from-shell-PATH ()
-              (let ((path-from-shell 
-                     (replace-regexp-in-string "[[:space:]\n]*$" "" 
+              (let ((path-from-shell
+                     (replace-regexp-in-string "[[:space:]\n]*$" ""
                                                (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
                 (setenv "PATH" path-from-shell)
                 (setq exec-path (split-string path-from-shell path-separator))))
@@ -352,7 +391,7 @@
 	    (add-hook 'cider-repl-mode-hook #'company-mode)
 	    (add-hook 'cider-mode-hook #'company-mode)
 	    (add-hook 'clojure-mode-hook #'company-mode)
-	    
+
 	    (setq nrepl-log-messages t ; useful for debugging
 		  cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
 		  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
@@ -361,7 +400,7 @@
 		  cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
       cider-repl-display-help-banner nil ; don't display start banner
       nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
-      ) 
+      )
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
@@ -381,7 +420,7 @@
               (cljr-add-keybindings-with-prefix "C-c C-m"))
             (add-hook 'clojure-mode-hook #'refactor-mode-hook))
   :diminish clj-refactor-mode)
- 
+
 (use-package magit
   :ensure t
   :bind ("<f10>" . magit-status)
@@ -398,16 +437,15 @@
 (use-package hydra :ensure t :pin melpa-stable
   :config (load "~/.emacs.d/hydras.el"))
 
- 
+
 (use-package reveal-in-osx-finder :ensure t
   :defer 5
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
 (use-package anzu :ensure t :pin melpa-stable
-  :config (progn
-            (global-anzu-mode)
-            (set-face-attribute 'anzu-mode-line nil
-                                :foreground "white" :weight 'bold))
+  :config
+  (global-anzu-mode)
+  (set-face-attribute 'anzu-mode-line nil :foreground "white" :weight 'bold)
   :bind ("M-%" . anzu-query-replace)
   :diminish anzu-mode)
 
@@ -432,8 +470,17 @@
 
 (use-package impatient-mode :ensure t
   :defer 5
-  :config (progn
-            (setq httpd-port 8181)))
+  :config
+  (setq httpd-port 8181))
+
+(use-package whitespace
+  :init
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook #'whitespace-mode))
+  (add-hook 'before-save-hook #'whitespace-cleanup)
+  :config
+  (setq whitespace-line-column 100) ;; limit line length
+  (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
 (use-package shrink-whitespace
   :ensure t
@@ -459,8 +506,8 @@
   :ensure t
   :chords (("u8" . buffer-flip))
   :bind (:map buffer-flip-map
-              ( "8" .   buffer-flip-forward) 
-              ( "*" .   buffer-flip-backward) 
+              ( "8" .   buffer-flip-forward)
+              ( "*" .   buffer-flip-backward)
               ( "C-g" . buffer-flip-abort)))
 
 (use-package smooth-scroll
@@ -514,7 +561,7 @@
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
 
- (use-package restclient-helm :ensure t :defer 5)
+(use-package restclient-helm :ensure t :defer 5)
 
 (use-package terraform-mode :ensure t :defer 5)
 
@@ -566,3 +613,20 @@
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package super-save
+  :ensure t
+  :config
+  (super-save-mode +1)
+  :diminish super-save-mode)
+
+;; temporarily highlight changes from yanking, etc
+(use-package volatile-highlights
+  :ensure t
+  :config
+  (volatile-highlights-mode +1)
+  :diminish volatile-highlights-mode)
+
+(use-package dockerfile-mode :ensure t :defer 10)
+
+(use-package yaml-mode :ensure t :defer 10)

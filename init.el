@@ -9,6 +9,9 @@
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
+;; Always load newest byte code
+(setq load-prefer-newer t)
+
 (defvar doom--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 
@@ -80,6 +83,6 @@
 ; Reset GC as late as possible;
 (add-hook 'emacs-startup-hook
           '(lambda ()
-             (setq gc-cons-threshold 16777216)
+             (setq gc-cons-threshold 50000000)
              (setq gc-cons-percentage 0.1)
              (setq file-name-handler-alist doom--file-name-handler-alist)))

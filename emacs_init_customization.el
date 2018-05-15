@@ -26,7 +26,7 @@
 (setq next-line-add-newlines t)
 
 ;; stop blinking cursor
-(blink-cursor-mode 0)
+(blink-cursor-mode -1)
 
 ;; force new frames into existing window
 (setq ns-pop-up-frames nil)
@@ -109,6 +109,7 @@
 
 ;; scroll PDFs with the mouse wheel
 (setq doc-view-continuous t)
+
 ;; so PDFs don't hurt my eyes
 (setq doc-view-resolution 300)
 
@@ -289,7 +290,7 @@ Version 2015-05-06"
                   (>= (point) beg))
         (skip-chars-backward (rx (syntax expression-prefix)))
         (setq p (point-marker)))
-      ;; Re-comment everything before it. 
+      ;; Re-comment everything before it.
       (ignore-errors
         (comment-region beg p))
       ;; And everything after it.
@@ -339,11 +340,6 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;; dired sane file sizes
 (setq dired-listing-switches "-alh")
-
-;; 100 column indicator fill
-(setq-default
- whitespace-line-column 100
- whitespace-style       '(face lines-tail))
 
 ;; switch between two most recent buffers
 (defun switch-to-previous-buffer ()
@@ -415,9 +411,6 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 ;; for ascii chars
 (setq search-default-mode #'char-fold-to-regexp)
 
-;; delete region when start typing
-(delete-selection-mode 1)
-
 ;; increase garbage collection threshold
 (setq gc-cons-threshold (* 100 1024 1024)) ;; 100 mb
 
@@ -432,3 +425,18 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ;; reduce lag when scrolling down
 (setq auto-window-vscroll nil)
+
+;; nice scrolling
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+
+;; more useful frame title, that show either a file or a
+;; buffer name (if the buffer isn't visiting a file)
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+
+;; Newline at end of file
+(setq require-final-newline t)
