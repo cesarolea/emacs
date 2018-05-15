@@ -555,6 +555,14 @@
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
 
-(use-package dockerfile-mode
+(use-package dockerfile-mode :ensure t
   :defer 10
   :diminish Dockerfile)
+
+(use-package irony :ensure t
+  :defer 10
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
