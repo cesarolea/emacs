@@ -43,11 +43,7 @@
   :config
   (load-theme 'zerodark t)
   (zerodark-setup-modeline-format)
-  (global-hl-line-mode 1)
-  (set-frame-font "Inconsolata-13")
-  ;; so default font works for new frames
-  (add-to-list 'default-frame-alist
-               '(font . "Inconsolata-13")))
+  (global-hl-line-mode 1))
 
 (use-package exec-path-from-shell :ensure t
   :config (exec-path-from-shell-initialize))

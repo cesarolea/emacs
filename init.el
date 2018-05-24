@@ -42,6 +42,21 @@
 ; use a different ispell
 (setq-default ispell-program-name "/usr/local/bin/aspell")
 
+; custom font size depending on resolution
+(defun fontify-frame (frame)
+  (interactive)
+  (if window-system
+      (progn
+        (if (> (x-display-pixel-width) 5000)
+            (set-frame-parameter frame 'font "Inconsolata 19") ;; 4K display
+          (set-frame-parameter frame 'font "Inconsolata 13")))))
+
+;; Fontify current frame
+(fontify-frame nil)
+
+;; Fontify any future frames
+(push 'fontify-frame after-make-frame-functions)
+
 ; sources
 (require 'package)
 (setq package-archives '(("org"       . "http://orgmode.org/elpa/")
