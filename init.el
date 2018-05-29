@@ -58,12 +58,12 @@
 (push 'fontify-frame after-make-frame-functions)
 
 ; sources
-(require 'package)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
-                         ("melpa"     . "http://melpa.org/packages/")
-                         ("tromey"    . "http://tromey.com/elpa/")))
+;(require 'package)
+(setq package-archives '(("org"          . "https://orgmode.org/elpa/")
+                         ("gnu"          . "https://elpa.gnu.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("melpa"        . "https://melpa.org/packages/")
+                         ("tromey"       . "https://tromey.com/elpa/")))
 
 (package-initialize)
 
