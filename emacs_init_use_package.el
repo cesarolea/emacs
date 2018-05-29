@@ -313,6 +313,7 @@
             (global-set-key "\C-ca" 'org-agenda)
             (global-set-key "\C-cb" 'org-iswitchb)
 
+            (setq org-default-notes-file "~/Sync/Org/refile.org")
             (setq org-log-done t)
 
             (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))

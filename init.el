@@ -51,14 +51,10 @@
             (set-frame-parameter frame 'font "Inconsolata 19") ;; 4K display
           (set-frame-parameter frame 'font "Inconsolata 13")))))
 
-;; Fontify current frame
-(fontify-frame nil)
-
 ;; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
 
 ; sources
-;(require 'package)
 (setq package-archives '(("org"          . "https://orgmode.org/elpa/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -73,9 +69,6 @@
 (load "~/.emacs.d/emacs_init_customization.el")
 (load "~/.emacs.d/emacs_init_utility.el")
 (load "~/.emacs.d/emacs_init_keymaps.el")
-
-;; load files depending on hostname
-(load "~/.emacs.d/emacs_init_galadriel.local.el")
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
@@ -94,6 +87,9 @@
   (interactive)
   (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; Fontify current frame
+(fontify-frame nil)
 
 ; Reset GC as late as possible;
 (add-hook 'emacs-startup-hook
