@@ -36,7 +36,7 @@
   '(diminish 'auto-revert-mode))
 
 (use-package use-package-chords
-  :ensure t :pin melpa-stable
+  :ensure t :pin melpa
   :config (key-chord-mode 1))
 
 (use-package zerodark-theme :ensure t :pin melpa-stable
@@ -236,7 +236,7 @@
             (global-set-key (kbd "<f15>") 'highlight-symbol-next)
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
-(use-package auto-highlight-symbol :ensure t :pin melpa-stable
+(use-package auto-highlight-symbol :ensure t :pin melpa
   :defer 5
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
@@ -257,7 +257,7 @@
   :diminish eyebrowse-mode)
 
 (use-package undo-tree
-  :ensure t :pin melpa-stable
+  :ensure t :pin melpa
   :config
   (global-undo-tree-mode 1)
   (defalias 'redo 'undo-tree-redo)
@@ -290,7 +290,7 @@
           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
           (define-key global-map (kbd "C-x o") nil)))
 
-(use-package rainbow-mode :ensure t :pin melpa-stable
+(use-package rainbow-mode :ensure t :pin melpa
  :defer 5
  :diminish rainbow-mode)
 
@@ -302,7 +302,7 @@
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package ox-reveal
-  :ensure t :pin melpa-stable
+  :ensure t :pin melpa
   :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
 (use-package org
@@ -521,7 +521,7 @@
 
 (use-package origami
   :defer 5
-  :ensure t :pin melpa-stable
+  :ensure t :pin melpa
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
@@ -542,7 +542,7 @@
 
 (use-package fireplace :ensure t :pin melpa-stable :defer 10)
 
-(use-package restclient :ensure t :pin melpa-stable)
+(use-package restclient :ensure t :pin melpa)
 
 (use-package company-restclient
   :ensure t :pin melpa-stable
