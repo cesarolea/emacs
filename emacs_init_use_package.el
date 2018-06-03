@@ -237,16 +237,13 @@
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
 (use-package auto-highlight-symbol :ensure t :pin melpa
-  :defer 5
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (auto-highlight-symbol-mode t)
                                         (flyspell-prog-mode))))
   :diminish auto-highlight-symbol-mode)
 
-(use-package smartparens :ensure t :pin melpa-stable
-  :config ;(show-smartparens-global-mode +1)
-  )
+(use-package smartparens :ensure t :pin melpa-stable)
 
 (use-package eyebrowse :ensure t :pin melpa-stable
   :init (progn
@@ -470,9 +467,9 @@
 
 (use-package whitespace
   :init
-  (dolist (hook '(prog-mode-hook text-mode-hook))
+  (dolist (hook '(prog-mode-hook))
     (add-hook hook #'whitespace-mode))
-  (add-hook 'before-save-hook #'whitespace-cleanup)
+  ;(add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 100) ;; limit line length
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
@@ -601,26 +598,14 @@
   :config
   ;; Enable irony for all c++ files, and platformio-mode only
   ;; when needed (platformio.ini present in project root).
-  (add-hook 'c++-mode-hook (lambda ()
-                             (irony-mode)
-                             (irony-eldoc)
-                             (platformio-conditionally-enable)))
-
-  ;; Use irony's completion functions.
-  (add-hook 'irony-mode-hook
-            (lambda ()
-              (define-key irony-mode-map [remap completion-at-point]
-                'irony-completion-at-point-async)
-
-              (define-key irony-mode-map [remap complete-symbol]
-                'irony-completion-at-point-async)
-
-              (irony-cdb-autosetup-compile-options))))
+  (add-hook 'c++-mode-hook (lambda () (platformio-conditionally-enable))))
 
 (use-package super-save
   :ensure t :pin melpa-stable
   :config
   (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t
+        auto-save-default nil)
   :diminish super-save-mode)
 
 ;; temporarily highlight changes from yanking, etc
