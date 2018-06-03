@@ -48,8 +48,8 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 5000)
-            (set-frame-parameter frame 'font "Inconsolata 19") ;; 4K display
-          (set-frame-parameter frame 'font "Inconsolata 13")))))
+            (set-frame-parameter frame 'font "Inconsolata 18") ;; 4K display
+          (set-frame-parameter frame 'font "Inconsolata 14")))))
 
 ;; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)

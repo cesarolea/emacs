@@ -596,20 +596,9 @@
   :defer 10
   :diminish Dockerfile)
 
-(use-package irony :ensure t :pin melpa-stable
-  :defer 10
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  :diminish irony)
-
 (use-package platformio-mode :ensure t :pin melpa-stable
   :defer 10
   :config
-  (add-to-list 'company-backends 'company-irony)
-
   ;; Enable irony for all c++ files, and platformio-mode only
   ;; when needed (platformio.ini present in project root).
   (add-hook 'c++-mode-hook (lambda ()
