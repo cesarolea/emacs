@@ -633,3 +633,13 @@
 (use-package dockerfile-mode :ensure t :pin melpa-stable :defer 10)
 
 (use-package yaml-mode :ensure t :pin melpa-stable :defer 10)
+
+(use-package all-the-icons :ensure t :pin melpa-stable)
+
+(use-package neotree :ensure t :pin melpa-stable
+  :config
+  (global-set-key [f7] 'neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
+        neo-smart-open t
+        neo-autorefresh t
+        neo-window-width (if (> (x-display-pixel-width) 5000) 50 35)))
