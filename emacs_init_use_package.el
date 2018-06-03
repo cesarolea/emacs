@@ -627,4 +627,4 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
         neo-smart-open t
         neo-autorefresh t
-        neo-window-width (if (> (x-display-pixel-width) 5000) 50 35)))
+        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35)))
