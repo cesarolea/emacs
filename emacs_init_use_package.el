@@ -35,9 +35,19 @@
 (eval-after-load "autorevert"
   '(diminish 'auto-revert-mode))
 
+(use-package use-package-ensure-system-package
+  :ensure t)
+
 (use-package use-package-chords
   :ensure t :pin melpa
   :config (key-chord-mode 1))
+
+(use-package auto-package-update
+  :ensure t :pin melpa-stable
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
 
 (use-package zerodark-theme :ensure t :pin melpa-stable
   :config
@@ -403,15 +413,6 @@
 (use-package helm-cider
   :ensure t :pin melpa-stable
   :config (helm-cider-mode 1))
-
-(use-package clj-refactor
-  :ensure t :pin melpa-stable
-  :config (progn
-            (defun refactor-mode-hook ()
-              (clj-refactor-mode 1)
-              (cljr-add-keybindings-with-prefix "C-c C-m"))
-            (add-hook 'clojure-mode-hook #'refactor-mode-hook))
-  :diminish clj-refactor-mode)
 
 (use-package magit
   :ensure t :pin melpa-stable
