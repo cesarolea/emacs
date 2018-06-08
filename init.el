@@ -5,6 +5,8 @@
            tool-bar-mode))
   (funcall mode 0))
 
+(setq create-lockfiles nil)
+
 ; Avoid garbage collection during startup
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
