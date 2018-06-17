@@ -122,7 +122,7 @@
 
 ;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
-                            (linum-mode 1)
+                            (display-line-numbers-mode 1)
                             (flycheck-mode 1)
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
@@ -132,7 +132,7 @@
                             (show-paren-mode t)
                             (lambda ()
                               ;; turn off `linum-mode' when there are more than 5000 lines
-                              (if (buffer-too-big-p) (linum-mode -1)))
+                              (if (buffer-too-big-p) (display-line-numbers-mode -1)))
                             (whitespace-mode 1)
                             (lambda ()
                               (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp))))
@@ -145,7 +145,7 @@
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
 			    (electric-pair-mode 0)
-			    (linum-mode 0)
+			    (display-line-numbers-mode -1)
 			    (flycheck-mode 0)
           ;(set-input-method "spanish-prefix")
           ))
