@@ -628,4 +628,7 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
         neo-smart-open t
         neo-autorefresh t
-        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35)))
+        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35))
+  (defun text-scale-twice ()
+    (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
+  (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice))))
