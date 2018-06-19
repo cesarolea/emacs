@@ -120,6 +120,10 @@
   (or (> (buffer-size) (* 5000 80))
       (> (line-number-at-pos (point-max)) 5000)))
 
+;; line number configuration
+(setq display-line-numbers-grow-only t
+      display-line-numbers-type "relative")
+
 ;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
                             (display-line-numbers-mode 1)
