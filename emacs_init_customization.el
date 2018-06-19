@@ -124,9 +124,10 @@
 (setq display-line-numbers-grow-only t
       display-line-numbers-type "relative")
 
+(global-set-key [f6] 'display-line-numbers-mode)
+
 ;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
-                            (display-line-numbers-mode 1)
                             (flycheck-mode 1)
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
@@ -135,7 +136,7 @@
                             (toggle-truncate-lines 1)
                             (show-paren-mode t)
                             (lambda ()
-                              ;; turn off `linum-mode' when there are more than 5000 lines
+                              ;; turn off `display-line-numbers-mode' when there are more than 5000 lines
                               (if (buffer-too-big-p) (display-line-numbers-mode -1)))
                             (whitespace-mode 1)
                             (lambda ()
@@ -149,7 +150,6 @@
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
 			    (electric-pair-mode 0)
-			    (display-line-numbers-mode -1)
 			    (flycheck-mode 0)
           ;(set-input-method "spanish-prefix")
           ))
@@ -443,4 +443,4 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
                  "%b"))))
 
 ;; Newline at end of file
-(setq require-final-newline t)
+(setq require-final-newline -1)
