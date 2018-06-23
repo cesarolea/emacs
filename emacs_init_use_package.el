@@ -109,6 +109,7 @@
   :config
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (global-set-key (kbd "C-'") 'company-complete)
+  (add-to-list 'company-backends 'company-ispell)
   (global-company-mode)
   :diminish company-mode)
 
@@ -264,7 +265,7 @@
   :diminish eyebrowse-mode)
 
 (use-package undo-tree
-  :ensure t :pin melpa
+  :ensure t
   :config
   (global-undo-tree-mode 1)
   (defalias 'redo 'undo-tree-redo)
@@ -554,7 +555,7 @@
 (use-package terraform-mode :ensure t :pin melpa-stable :defer 10)
 
 (use-package dumb-jump
-  :ensure t :pin melpa-stable
+  :ensure t
   :config (progn
             (dumb-jump-mode t)
             (global-set-key (kbd "<f12>") 'dumb-jump-go)
