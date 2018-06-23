@@ -56,14 +56,24 @@
 ;; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
 
-; sources
-(setq package-archives '(("org"          . "https://orgmode.org/elpa/")
-                         ("gnu"          . "https://elpa.gnu.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("melpa"        . "https://melpa.org/packages/")))
+;; sources
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 4))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(package-initialize)
+; execution path so homebrew binaries work
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
+(load "~/.emacs.d/emacs_init_straight.el")
 (load "~/.emacs.d/emacs_init_use_package.el")
 
 ; custom init files
@@ -74,19 +84,12 @@
 (load custom-file)
 (put 'erase-buffer 'disabled nil)
 
-; Set exec path from shell variables
-(exec-path-from-shell-initialize)
-
 (add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
 
 (set-fontset-font
  t 'symbol
  (font-spec :family "Apple Color Emoji") nil 'prepend)
 
-(defun recompile-init ()
-  "Recompile init files"
-  (interactive)
-  (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;; Fontify current frame

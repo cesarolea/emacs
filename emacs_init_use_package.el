@@ -1,79 +1,51 @@
-;; use straight.el for retrieving packages
-;(let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
-;      (bootstrap-version 2))
-;  (unless (file-exists-p bootstrap-file)
-;    (with-current-buffer
-;        (url-retrieve-synchronously
-;         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-;         'silent 'inhibit-cookies)
-;      (goto-char (point-max))
-;      (eval-print-last-sexp)))
-;  (load bootstrap-file nil 'nomessage))
-
-;; install use-package with straight.el
-;(straight-use-package 'use-package)
-
 ;; Now use-package will use straight.el to automatically install missing packages if you provide :ensure t
 (defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-
-(require 'diminish)
 (require 'bind-key)
 
-(diminish 'visual-line-mode)
-(diminish 'abbrev-mode)
+(use-package diminish)
 
-(eval-after-load "eldoc"
-  '(diminish 'eldoc-mode))
+(eval-after-load "visual-line" '(diminish 'visual-line-mode))
+(eval-after-load "abbrev" '(diminish 'abbrev-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 
-(eval-after-load "autorevert"
-  '(diminish 'auto-revert-mode))
-
-(use-package use-package-ensure-system-package
-  :ensure t)
+(use-package use-package-ensure-system-package)
 
 (use-package use-package-chords
-  :ensure t :pin melpa
   :config (key-chord-mode 1))
 
 (use-package auto-package-update
-  :ensure t :pin melpa-stable
   :config
   (setq auto-package-update-delete-old-versions t)
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
-(use-package zerodark-theme :ensure t :pin melpa-stable
+(use-package zerodark-theme
   :config
   (load-theme 'zerodark t)
   (zerodark-setup-modeline-format)
   (global-hl-line-mode 1))
 
-(use-package exec-path-from-shell :ensure t :pin melpa-stable
+(use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
-(use-package popwin :ensure t :pin melpa-stable
+(use-package popwin
   :config (popwin-mode 1))
 
-(use-package recentf :ensure t :pin melpa-stable
+(use-package recentf
   :defer 5
   :config
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
-(use-package saveplace :ensure t :pin melpa-stable
+(use-package saveplace
   :init
   (setq save-place-file (concat user-emacs-directory "saveplace.el"))
   (setq-default save-place t))
 
-(use-package savehist :ensure t :pin melpa-stable
+(use-package savehist
   :config
   (setq savehist-additional-variables
         ;; search entries
@@ -84,28 +56,12 @@
         savehist-file (expand-file-name "savehist" cesaro-savefile-dir))
   (savehist-mode +1))
 
-(use-package windmove :ensure t :pin melpa-stable
+(use-package windmove
   :config
   ;; use shift + arrow keys to switch between visible buffers
   (windmove-default-keybindings))
 
-(use-package dired
-  :config
-  ;; dired - reuse current buffer by pressing 'a'
-  (put 'dired-find-alternate-file 'disabled nil)
-
-  ;; always delete and copy recursively
-  (setq dired-recursive-deletes 'always)
-  (setq dired-recursive-copies 'always)
-
-  ;; if there is a dired buffer displayed in the next window, use its
-  ;; current subdir, instead of the current subdir of this dired buffer
-  (setq dired-dwim-target t)
-
-  ;; enable some really cool extensions like C-x C-j(dired-jump)
-  (require 'dired-x))
-
-(use-package company :ensure t :pin melpa-stable
+(use-package company
   :config
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (global-set-key (kbd "C-'") 'company-complete)
@@ -113,11 +69,11 @@
   (global-company-mode)
   :diminish company-mode)
 
-(use-package js2-mode :ensure t :pin melpa-stable
+(use-package js2-mode
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
 
-(use-package ido :ensure t :pin melpa-stable
+(use-package ido
   :config (progn
             (ido-mode 1)
             (setq ido-everywhere t)
@@ -137,29 +93,29 @@
 
             (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
 
-(use-package ido-vertical-mode :ensure t :pin melpa-stable
+(use-package ido-vertical-mode
   :config (progn
             (ido-mode 1)
             (ido-vertical-mode 1)
             (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
 
-(use-package flx-ido :ensure t :pin melpa-stable
+(use-package flx-ido
   :config (progn
             (flx-ido-mode 1)
             (setq ido-enable-flex-matching t
                   ido-use-faces t
                   ido-use-filename-at-point t)))
 
-(use-package projectile :ensure t :pin melpa-stable
+(use-package projectile
   :config (progn
             (setq projectile-require-project-root nil)
             (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
             (projectile-global-mode t)))
 
-(use-package helm-flx :ensure t
+(use-package helm-flx
   :config (helm-flx-mode +1))
 
-(use-package helm :ensure t :pin melpa-stable
+(use-package helm
   :config (progn
             ;; (require 'helm-files)
 
@@ -195,7 +151,7 @@
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile :ensure t :pin melpa-stable
+(use-package helm-projectile
   :config (progn
             (defun contextual-helm-projectile ()
               (if (and (buffer-file-name)
@@ -214,7 +170,6 @@
             (helm-projectile-on)))
 
 (use-package helm-ag
-  :ensure t :pin melpa-stable
   :config (progn (setq helm-ag-fuzzy-match t)
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
@@ -225,21 +180,19 @@
                    (interactive)
                    (helm-do-ag (projectile-project-root)))))
 
-(use-package helm-descbinds :ensure t :pin melpa-stable)
-
-(use-package flycheck :ensure t :pin melpa-stable
+(use-package flycheck
   :defer 5
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
             (provide 'emacs_init_packages))
   :diminish flycheck-mode)
 
-(use-package flyspell :ensure t :pin melpa-stable
+(use-package flyspell
   :defer 5
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
-(use-package highlight-symbol :ensure t :pin melpa-stable
+(use-package highlight-symbol
   :defer 5
   :config (progn
             (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
@@ -247,16 +200,16 @@
             (global-set-key (kbd "<f15>") 'highlight-symbol-next)
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
-(use-package auto-highlight-symbol :ensure t :pin melpa
+(use-package auto-highlight-symbol
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (auto-highlight-symbol-mode t)
                                         (flyspell-prog-mode))))
   :diminish auto-highlight-symbol-mode)
 
-(use-package smartparens :ensure t :pin melpa-stable)
+(use-package smartparens)
 
-(use-package eyebrowse :ensure t :pin melpa-stable
+(use-package eyebrowse
   :init (progn
           (setq eyebrowse-wrap-around t
                 eyebrowse-new-workspace t)
@@ -265,7 +218,6 @@
   :diminish eyebrowse-mode)
 
 (use-package undo-tree
-  :ensure t
   :config
   (global-undo-tree-mode 1)
   (defalias 'redo 'undo-tree-redo)
@@ -277,8 +229,8 @@
   (setq undo-tree-auto-save-history t)
   :diminish undo-tree-mode)
 
-(use-package web-mode :ensure t :pin melpa-stable
-  :defer 5
+(use-package web-mode
+  :defer 10
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
             (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -292,29 +244,27 @@
             (setq web-mode-markup-indent-offset 4)
             (setq web-mode-code-indent-offset 4)))
 
-(use-package ace-window :ensure t :pin melpa-stable
+(use-package ace-window
   :init (progn
           (define-key global-map (kbd "M-'") 'ace-window)
           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
           (define-key global-map (kbd "C-x o") nil)))
 
-(use-package rainbow-mode :ensure t :pin melpa
+(use-package rainbow-mode
  :defer 5
  :diminish rainbow-mode)
 
-(use-package rainbow-delimiters :ensure t :pin melpa-stable)
+(use-package rainbow-delimiters)
 
-(use-package expand-region :ensure t :pin melpa-stable
+(use-package expand-region
   :config (progn
             (global-set-key (kbd "C-=") 'er/expand-region)
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package ox-reveal
-  :ensure t :pin melpa
   :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
 (use-package org
-  :ensure t :pin melpa-stable
   :config (progn
             (global-set-key "\C-cl" 'org-store-link)
             (global-set-key "\C-cc" 'org-capture)
@@ -357,7 +307,7 @@
             (require 'ox-reveal) ; nice presentations
             ))
 
-(use-package paredit :ensure t :pin melpa-stable
+(use-package paredit
   :config (progn
             (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
             (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -378,7 +328,7 @@
                       'override-slime-repl-bindings-with-paredit t))
   :diminish paredit-mode)
 
-(use-package clojure-mode :ensure t :pin melpa-stable
+(use-package clojure-mode
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
   :init
@@ -389,7 +339,7 @@
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
-(use-package cider :pin melpa-stable
+(use-package cider
   :config (progn
 	    (add-hook 'cider-mode-hook 'eldoc-mode)
       (add-hook 'cider-repl-mode-hook #'eldoc-mode)
@@ -409,41 +359,37 @@
 
 	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
 
-(use-package cider-hydra :ensure t)
-
 (use-package helm-cider
-  :ensure t :pin melpa-stable
   :config (helm-cider-mode 1))
 
-(use-package magit
-  :ensure t :pin melpa-stable
-  :bind ("<f10>" . magit-status)
-  :config
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-push-always-verify nil)
-  (setq magit-branch-read-upstream-first t)
-  (if (bound-and-true-p magit-auto-revert-mode)
-      (diminish 'magit-auto-revert-mode))
-  :diminish magit-mode)
+;(use-package magit
+;  :bind ("<f10>" . magit-status)
+;  :config
+;  (setq magit-last-seen-setup-instructions "1.4.0")
+;  (setq magit-push-always-verify nil)
+;  (setq magit-branch-read-upstream-first t)
+;  (if (bound-and-true-p magit-auto-revert-mode)
+;      (diminish 'magit-auto-revert-mode))
+;  :diminish magit-mode)
 
-(use-package move-text :ensure t :pin melpa-stable)
+(use-package move-text)
 
-(use-package hydra :ensure t :pin melpa-stable
+(use-package hydra
   :config (load "~/.emacs.d/hydras.el"))
 
 
-(use-package reveal-in-osx-finder :ensure t :pin melpa-stable
+(use-package reveal-in-osx-finder
   :defer 5
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
-(use-package anzu :ensure t :pin melpa-stable
+(use-package anzu
   :config
   (global-anzu-mode)
   (set-face-attribute 'anzu-mode-line nil :foreground "white" :weight 'bold)
   :bind ("M-%" . anzu-query-replace)
   :diminish anzu-mode)
 
-(use-package bm :ensure t :pin melpa-stable
+(use-package bm
   :config (progn
             (define-fringe-bitmap 'bm-marker-left [#xF8
                                                    #xFC
@@ -462,8 +408,8 @@
                                           (bm-buffer-save-all)
                                           (bm-repository-save)))))
 
-(use-package impatient-mode :ensure t :pin melpa-stable
-  :defer 5
+(use-package impatient-mode
+  :defer 10
   :config
   (setq httpd-port 8181))
 
@@ -477,11 +423,9 @@
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
 (use-package shrink-whitespace
-  :ensure t :pin melpa-stable
   :bind ("M-SPC" . shrink-whitespace))
 
 (use-package diff-hl
-  :ensure t :pin melpa-stable
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
@@ -497,7 +441,6 @@
 ;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
 (use-package buffer-flip
-  :ensure t :pin melpa-stable
   :chords (("u8" . buffer-flip))
   :bind (:map buffer-flip-map
               ( "8" .   buffer-flip-forward)
@@ -505,14 +448,12 @@
               ( "C-g" . buffer-flip-abort)))
 
 (use-package smooth-scroll
-  :ensure t :pin melpa-stable
   :config (progn
             (smooth-scroll-mode 1)
             (setq smooth-scroll/vscroll-step-size 5))
   :diminish smooth-scroll-mode)
 
 (use-package org-bullets
-  :ensure t :pin melpa-stable
   :config (progn
             (setq org-bullets-face-name (quote org-bullet-face))
             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -520,49 +461,43 @@
 
 (use-package origami
   :defer 5
-  :ensure t :pin melpa
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
 
 (use-package git-timemachine
-  :ensure t :pin melpa-stable
   :defer 5)
 
-(use-package swiper :ensure t :pin melpa-stable)
+(use-package swiper)
 
 (use-package swiper-helm
-  :ensure t :pin melpa-stable
   :config (progn (global-set-key "\C-s" 'swiper)
                  (global-set-key "\C-r" 'swiper)))
 
-(use-package crux :ensure t :pin melpa-stable
+(use-package crux
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
-(use-package fireplace :ensure t :pin melpa-stable :defer 10)
+(use-package fireplace :defer 10)
 
-(use-package restclient :ensure t :pin melpa)
+(use-package restclient)
 
 (use-package company-restclient
-  :ensure t :pin melpa-stable
-  :defer 5
+  :defer 10
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
 
-(use-package restclient-helm :ensure t :defer 10)
+(use-package restclient-helm :defer 10)
 
-(use-package terraform-mode :ensure t :pin melpa-stable :defer 10)
+(use-package terraform-mode :defer 10)
 
 (use-package dumb-jump
-  :ensure t
   :config (progn
             (dumb-jump-mode t)
             (global-set-key (kbd "<f12>") 'dumb-jump-go)
             (setq dumb-jump-selector 'helm)))
 
 (use-package tramp
-  :defer 5
   :config
   ;; Turn off auto-save for tramp files
   (defun tramp-set-auto-save ()
@@ -581,7 +516,7 @@
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
 
-(use-package atomic-chrome :ensure t :pin melpa-stable
+(use-package atomic-chrome
   :defer 10
   :config
   (setq atomic-chrome-default-major-mode 'text-mode)
@@ -591,19 +526,11 @@
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
 
-(use-package dockerfile-mode :ensure t :pin melpa-stable
+(use-package dockerfile-mode
   :defer 10
   :diminish Dockerfile)
 
-(use-package platformio-mode :ensure t :pin melpa-stable
-  :defer 10
-  :config
-  ;; Enable irony for all c++ files, and platformio-mode only
-  ;; when needed (platformio.ini present in project root).
-  (add-hook 'c++-mode-hook (lambda () (platformio-conditionally-enable))))
-
 (use-package super-save
-  :ensure t :pin melpa-stable
   :config
   (super-save-mode +1)
   (setq super-save-auto-save-when-idle t
@@ -612,18 +539,17 @@
 
 ;; temporarily highlight changes from yanking, etc
 (use-package volatile-highlights
-  :ensure t :pin melpa-stable
   :config
   (volatile-highlights-mode +1)
   :diminish volatile-highlights-mode)
 
-(use-package dockerfile-mode :ensure t :pin melpa-stable :defer 10)
+(use-package dockerfile-mode :defer 10)
 
-(use-package yaml-mode :ensure t :pin melpa-stable :defer 10)
+(use-package yaml-mode :defer 10)
 
-(use-package all-the-icons :ensure t :pin melpa-stable)
+(use-package all-the-icons)
 
-(use-package neotree :ensure t :pin melpa-stable
+(use-package neotree
   :config
   (global-set-key [f7] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)

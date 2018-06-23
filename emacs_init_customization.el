@@ -1,22 +1,5 @@
 (defvar root-dir "~/.emacs.d/")
 
-(global-set-key "\M-/" 'hippie-expand)
-(setq hippie-expand-try-functions-list
-      '(try-expand-dabbrev
-	try-expand-dabbrev-all-buffers
-	try-expand-dabbrev-from-kill
-	try-complete-file-name-partially
-	try-complete-file-name
-	try-expand-all-abbrevs
-	try-expand-list
-	try-expand-line
-	try-complete-lisp-symbol-partially
-	try-complete-lisp-symbol))
-
-; execution path so homebrew binaries work
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
 ;; Write backup files to own directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
@@ -444,3 +427,18 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ;; Newline at end of file
 (setq require-final-newline -1)
+
+;; Dired setup
+;; reuse current buffer by pressing 'a'
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; always delete and copy recursively
+(setq dired-recursive-deletes 'always)
+(setq dired-recursive-copies 'always)
+
+;; if there is a dired buffer displayed in the next window, use its
+;; current subdir, instead of the current subdir of this dired buffer
+(setq dired-dwim-target t)
+
+;; enable some really cool extensions like C-x C-j(dired-jump)
+(require 'dired-x)
