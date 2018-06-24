@@ -291,7 +291,7 @@
       (make-local-variable 'company-backends)
       ;; add ispell
       (add-to-list 'company-backends 'company-ispell)))
-  (add-hook 'org-mode-hook 'company-add-ispell)
+  (add-hook 'text-mode-hook 'company-add-ispell)
 
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
@@ -350,8 +350,8 @@
     (when (boundp 'company-backends)
       (make-local-variable 'company-backends)
       ;; remove ispell
-      (delete 'company-backends 'company-ispell)))
-  (add-hook 'cider-mode-hook 'company-remove-ispell)
+      (setq company-backends (delete 'company-dabbrev company-backends))))
+  (add-hook 'prog-mode-hook 'company-remove-ispell)
 
   (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
@@ -360,7 +360,6 @@
 	(add-hook 'cider-repl-mode-hook #'company-mode)
 	(add-hook 'cider-mode-hook #'company-mode)
 	(add-hook 'clojure-mode-hook #'company-mode)
-  (add-to-list 'company-backends 'company-cider)
 
   (setq nrepl-log-messages t ; useful for debugging
 		    cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
