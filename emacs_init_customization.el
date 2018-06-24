@@ -106,8 +106,16 @@
 ;; line number configuration
 (setq display-line-numbers-grow-only t
       display-line-numbers-type "relative")
-
 (global-set-key [f6] 'display-line-numbers-mode)
+
+;; cleanup whitespace
+(global-set-key [f2] 'whitespace-cleanup)
+(setq whitespace-line-column 100                                        ;; limit line length
+      whitespace-style '(face tabs empty trailing lines-tail tab-mark)  ;; basic background coloring for whitespaces
+      whitespace-display-mappings '((trailing-mark 32 [183] [46])       ;; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+                                    (newline-mark 10 [182 10])          ;; LINE FEED
+                                    (tab-mark 9 [9655 9] [92 9]))       ;; tab
+      )
 
 ;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
@@ -118,24 +126,21 @@
                             (visual-line-mode 0)
                             (toggle-truncate-lines 1)
                             (show-paren-mode t)
-                            (lambda ()
-                              ;; turn off `display-line-numbers-mode' when there are more than 5000 lines
-                              (if (buffer-too-big-p) (display-line-numbers-mode -1)))
-                            (whitespace-mode 1)
-                            (lambda ()
-                              (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp))))
+                            (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
+                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
 ;; but only lisps should have rainbow delimiters
 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
+(add-hook 'clojure-mode-hook 'whitespace-mode)
+(add-hook 'emacs-lisp-mode-hook 'whitespace-mode)
+
 ;; default major mode is text mode instead of fundamental mode
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook (lambda ()
-			    (electric-pair-mode 0)
-			    (flycheck-mode 0)
-          ;(set-input-method "spanish-prefix")
-          ))
+                            (electric-pair-mode 0)
+                            (flycheck-mode 0)))
 
 ;; which function
 (which-function-mode)

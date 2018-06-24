@@ -427,15 +427,6 @@
   :config
   (setq httpd-port 8181))
 
-(use-package whitespace
-  :init
-  (dolist (hook '(prog-mode-hook))
-    (add-hook hook #'whitespace-mode))
-  ;(add-hook 'before-save-hook #'whitespace-cleanup)
-  :config
-  (setq whitespace-line-column 100) ;; limit line length
-  (setq whitespace-style '(face tabs empty trailing lines-tail)))
-
 (use-package shrink-whitespace
   :bind ("M-SPC" . shrink-whitespace))
 
@@ -570,6 +561,6 @@
         neo-smart-open t
         neo-autorefresh t
         neo-window-width (if (> (x-display-pixel-width) 5000) 40 35))
-  (defun text-scale-twice ()
-    (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 2)))
-  (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-twice))))
+  (defun text-scale-once ()
+    (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
+  (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
