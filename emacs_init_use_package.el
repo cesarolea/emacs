@@ -65,7 +65,6 @@
   :config
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (global-set-key (kbd "C-'") 'company-complete)
-  (add-to-list 'company-backends 'company-ispell)
   (global-company-mode)
   :diminish company-mode)
 
@@ -265,47 +264,54 @@
   :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
 (use-package org
-  :config (progn
-            (global-set-key "\C-cl" 'org-store-link)
-            (global-set-key "\C-cc" 'org-capture)
-            (global-set-key "\C-ca" 'org-agenda)
-            (global-set-key "\C-cb" 'org-iswitchb)
+  :config
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
 
-            (setq org-default-notes-file "~/Sync/Org/refile.org")
-            (setq org-log-done t)
+  (setq org-default-notes-file "~/Sync/Org/refile.org")
+  (setq org-log-done t)
 
-            (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-            (add-hook 'org-mode-hook (lambda ()
-                                       (flyspell-mode 1)
-                                       (electric-pair-mode 1)))
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+  (add-hook 'org-mode-hook (lambda ()
+                             (flyspell-mode 1)
+                             (electric-pair-mode 1)))
 
-            (defun set-exec-path-from-shell-PATH ()
-              (let ((path-from-shell
-                     (replace-regexp-in-string "[[:space:]\n]*$" ""
-                                               (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-                (setenv "PATH" path-from-shell)
-                (setq exec-path (split-string path-from-shell path-separator))))
-            (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
+  (defun set-exec-path-from-shell-PATH ()
+    (let ((path-from-shell
+           (replace-regexp-in-string "[[:space:]\n]*$" ""
+                                     (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
+      (setenv "PATH" path-from-shell)
+      (setq exec-path (split-string path-from-shell path-separator))))
+  (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
-            (setq org-clock-persist 'history)
-            (org-clock-persistence-insinuate)
+  (defun company-add-ispell ()
+    (when (boundp 'company-backends)
+      (make-local-variable 'company-backends)
+      ;; add ispell
+      (add-to-list 'company-backends 'company-ispell)))
+  (add-hook 'org-mode-hook 'company-add-ispell)
 
-            ;; when evaluating, reinsert and preserve indentation
-            (setq org-src-preserve-indentation t)
-            ;; preserve native color scheme for target source code
-            (setq org-src-fontify-natively t)
-            ;; smart quotes on export
-            (setq org-export-with-smart-quotes t)
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
 
-            (define-key org-mode-map (kbd "s-u") #'org-goto)
-            (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+  ;; when evaluating, reinsert and preserve indentation
+  (setq org-src-preserve-indentation t)
+  ;; preserve native color scheme for target source code
+  (setq org-src-fontify-natively t)
+  ;; smart quotes on export
+  (setq org-export-with-smart-quotes t)
 
-            (add-hook 'org-mode #'auto-fill-mode)
+  (define-key org-mode-map (kbd "s-u") #'org-goto)
+  (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
 
-            ;; exporters
-            (require 'ox-md)     ; markdown
-            (require 'ox-reveal) ; nice presentations
-            ))
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+
+  ;; exporters
+  (require 'ox-md)     ; markdown
+  (require 'ox-reveal) ; nice presentations
+)
 
 (use-package paredit
   :config (progn
@@ -334,30 +340,39 @@
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
-                                            (diminish 'subword-mode)
-                                            (cider-hydra-mode 1))))
+                                            (diminish 'subword-mode))))
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
 (use-package cider
-  :config (progn
-	    (add-hook 'cider-mode-hook 'eldoc-mode)
-      (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-	    (add-hook 'cider-repl-mode-hook #'company-mode)
-	    (add-hook 'cider-mode-hook #'company-mode)
-	    (add-hook 'clojure-mode-hook #'company-mode)
+  :config
+  (defun company-remove-ispell ()
+    (when (boundp 'company-backends)
+      (make-local-variable 'company-backends)
+      ;; remove ispell
+      (delete 'company-backends 'company-ispell)))
+  (add-hook 'cider-mode-hook 'company-remove-ispell)
 
-	    (setq nrepl-log-messages t ; useful for debugging
-		  cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-		  cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
-		  cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
-		  cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-		  cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
-      cider-repl-display-help-banner nil ; don't display start banner
-      nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
-      )
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+	(add-hook 'cider-repl-mode-hook #'company-mode)
+	(add-hook 'cider-mode-hook #'company-mode)
+	(add-hook 'clojure-mode-hook #'company-mode)
+  (add-to-list 'company-backends 'company-cider)
 
-	    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer)))
+  (setq nrepl-log-messages t ; useful for debugging
+		    cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+		    cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
+		    cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
+		    cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+		    cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+        cider-repl-display-help-banner nil ; don't display start banner
+        nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+        )
+
+  (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 (use-package helm-cider
   :config (helm-cider-mode 1))
