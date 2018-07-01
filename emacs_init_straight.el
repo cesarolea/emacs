@@ -1,7 +1,7 @@
 ;; install use-package
 (straight-use-package 'use-package)
 
-;; set proper path 
+;; set proper path
 (straight-use-package 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 

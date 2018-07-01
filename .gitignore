@@ -1,5 +1,6 @@
 straight/build/
 straight/repos/
+straight/modified/
 .last-package-update-day
 network-security.data
 *.elc
