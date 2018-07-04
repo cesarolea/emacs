@@ -69,8 +69,12 @@
   :diminish company-mode)
 
 (use-package js2-mode
-  :config (progn
-            (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+  (setq js2-mode-show-parse-errors nil
+        js2-mode-show-strict-warnings nil
+        js2-basic-offset 2
+        js-indent-level 2))
 
 (use-package ido
   :config (progn
