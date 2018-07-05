@@ -22,9 +22,15 @@
   (auto-package-update-maybe))
 
 (use-package zerodark-theme
+  :config (zerodark-setup-modeline-format))
+
+(use-package doom-themes
   :config
-  (load-theme 'zerodark t)
-  (zerodark-setup-modeline-format)
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-one t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
   (global-hl-line-mode 1))
 
 (use-package exec-path-from-shell
@@ -462,11 +468,11 @@
             (setq smooth-scroll/vscroll-step-size 5))
   :diminish smooth-scroll-mode)
 
-(use-package org-bullets
-  :config (progn
-            (setq org-bullets-face-name (quote org-bullet-face))
-            (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-            (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
+;; (use-package org-bullets
+;;   :config (progn
+;;             (setq org-bullets-face-name (quote org-bullet-face))
+;;             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;;             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
 
 (use-package origami
   :defer 5
