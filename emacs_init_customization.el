@@ -124,7 +124,6 @@
 
 ;; prog mode setup
 (add-hook 'prog-mode-hook (lambda ()
-                            (flycheck-mode 1)
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
                             (flyspell-mode 1)

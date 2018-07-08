@@ -36,20 +36,28 @@
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
-(use-package popwin
-  :config (popwin-mode 1))
+(use-package rainbow-mode :diminish rainbow-mode)
+
+(use-package flycheck
+  :config (progn
+            (add-hook 'after-init-hook #'global-flycheck-mode)
+            (provide 'emacs_init_packages))
+  :diminish flycheck-mode)
+
+(use-package popwin :config (popwin-mode 1))
 
 (use-package recentf
   :defer 5
   :config
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
+  (add-to-list 'recentf-exclude
+               (expand-file-name "~/.emacs.d/ido.last"))
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
 (use-package saveplace
   :init
-  (setq save-place-file (concat user-emacs-directory "saveplace.el"))
-  (setq-default save-place t))
+  (save-place-mode 1))
 
 (use-package savehist
   :config
@@ -60,7 +68,7 @@
         savehist-autosave-interval 60
         ;; keep the home clean
         savehist-file (expand-file-name "savehist" cesaro-savefile-dir))
-  (savehist-mode +1))
+  (savehist-mode 1))
 
 (use-package windmove
   :config
@@ -179,6 +187,7 @@
             (helm-projectile-on)))
 
 (use-package helm-ag
+  :defer 10
   :config (progn (setq helm-ag-fuzzy-match t)
                  (defun helm-ag-projectile-root (&optional ARG)
                    "Search from projectile-project-root` which defaults to current directory if no project."
@@ -189,20 +198,13 @@
                    (interactive)
                    (helm-do-ag (projectile-project-root)))))
 
-(use-package flycheck
-  :defer 5
-  :config (progn
-            (add-hook 'after-init-hook #'global-flycheck-mode)
-            (provide 'emacs_init_packages))
-  :diminish flycheck-mode)
-
 (use-package flyspell
-  :defer 5
+  :defer 10
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
 (use-package highlight-symbol
-  :defer 5
+  :defer 10
   :config (progn
             (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
             (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
@@ -210,6 +212,7 @@
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
 (use-package auto-highlight-symbol
+  :defer 10
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (auto-highlight-symbol-mode t)
@@ -229,13 +232,10 @@
 (use-package undo-tree
   :config
   (global-undo-tree-mode 1)
+  (setq undo-tree-auto-save-history t)
   (defalias 'redo 'undo-tree-redo)
   (global-set-key (kbd "s-z") 'undo)
   (global-set-key (kbd "M-z") 'redo)
-  ;; autosave the undo-tree history
-  (setq undo-tree-history-directory-alist
-        `((".*" . ,temporary-file-directory)))
-  (setq undo-tree-auto-save-history t)
   :diminish undo-tree-mode)
 
 (use-package web-mode
@@ -258,10 +258,6 @@
           (define-key global-map (kbd "M-'") 'ace-window)
           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
           (define-key global-map (kbd "C-x o") nil)))
-
-(use-package rainbow-mode
- :defer 5
- :diminish rainbow-mode)
 
 (use-package rainbow-delimiters)
 
