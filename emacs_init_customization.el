@@ -11,6 +11,7 @@
                  (concat user-emacs-directory "backups")))))
 
 ;; enable saveplace (now part of emacs)
+(setq recenter-positions '(top middle bottom))
 (save-place-mode 1)
 
 ;; Add newlines at the end of line with C-n
