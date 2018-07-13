@@ -3,12 +3,15 @@
 ;; Fancy titlebar for MacOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
-(setq ns-use-proxy-icon  nil)
+(setq ns-use-proxy-icon nil)
 
 ;; Write backup files to own directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
+
+;; enable saveplace (now part of emacs)
+(save-place-mode 1)
 
 ;; Add newlines at the end of line with C-n
 (setq next-line-add-newlines t)

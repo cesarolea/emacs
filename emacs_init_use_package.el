@@ -55,9 +55,9 @@
                (expand-file-name "~/.emacs.d/ido.last"))
   :bind ("\C-x\ \C-r" . recentf-open-files))
 
-(use-package saveplace
-  :init
-  (save-place-mode 1))
+;; (use-package saveplace
+;;   :init
+;;   (save-place-mode 1))
 
 (use-package savehist
   :config
