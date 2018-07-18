@@ -232,8 +232,12 @@
 (use-package undo-tree
   :config
   (global-undo-tree-mode 1)
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-dir (let ((dir (concat user-emacs-directory
+                                                 "undo-tree-history/")))
+                                (make-directory dir :parents)
+                                dir))
+  (setq undo-tree-history-directory-alist `(("." . ,undo-tree-history-dir)))
   (defalias 'redo 'undo-tree-redo)
   (global-set-key (kbd "s-z") 'undo)
   (global-set-key (kbd "M-z") 'redo)
