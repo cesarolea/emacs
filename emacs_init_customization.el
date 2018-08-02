@@ -438,8 +438,8 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
 
-;; Newline at end of file
-(setq require-final-newline -1)
+;; Newline at end of file. Leave it alone.
+(setq require-final-newline nil)
 
 ;; Dired setup
 ;; reuse current buffer by pressing 'a'
@@ -455,3 +455,13 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ;; enable some really cool extensions like C-x C-j(dired-jump)
 (require 'dired-x)
+
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+(defun unfill-paragraph (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
+(define-key global-map "\M-Q" 'unfill-paragraph)
