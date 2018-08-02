@@ -124,10 +124,12 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile
-  :config (progn
-            (setq projectile-require-project-root nil)
-            (setq projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name))))
-            (projectile-global-mode t)))
+  :init (custom-set-variables '(projectile-keymap-prefix (kbd "C-c C-o")))
+  :config
+  (setq projectile-require-project-root nil
+        projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
+        projectile-indexing-method 'alien)
+  (projectile-global-mode t))
 
 (use-package helm-flx
   :config (helm-flx-mode +1))
@@ -169,34 +171,35 @@
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile
-  :config (progn
-            (defun contextual-helm-projectile ()
-              (if (and (buffer-file-name)
-                       (projectile-project-p))
-                  (progn
-                    (global-unset-key "\C-x\ a")
-                    (global-set-key "\C-x\ a" 'helm-projectile)
-                    )
-                (progn
-                  (global-unset-key "\C-x\ a")
-                  (global-set-key "\C-x\ a" 'helm-for-files)
-                  )))
-            (contextual-helm-projectile)
-            (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
-            (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
-            (helm-projectile-on)))
+  :config
+  (defun contextual-helm-projectile ()
+    (if (and (buffer-file-name)
+             (projectile-project-p))
+        (progn
+          (global-unset-key "\C-x\ a")
+          (global-set-key "\C-x\ a" 'helm-projectile)
+          )
+      (progn
+        (global-unset-key "\C-x\ a")
+        (global-set-key "\C-x\ a" 'helm-for-files)
+        )))
+  (contextual-helm-projectile)
+  (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+  (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
+  (helm-projectile-on))
 
 (use-package helm-ag
   :defer 10
-  :config (progn (setq helm-ag-fuzzy-match t)
-                 (defun helm-ag-projectile-root (&optional ARG)
-                   "Search from projectile-project-root` which defaults to current directory if no project."
-                   (interactive)
-                   (helm-ag (projectile-project-root)))
-                 (defun helm-do-ag-projectile-root (&optional ARG)
-                   "Search from projectile-project-root` which defaults to current directory if no project."
-                   (interactive)
-                   (helm-do-ag (projectile-project-root)))))
+  :config
+  (setq helm-ag-fuzzy-match t)
+  (defun helm-ag-projectile-root (&optional ARG)
+    "Search from projectile-project-root` which defaults to current directory if no project."
+    (interactive)
+    (helm-ag (projectile-project-root)))
+  (defun helm-do-ag-projectile-root (&optional ARG)
+    "Search from projectile-project-root` which defaults to current directory if no project."
+    (interactive)
+    (helm-do-ag (projectile-project-root))))
 
 (use-package flyspell
   :defer 10
@@ -368,16 +371,16 @@
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-	(add-hook 'cider-repl-mode-hook #'company-mode)
-	(add-hook 'cider-mode-hook #'company-mode)
-	(add-hook 'clojure-mode-hook #'company-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'clojure-mode-hook #'company-mode)
 
   (setq nrepl-log-messages t ; useful for debugging
-		    cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-		    cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
-		    cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
-		    cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-		    cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+        cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+        cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
+        cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
+        cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+        cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
         cider-repl-display-help-banner nil ; don't display start banner
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
         )
