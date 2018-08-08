@@ -124,7 +124,7 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile
-  :init (custom-set-variables '(projectile-keymap-prefix (kbd "C-c C-o")))
+  :init (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
   :config
   (setq projectile-require-project-root nil
         projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
