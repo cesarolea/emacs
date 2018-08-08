@@ -385,6 +385,9 @@
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
         )
 
+  (cider-register-cljs-repl-type 'chestnut "(do (user/go) (user/cljs-repl))")
+  (setq cider-default-cljs-repl 'chestnut)
+
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 (use-package helm-cider
