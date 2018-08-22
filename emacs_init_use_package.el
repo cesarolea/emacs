@@ -513,10 +513,10 @@
 (use-package terraform-mode :defer 10)
 
 (use-package dumb-jump
-  :config (progn
-            (dumb-jump-mode t)
-            (global-set-key (kbd "<f12>") 'dumb-jump-go)
-            (setq dumb-jump-selector 'helm)))
+  :config
+  (dumb-jump-mode t)
+  (global-set-key (kbd "<f12>") 'dumb-jump-go)
+  (setq dumb-jump-selector 'helm))
 
 (use-package tramp
   :config
