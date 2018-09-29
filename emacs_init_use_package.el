@@ -21,6 +21,22 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+(use-package flycheck
+  :config (progn
+            (add-hook 'after-init-hook #'global-flycheck-mode)
+            (provide 'emacs_init_packages))
+  :diminish flycheck-mode)
+
+(use-package magit
+ :bind ("<f10>" . magit-status)
+ :config
+ (setq magit-last-seen-setup-instructions "1.4.0")
+ (setq magit-push-always-verify nil)
+ (setq magit-branch-read-upstream-first t)
+ (if (bound-and-true-p magit-auto-revert-mode)
+     (diminish 'magit-auto-revert-mode))
+ :diminish magit-mode)
+
 (use-package zerodark-theme
   :config (zerodark-setup-modeline-format))
 
@@ -37,12 +53,6 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package rainbow-mode :diminish rainbow-mode)
-
-(use-package flycheck
-  :config (progn
-            (add-hook 'after-init-hook #'global-flycheck-mode)
-            (provide 'emacs_init_packages))
-  :diminish flycheck-mode)
 
 (use-package popwin :config (popwin-mode 1))
 
@@ -384,23 +394,10 @@
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
         )
 
-  (cider-register-cljs-repl-type 'chestnut "(do (user/go) (user/cljs-repl))")
-  (setq cider-default-cljs-repl 'chestnut)
-
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 (use-package helm-cider
   :config (helm-cider-mode 1))
-
-(use-package magit
- :bind ("<f10>" . magit-status)
- :config
- (setq magit-last-seen-setup-instructions "1.4.0")
- (setq magit-push-always-verify nil)
- (setq magit-branch-read-upstream-first t)
- (if (bound-and-true-p magit-auto-revert-mode)
-     (diminish 'magit-auto-revert-mode))
- :diminish magit-mode)
 
 (use-package move-text)
 
