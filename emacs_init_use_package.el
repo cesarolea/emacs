@@ -384,14 +384,15 @@
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'company-mode)
 
-  (setq nrepl-log-messages t ; useful for debugging
+  (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-        cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
-        cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
         cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
         cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
         cider-repl-display-help-banner nil ; don't display start banner
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+        cider-repl-wrap-history t ; wrap around history when end is reached
+        cider-save-file-on-load t ; don't prompt when eval, just save
+        cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
         )
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
