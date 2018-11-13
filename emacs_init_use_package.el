@@ -21,6 +21,22 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+(use-package flycheck
+  :config (progn
+            (add-hook 'after-init-hook #'global-flycheck-mode)
+            (provide 'emacs_init_packages))
+  :diminish flycheck-mode)
+
+(use-package magit
+ :bind ("<f10>" . magit-status)
+ :config
+ (setq magit-last-seen-setup-instructions "1.4.0")
+ (setq magit-push-always-verify nil)
+ (setq magit-branch-read-upstream-first t)
+ (if (bound-and-true-p magit-auto-revert-mode)
+     (diminish 'magit-auto-revert-mode))
+ :diminish magit-mode)
+
 (use-package zerodark-theme
   :config (zerodark-setup-modeline-format))
 
@@ -37,12 +53,6 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package rainbow-mode :diminish rainbow-mode)
-
-(use-package flycheck
-  :config (progn
-            (add-hook 'after-init-hook #'global-flycheck-mode)
-            (provide 'emacs_init_packages))
-  :diminish flycheck-mode)
 
 (use-package popwin :config (popwin-mode 1))
 
@@ -372,30 +382,21 @@
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'clojure-mode-hook #'company-mode)
 
-  (setq nrepl-log-messages t ; useful for debugging
+  (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-        cider-prompt-save-file-on-load 'always-save ;  just always save when loading buffer
-        cider-font-lock-dynamically '(macro core function var) ; syntax highlight all namespaces
         cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
         cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
         cider-repl-display-help-banner nil ; don't display start banner
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+        cider-repl-wrap-history t ; wrap around history when end is reached
+        cider-save-file-on-load t ; don't prompt when eval, just save
+        cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
         )
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 (use-package helm-cider
   :config (helm-cider-mode 1))
-
-(use-package magit
- :bind ("<f10>" . magit-status)
- :config
- (setq magit-last-seen-setup-instructions "1.4.0")
- (setq magit-push-always-verify nil)
- (setq magit-branch-read-upstream-first t)
- (if (bound-and-true-p magit-auto-revert-mode)
-     (diminish 'magit-auto-revert-mode))
- :diminish magit-mode)
 
 (use-package move-text)
 
@@ -575,3 +576,8 @@
   (defun text-scale-once ()
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
+
+(use-package s3ed
+  :config
+  (global-set-key (kbd "C-c s f") 's3ed-find-file)
+  (global-set-key (kbd "C-c s s") 's3ed-save-file))
