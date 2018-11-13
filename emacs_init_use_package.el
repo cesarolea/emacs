@@ -241,8 +241,6 @@
                                 dir))
   (setq undo-tree-history-directory-alist `(("." . ,undo-tree-history-dir)))
   (defalias 'redo 'undo-tree-redo)
-  (global-set-key (kbd "s-z") 'undo)
-  (global-set-key (kbd "M-z") 'redo)
   :diminish undo-tree-mode)
 
 (use-package web-mode
@@ -383,9 +381,6 @@
         cider-repl-display-help-banner nil ; don't display start banner
         nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
         )
-
-  (cider-register-cljs-repl-type 'chestnut "(do (user/go) (user/cljs-repl))")
-  (setq cider-default-cljs-repl 'chestnut)
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
