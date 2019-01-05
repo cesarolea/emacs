@@ -65,7 +65,7 @@ Resize: _h_:splitter left  _j_:splitter down  _k_:splitter up  _l_:splitter righ
   ("R" gist-region-private "Private gist")
   ("b" gist-buffer "Gist buffer")
   ("B" gist-buffer-private "Gist buffer private"))
-(global-set-key (kbd "C-c s") 'hydra-gist/body)
+(global-set-key (kbd "C-c q") 'hydra-gist/body)
 
 (defhydra hydra-org (:color red :hint nil)
   "

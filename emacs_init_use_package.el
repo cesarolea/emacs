@@ -251,8 +251,6 @@
                                 dir))
   (setq undo-tree-history-directory-alist `(("." . ,undo-tree-history-dir)))
   (defalias 'redo 'undo-tree-redo)
-  (global-set-key (kbd "s-z") 'undo)
-  (global-set-key (kbd "M-z") 'redo)
   :diminish undo-tree-mode)
 
 (use-package web-mode
@@ -578,3 +576,8 @@
   (defun text-scale-once ()
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
+
+(use-package s3ed
+  :config
+  (global-set-key (kbd "C-c s f") 's3ed-find-file)
+  (global-set-key (kbd "C-c s s") 's3ed-save-file))
