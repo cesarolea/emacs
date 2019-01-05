@@ -12,7 +12,7 @@
   "
  Split: _v_ert _x_:horz
 Delete: _o_ther ace-_d_elete
-Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter right
+Resize: _h_:splitter left  _j_:splitter down  _k_:splitter up  _l_:splitter right _b_alance windows
   Move: _s_wap
   Misc: _a_ce-window _+_:text increase _-_:text decrease _=_:text adjust
 "
@@ -33,10 +33,11 @@ Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter righ
          (split-window-below)
          (windmove-down)) "Split below and move")
   ("o" delete-other-windows "Delete other windows" :exit t)
-  ("H" hydra-move-splitter-left)
-  ("J" hydra-move-splitter-down)
-  ("K" hydra-move-splitter-up)
-  ("L" hydra-move-splitter-right)
+  ("h" shrink-window-horizontally)
+  ("j" enlarge-window)
+  ("k" shrink-window)
+  ("l" enlarge-window-horizontally)
+  ("b" balance-windows)
   ("a" ace-window "Ace window" :exit t)
   ("+" text-scale-increase)
   ("-" text-scale-decrease)
