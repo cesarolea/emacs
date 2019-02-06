@@ -2,7 +2,8 @@
 (dolist (mode
          '(tool-bar-mode                ; No toolbars, more room for text.
            scroll-bar-mode              ; No scroll bars either.
-           tool-bar-mode))
+           tool-bar-mode
+           menu-bar-mode))
   (funcall mode 0))
 
 (setq create-lockfiles nil)
@@ -51,7 +52,7 @@
       (progn
         (if (> (x-display-pixel-width) 5000)
             (set-frame-parameter frame 'font "IBM Plex Mono 18") ;; 4K display
-          (set-frame-parameter frame 'font "IBM Plex Mono 14")))))
+          (set-frame-parameter frame 'font "IBM Plex Mono 12")))))
 
 ;; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
