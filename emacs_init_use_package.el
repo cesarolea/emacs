@@ -524,6 +524,8 @@
   (setq tramp-default-method "ssh"
         tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
         tramp-adb-program "adb"
+        tramp-auto-save-directory "~/.emacs.d/tramp-autosave"
+        tramp-verbose 6
         ;; use the settings in ~/.ssh/config instead of Tramp's
         tramp-use-ssh-controlmaster-options nil
         backup-enable-predicate
@@ -581,3 +583,6 @@
   :config
   (global-set-key (kbd "C-c s f") 's3ed-find-file)
   (global-set-key (kbd "C-c s s") 's3ed-save-file))
+
+(use-package php-mode
+  :defer 10)

@@ -2,7 +2,8 @@
 (dolist (mode
          '(tool-bar-mode                ; No toolbars, more room for text.
            scroll-bar-mode              ; No scroll bars either.
-           tool-bar-mode))
+           tool-bar-mode
+           menu-bar-mode))
   (funcall mode 0))
 
 (setq create-lockfiles nil)
