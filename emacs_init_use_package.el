@@ -135,10 +135,9 @@
 
 (use-package projectile
   :init (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
-  :config
-  (setq projectile-require-project-root nil
-        projectile-mode-line '(:eval (format " P[%s]" (projectile-project-name)))
-        projectile-indexing-method 'alien)
+  :config (setq projectile-require-project-root nil
+                projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+                projectile-indexing-method 'alien)
   (projectile-global-mode t))
 
 (use-package helm-flx
