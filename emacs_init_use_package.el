@@ -467,7 +467,10 @@
 (use-package smooth-scroll
   :config (progn
             (smooth-scroll-mode 1)
-            (setq smooth-scroll/vscroll-step-size 5))
+            (setq smooth-scroll-margin 5)
+            ;; (setq smooth-scroll/vscroll-step-size 5
+            ;;       smooth-scroll-margin 5)
+            )
   :diminish smooth-scroll-mode)
 
 ;; (use-package org-bullets
@@ -506,8 +509,6 @@
 
 (use-package restclient-helm :defer 10)
 
-(use-package terraform-mode :defer 10)
-
 (use-package dumb-jump
   :config
   (dumb-jump-mode t)
@@ -536,12 +537,14 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package atomic-chrome
-  :defer 10
   :config
-  (setq atomic-chrome-default-major-mode 'text-mode)
-  (setq atomic-chrome-url-major-mode-alist
-        '(("flotiya\\.local" . js2-mode)
-          ("phabricator" . text-mode)))
+  (setq atomic-chrome-default-major-mode  'text-mode)
+  (setq atomic-chrome-buffer-open-style   'frame
+        atomic-chrome-buffer-frame-width  100
+        atomic-chrome-buffer-frame-height 25)
+  ;; (setq atomic-chrome-url-major-mode-alist
+  ;;       '(("flotiya\\.local" . js2-mode)
+  ;;         ("phabricator" . text-mode)))
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
 
@@ -562,8 +565,6 @@
   (volatile-highlights-mode +1)
   :diminish volatile-highlights-mode)
 
-(use-package dockerfile-mode :defer 10)
-
 (use-package yaml-mode :defer 10)
 
 (use-package all-the-icons)
@@ -573,8 +574,9 @@
   (global-set-key [f7] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
         neo-smart-open t
-        neo-autorefresh t
-        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35))
+        neo-autorefresh nil
+        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35)
+        projectile-switch-project-action 'neotree-projectile-action)
   (defun text-scale-once ()
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
@@ -584,5 +586,6 @@
   (global-set-key (kbd "C-c s f") 's3ed-find-file)
   (global-set-key (kbd "C-c s s") 's3ed-save-file))
 
-(use-package php-mode
-  :defer 10)
+(use-package php-mode :defer 10)
+
+(use-package indium)
