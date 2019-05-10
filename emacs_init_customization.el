@@ -427,7 +427,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (setq auto-window-vscroll nil)
 
 ;; nice scrolling
-(setq scroll-margin 0
+(setq scroll-margin 10
       scroll-conservatively 100000
       scroll-preserve-screen-position 1)
 

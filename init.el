@@ -50,7 +50,7 @@
   (interactive)
   (if window-system
       (progn
-        (if (> (x-display-pixel-width) 5000)
+        (if (> (x-display-pixel-width) 3000)
             (set-frame-parameter frame 'font "IBM Plex Mono 18") ;; 4K display
           (set-frame-parameter frame 'font "IBM Plex Mono 12")))))
 
