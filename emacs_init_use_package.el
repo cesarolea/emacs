@@ -134,11 +134,13 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile
-  :init (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
-  :config (setq projectile-require-project-root nil
-                projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
-                projectile-indexing-method 'alien)
-  (projectile-global-mode t))
+  :init
+  (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+  :config
+  (projectile-mode t)
+  (setq projectile-project-search-path '("~/workspace/")
+        projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+        projectile-indexing-method 'alien))
 
 (use-package helm-flx
   :config (helm-flx-mode +1))
