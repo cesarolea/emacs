@@ -469,3 +469,15 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
 (define-key global-map "\M-Q" 'unfill-paragraph)
+
+(defun joaot/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
+(define-key process-menu-mode-map (kbd "C-k") 'joaot/delete-process-at-point)
