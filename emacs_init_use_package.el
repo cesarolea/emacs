@@ -50,7 +50,9 @@
   (global-hl-line-mode 1))
 
 (use-package exec-path-from-shell
-  :config (exec-path-from-shell-initialize))
+  :config
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 
 (use-package rainbow-mode :diminish rainbow-mode)
 

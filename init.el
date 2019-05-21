@@ -43,9 +43,9 @@
 (setq ns-use-srgb-colorspace t)
 
 ; use a different ispell
-(cond
- ((executable-find "aspell")
-  (setq-default ispell-program-name "aspell")))
+;(cond
+; ((executable-find "aspell")
+;  (setq-default ispell-program-name "aspell")))
 
 ; custom font size depending on resolution
 (defun fontify-frame (frame)
