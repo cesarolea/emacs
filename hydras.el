@@ -151,7 +151,7 @@ _l_ List      _S_etup
   ("S" flycheck-verify-setup :color blue))
 (global-set-key (kbd "C-c k") 'hydra-flycheck/body)
 
-(defhydra hydra-bm (:color red :hint nil :idle 1.0)
+(defhydra hydra-bm (:color red :hint nil :timeout 1.0)
   "Bookmarks"
   ("t" bm-toggle "Toggle")
   ("T" bm-toggle "Toggle" :color blue)
@@ -163,7 +163,7 @@ _l_ List      _S_etup
   ("X" bm-remove-all-all-buffers :color blue))
 (global-set-key (kbd "C-c b") 'hydra-bm/body)
 
-(defhydra hydra-origami (:color red :hint nil :timeout)
+(defhydra hydra-origami (:color red :hint nil :timeout 1.0)
     "
 Code Folds^       ^Navigation^
 ---------------------------------
