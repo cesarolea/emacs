@@ -173,7 +173,7 @@
                     helm-source-bookmarks
                     helm-source-file-cache
                     helm-source-files-in-current-dir
-                    helm-source-mac-spotlight))
+                    helm-source-locate))
             (global-set-key "\C-x\ a" 'helm-for-files)
             (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
             ;; replace M-x with helm's version
@@ -592,3 +592,23 @@
 (use-package php-mode :defer 10)
 
 (use-package indium)
+
+(use-package fontawesome)
+
+(use-package emojify
+  :config
+  (setq
+        emojify-prog-contexts           "comments"
+        emojify-point-entered-behaviour "echo")
+  (when (member "EmojiOne Color" (font-family-list))
+    (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
+  (add-hook 'after-init-hook #'global-emojify-mode))
+
+(use-package lsp-mode)
+
+(use-package company-lsp)
+
+(use-package lsp-ui)
+
+(use-package lsp-java :after lsp
+  :config (add-hook 'java-mode-hook #'lsp))
