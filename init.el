@@ -53,7 +53,7 @@
   (if window-system
       (progn
         (if (> (x-display-pixel-width) 3000)
-            (set-frame-parameter frame 'font "IBM Plex Mono 18") ;; 4K display
+            (set-frame-parameter frame 'font "IBM Plex Mono 14") ;; 4K display
           (set-frame-parameter frame 'font "IBM Plex Mono 12")))))
 
 ;; Fontify any future frames
@@ -88,10 +88,6 @@
 (put 'erase-buffer 'disabled nil)
 
 (add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
-
-(set-fontset-font
- t 'symbol
- (font-spec :family "Apple Color Emoji") nil 'prepend)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
