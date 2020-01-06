@@ -60,23 +60,18 @@
 (push 'fontify-frame after-make-frame-functions)
 
 ;; sources
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 4))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+; sources
+(setq package-archives '(("org"          . "https://orgmode.org/elpa/")
+                         ("gnu"          . "https://elpa.gnu.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("melpa"        . "https://melpa.org/packages/")))
+
+(package-initialize)
 
 ; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-(load "~/.emacs.d/emacs_init_straight.el")
 (load "~/.emacs.d/emacs_init_use_package.el")
 
 ; custom init files

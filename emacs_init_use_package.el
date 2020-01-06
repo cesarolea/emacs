@@ -1,33 +1,45 @@
-;; Now use-package will use straight.el to automatically install missing packages if you provide :ensure t
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
 (defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
+
+(setq use-package-always-pin "melpa-stable")
 
 (require 'bind-key)
 
-(use-package diminish)
+(use-package diminish :ensure t)
 
 (eval-after-load "visual-line" '(diminish 'visual-line-mode))
 (eval-after-load "abbrev" '(diminish 'abbrev-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 
-(use-package use-package-ensure-system-package)
+(use-package use-package-ensure-system-package :ensure t)
 
 (use-package use-package-chords
+  :ensure t
   :config (key-chord-mode 1))
 
 (use-package auto-package-update
+  :ensure t
   :config
   (setq auto-package-update-delete-old-versions t)
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
 (use-package flycheck
+  :ensure t
   :config (progn
             (add-hook 'after-init-hook #'global-flycheck-mode)
             (provide 'emacs_init_packages))
   :diminish flycheck-mode)
 
 (use-package magit
+ :ensure t
  :bind ("<f10>" . magit-status)
  :config
  (setq magit-last-seen-setup-instructions "1.4.0")
@@ -37,10 +49,10 @@
      (diminish 'magit-auto-revert-mode))
  :diminish magit-mode)
 
-(use-package zerodark-theme
+(use-package zerodark-theme :ensure t
   :config (zerodark-setup-modeline-format))
 
-(use-package doom-themes
+(use-package doom-themes :ensure t
   :config
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
@@ -49,16 +61,16 @@
   (doom-themes-org-config)
   (global-hl-line-mode 1))
 
-(use-package exec-path-from-shell
+(use-package exec-path-from-shell :ensure t
   :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
-(use-package rainbow-mode :diminish rainbow-mode)
+(use-package rainbow-mode :diminish rainbow-mode :ensure t :pin melpa)
 
-(use-package popwin :config (popwin-mode 1))
+(use-package popwin :config (popwin-mode 1) :ensure t)
 
-(use-package recentf
+(use-package recentf :ensure t
   :defer 5
   :config
   (recentf-mode 1)
@@ -71,7 +83,7 @@
 ;;   :init
 ;;   (save-place-mode 1))
 
-(use-package savehist
+(use-package savehist :ensure t
   :config
   (setq savehist-additional-variables
         ;; search entries
@@ -82,19 +94,19 @@
         savehist-file (expand-file-name "savehist" cesaro-savefile-dir))
   (savehist-mode 1))
 
-(use-package windmove
+(use-package windmove :ensure t
   :config
   ;; use shift + arrow keys to switch between visible buffers
   (windmove-default-keybindings))
 
-(use-package company
+(use-package company :ensure t
   :config
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (global-set-key (kbd "C-'") 'company-complete)
   (global-company-mode)
   :diminish company-mode)
 
-(use-package js2-mode
+(use-package js2-mode :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
   (setq js2-mode-show-parse-errors nil
@@ -102,7 +114,7 @@
         js2-basic-offset 2
         js-indent-level 2))
 
-(use-package ido
+(use-package ido :ensure t
   :config (progn
             (ido-mode 1)
             (setq ido-everywhere t)
@@ -122,20 +134,20 @@
 
             (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
 
-(use-package ido-vertical-mode
+(use-package ido-vertical-mode :ensure t
   :config (progn
             (ido-mode 1)
             (ido-vertical-mode 1)
             (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
 
-(use-package flx-ido
+(use-package flx-ido :ensure t
   :config (progn
             (flx-ido-mode 1)
             (setq ido-enable-flex-matching t
                   ido-use-faces t
                   ido-use-filename-at-point t)))
 
-(use-package projectile
+(use-package projectile :ensure t
   :init
   (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
   :config
@@ -144,10 +156,10 @@
         projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
         projectile-indexing-method 'alien))
 
-(use-package helm-flx
+(use-package helm-flx :ensure t :pin melpa
   :config (helm-flx-mode +1))
 
-(use-package helm
+(use-package helm :ensure t
   :config (progn
             ;; (require 'helm-files)
 
@@ -183,7 +195,7 @@
             (global-set-key "\C-x\ \C-r" 'helm-recentf)
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
-(use-package helm-projectile
+(use-package helm-projectile :ensure t
   :config
   (defun contextual-helm-projectile ()
     (if (and (buffer-file-name)
@@ -201,7 +213,7 @@
   (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
   (helm-projectile-on))
 
-(use-package helm-ag
+(use-package helm-ag :ensure t
   :defer 10
   :config
   (setq helm-ag-fuzzy-match t)
@@ -214,12 +226,12 @@
     (interactive)
     (helm-do-ag (projectile-project-root))))
 
-(use-package flyspell
+(use-package flyspell :ensure t
   :defer 10
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
-(use-package highlight-symbol
+(use-package highlight-symbol :ensure t
   :defer 10
   :config (progn
             (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
@@ -227,7 +239,7 @@
             (global-set-key (kbd "<f15>") 'highlight-symbol-next)
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
-(use-package auto-highlight-symbol
+(use-package auto-highlight-symbol :ensure t :pin melpa
   :defer 10
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
@@ -235,9 +247,9 @@
                                         (flyspell-prog-mode))))
   :diminish auto-highlight-symbol-mode)
 
-(use-package smartparens)
+(use-package smartparens :ensure t)
 
-(use-package eyebrowse
+(use-package eyebrowse :ensure t
   :init (progn
           (setq eyebrowse-wrap-around t
                 eyebrowse-new-workspace t)
@@ -245,7 +257,7 @@
           (eyebrowse-switch-to-window-config-0))
   :diminish eyebrowse-mode)
 
-(use-package undo-tree
+(use-package undo-tree :ensure t :pin melpa
   :config
   (global-undo-tree-mode 1)
   (setq undo-tree-history-dir (let ((dir (concat user-emacs-directory
@@ -256,7 +268,7 @@
   (defalias 'redo 'undo-tree-redo)
   :diminish undo-tree-mode)
 
-(use-package web-mode
+(use-package web-mode :ensure t
   :defer 10
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -271,23 +283,23 @@
             (setq web-mode-markup-indent-offset 4)
             (setq web-mode-code-indent-offset 4)))
 
-(use-package ace-window
+(use-package ace-window :ensure t
   :init (progn
           (define-key global-map (kbd "M-'") 'ace-window)
           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
           (define-key global-map (kbd "C-x o") nil)))
 
-(use-package rainbow-delimiters)
+(use-package rainbow-delimiters :ensure t)
 
-(use-package expand-region
+(use-package expand-region :ensure t
   :config (progn
             (global-set-key (kbd "C-=") 'er/expand-region)
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
-(use-package ox-reveal
+(use-package ox-reveal :ensure t :pin melpa
   :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
 
-(use-package org
+(use-package org :ensure t
   :config
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-cc" 'org-capture)
@@ -337,7 +349,7 @@
   (require 'ox-reveal) ; nice presentations
 )
 
-(use-package paredit
+(use-package paredit :ensure t
   :config (progn
             (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
             (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -358,7 +370,7 @@
                       'override-slime-repl-bindings-with-paredit t))
   :diminish paredit-mode)
 
-(use-package clojure-mode
+(use-package clojure-mode :ensure t
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
   :init
@@ -368,7 +380,7 @@
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
-(use-package cider
+(use-package cider :ensure t
   :config
   (defun company-remove-ispell ()
     (when (boundp 'company-backends)
@@ -398,27 +410,27 @@
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
-(use-package helm-cider
+(use-package helm-cider :ensure t
   :config (helm-cider-mode 1))
 
-(use-package move-text)
+(use-package move-text :ensure t)
 
-(use-package hydra
+(use-package hydra :ensure t
   :config (load "~/.emacs.d/hydras.el"))
 
 
-(use-package reveal-in-osx-finder
+(use-package reveal-in-osx-finder :ensure t
   :defer 5
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
-(use-package anzu
+(use-package anzu :ensure t
   :config
   (global-anzu-mode)
   (set-face-attribute 'anzu-mode-line nil :foreground "white" :weight 'bold)
   :bind ("M-%" . anzu-query-replace)
   :diminish anzu-mode)
 
-(use-package bm
+(use-package bm :ensure t
   :config (progn
             (define-fringe-bitmap 'bm-marker-left [#xF8
                                                    #xFC
@@ -437,15 +449,15 @@
                                           (bm-buffer-save-all)
                                           (bm-repository-save)))))
 
-(use-package impatient-mode
+(use-package impatient-mode :ensure t
   :defer 10
   :config
   (setq httpd-port 8181))
 
-(use-package shrink-whitespace
+(use-package shrink-whitespace :ensure t
   :bind ("M-SPC" . shrink-whitespace))
 
-(use-package diff-hl
+(use-package diff-hl :ensure t
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
@@ -460,14 +472,14 @@
 ;             (add-hook 'git-commit-mode-hook 'company-mode)
 ;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
 
-(use-package buffer-flip
+(use-package buffer-flip :ensure t
   :chords (("u8" . buffer-flip))
   :bind (:map buffer-flip-map
               ( "8" .   buffer-flip-forward)
               ( "*" .   buffer-flip-backward)
               ( "C-g" . buffer-flip-abort)))
 
-(use-package smooth-scroll
+(use-package smooth-scroll :ensure t
   :config (progn
             (smooth-scroll-mode 1)
             (setq smooth-scroll-margin 5)
@@ -482,43 +494,43 @@
 ;;             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;;             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
 
-(use-package origami
+(use-package origami :ensure t :pin melpa
   :defer 5
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
 
-(use-package git-timemachine
+(use-package git-timemachine :ensure t
   :defer 5)
 
-(use-package swiper)
+(use-package swiper :ensure t)
 
-(use-package swiper-helm
+(use-package swiper-helm :ensure t
   :config (progn (global-set-key "\C-s" 'swiper)
                  (global-set-key "\C-r" 'swiper)))
 
-(use-package crux
+(use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
-(use-package fireplace :defer 10)
+(use-package fireplace :defer 10 :ensure t)
 
-(use-package restclient)
+(use-package restclient :ensure t :pin melpa)
 
-(use-package company-restclient
+(use-package company-restclient :ensure t :pin melpa
   :defer 10
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
 
-(use-package restclient-helm :defer 10)
+(use-package restclient-helm :defer 10 :ensure t :pin melpa)
 
-(use-package dumb-jump
+(use-package dumb-jump :ensure t
   :config
   (dumb-jump-mode t)
   (global-set-key (kbd "<f12>") 'dumb-jump-go)
   (setq dumb-jump-selector 'helm))
 
-(use-package tramp
+(use-package tramp :ensure t
   :config
   ;; Turn off auto-save for tramp files
   (defun tramp-set-auto-save ()
@@ -539,7 +551,7 @@
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
 
-(use-package atomic-chrome
+(use-package atomic-chrome :ensure t
   :config
   (setq atomic-chrome-default-major-mode  'text-mode)
   (setq atomic-chrome-buffer-open-style   'frame
@@ -551,11 +563,11 @@
   (atomic-chrome-start-server)
   :diminish AtomicChrome)
 
-(use-package dockerfile-mode
+(use-package dockerfile-mode :ensure t
   :defer 10
   :diminish Dockerfile)
 
-(use-package super-save
+(use-package super-save :ensure t
   :config
   (super-save-mode +1)
   (setq super-save-auto-save-when-idle t
@@ -563,16 +575,16 @@
   :diminish super-save-mode)
 
 ;; temporarily highlight changes from yanking, etc
-(use-package volatile-highlights
+(use-package volatile-highlights :ensure t
   :config
   (volatile-highlights-mode +1)
   :diminish volatile-highlights-mode)
 
-(use-package yaml-mode :defer 10)
+(use-package yaml-mode :defer 10 :ensure t)
 
-(use-package all-the-icons)
+(use-package all-the-icons :ensure t)
 
-(use-package neotree
+(use-package neotree :ensure t
   :config
   (global-set-key [f7] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
@@ -584,18 +596,16 @@
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
 
-(use-package s3ed
+(use-package s3ed :ensure t :pin melpa
   :config
   (global-set-key (kbd "C-c s f") 's3ed-find-file)
   (global-set-key (kbd "C-c s s") 's3ed-save-file))
 
-(use-package php-mode :defer 10)
+(use-package php-mode :defer 10 :ensure t)
 
-(use-package indium)
+(use-package fontawesome :ensure t)
 
-(use-package fontawesome)
-
-(use-package emojify
+(use-package emojify :ensure t
   :config
   (setq
         emojify-prog-contexts           "comments"
@@ -603,12 +613,3 @@
   (when (member "EmojiOne Color" (font-family-list))
     (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
   (add-hook 'after-init-hook #'global-emojify-mode))
-
-(use-package lsp-mode)
-
-(use-package company-lsp)
-
-(use-package lsp-ui)
-
-(use-package lsp-java :after lsp
-  :config (add-hook 'java-mode-hook #'lsp))
