@@ -552,6 +552,7 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package atomic-chrome :ensure t
+  :defer 10 :pin melpa
   :config
   (setq atomic-chrome-default-major-mode  'text-mode)
   (setq atomic-chrome-buffer-open-style   'frame
