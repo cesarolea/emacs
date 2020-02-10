@@ -1,15 +1,9 @@
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-
-(defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
+(require 'package)
 
 (setq use-package-always-pin "melpa-stable")
+(setq use-package-always-ensure t)
 
-(require 'bind-key)
+(defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
 (use-package diminish :ensure t)
 
@@ -410,7 +404,7 @@
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
-(use-package helm-cider :ensure t
+(use-package helm-cider :pin melpa
   :config (helm-cider-mode 1))
 
 (use-package move-text :ensure t)
@@ -614,3 +608,13 @@
   (when (member "EmojiOne Color" (font-family-list))
     (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
   (add-hook 'after-init-hook #'global-emojify-mode))
+
+(use-package elixir-mode :ensure t)
+
+(use-package lsp-mode :ensure t
+  :commands lsp
+  :diminish lsp-mode
+  :hook (elixir-mode . lsp)
+  :init (add-to-list 'exec-path "/home/cesaro/workspace/elixir-ls/release")
+  :config
+  (setq lsp-enable-snippet nil))

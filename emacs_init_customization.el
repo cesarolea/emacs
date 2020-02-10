@@ -94,7 +94,7 @@
   (cl-letf ((process-list ())) ad-do-it))
 
 ;; use finder database instead of locate
-(setq locate-command "mdfind")
+;(setq locate-command "mdfind")
 
 ;; Anwsering y/n is faster than yes/no.
 (fset 'yes-or-no-p 'y-or-n-p)

@@ -60,13 +60,14 @@
 (push 'fontify-frame after-make-frame-functions)
 
 ;; sources
+(package-initialize)
 ; sources
 (setq package-archives '(("org"          . "https://orgmode.org/elpa/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("melpa"        . "https://melpa.org/packages/")))
 
-(package-initialize)
+
 
 ; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
