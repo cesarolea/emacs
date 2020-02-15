@@ -316,12 +316,12 @@
       (setq exec-path (split-string path-from-shell path-separator))))
   (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
-  (defun company-add-ispell ()
-    (when (boundp 'company-backends)
-      (make-local-variable 'company-backends)
-      ;; add ispell
-      (add-to-list 'company-backends 'company-ispell)))
-  (add-hook 'text-mode-hook 'company-add-ispell)
+  ;; (defun company-add-ispell ()
+  ;;   (when (boundp 'company-backends)
+  ;;     (make-local-variable 'company-backends)
+  ;;     ;; add ispell
+  ;;     (add-to-list 'company-backends 'company-ispell)))
+  ;; (add-hook 'text-mode-hook 'company-add-ispell)
 
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)

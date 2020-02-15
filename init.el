@@ -15,6 +15,15 @@
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 
+;; Prevent resizing frame when setting new font (adds 1s to startup)
+(setq frame-inhibit-implied-resize t)
+
+;; Prevent loading text mode at startup
+(setq initial-major-mode 'fundamental-mode)
+
+;; Welcome
+(setq initial-scratch-message (concat "# Welcome " (user-login-name) "!\n# Happy Hacking...\n\n"))
+
 (defvar doom--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 
