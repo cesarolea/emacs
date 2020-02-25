@@ -14,16 +14,12 @@
 
 (use-package use-package-ensure-system-package :ensure t)
 
-(use-package use-package-chords
-  :ensure t
-  :config (key-chord-mode 1))
-
-(use-package auto-package-update
-  :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
+;; (use-package auto-package-update
+;;   :ensure t
+;;   :config
+;;   (setq auto-package-update-delete-old-versions t)
+;;   (setq auto-package-update-hide-results t)
+;;   (auto-package-update-maybe))
 
 (use-package flycheck
   :ensure t
@@ -64,14 +60,47 @@
 
 (use-package popwin :config (popwin-mode 1) :ensure t)
 
-(use-package recentf :ensure t
+;; (use-package recentf :ensure t
+;;   :defer 5
+;;   :config
+;;   (recentf-mode 1)
+;;   (setq recentf-max-menu-items 25)
+;;   (add-to-list 'recentf-exclude
+;;                (expand-file-name "~/.emacs.d/ido.last"))
+;;   :bind ("\C-x\ \C-r" . recentf-open-files))
+
+(use-package recentf
+  :ensure t
   :defer 5
-  :config
+  :hook (after-init . recentf-mode)
+  :bind ("\C-x\ \C-r" . recentf-open-files)
+  :custom
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
-  (add-to-list 'recentf-exclude
-               (expand-file-name "~/.emacs.d/ido.last"))
-  :bind ("\C-x\ \C-r" . recentf-open-files))
+  (recentf-max-saved-items 20000000)
+  (recentf-exclude '((expand-file-name package-user-dir)
+                     ".cache"
+                     "cache"
+                     "recentf"
+                     "~/.emacs.d/ido.last"
+                     "COMMIT_EDITMSG\\'"))
+  :preface
+  (defun ladicle/recentf-save-list-silence ()
+    (interactive)
+    (let ((message-log-max nil))
+      (if (fboundp 'shut-up)
+          (shut-up (recentf-save-list))
+        (recentf-save-list)))
+    (message ""))
+  (defun ladicle/recentf-cleanup-silence ()
+    (interactive)
+    (let ((message-log-max nil))
+      (if shutup-p
+          (shut-up (recentf-cleanup))
+        (recentf-cleanup)))
+    (message ""))
+  :hook
+  (focus-out-hook . (ladicle/recentf-save-list-silence ladicle/recentf-cleanup-silence)))
 
 ;; (use-package saveplace
 ;;   :init
@@ -204,7 +233,7 @@
         )))
   (contextual-helm-projectile)
   (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
-  (setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
+  ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
   (helm-projectile-on))
 
 (use-package helm-ag :ensure t
@@ -306,7 +335,9 @@
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   (add-hook 'org-mode-hook (lambda ()
                              (flyspell-mode 1)
-                             (electric-pair-mode 1)))
+                             (electric-pair-mode 1)
+                             (delete '("\\.pdf\\'" . default) org-file-apps)
+                             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
   (defun set-exec-path-from-shell-PATH ()
     (let ((path-from-shell
@@ -456,22 +487,15 @@
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
 
-; (use-package company-emoji
-;   :ensure t
-;   :config (progn
-;             ;; enable in org mode buffers
-;             (add-hook 'org-mode-hook 'company-mode)
-;             (add-hook 'org-mode-hook 'company-emoji-init)
-;             ;; enable in git commit log buffers
-;             (add-hook 'git-commit-mode-hook 'company-mode)
-;             (add-hook 'git-commit-mode-hook 'company-emoji-init)))
-
-(use-package buffer-flip :ensure t
-  :chords (("u8" . buffer-flip))
-  :bind (:map buffer-flip-map
-              ( "8" .   buffer-flip-forward)
-              ( "*" .   buffer-flip-backward)
-              ( "C-g" . buffer-flip-abort)))
+(use-package buffer-flip :ensure t :defer 5
+  :bind  (("M-<tab>" . buffer-flip)
+          :map buffer-flip-map
+          ( "M-<tab>" .   buffer-flip-forward)
+          ( "M-S-<tab>" . buffer-flip-backward)
+          ( "M-ESC" .     buffer-flip-abort))
+  :config (setq buffer-flip-skip-patterns
+                '("^\\*helm\\b"
+                  "^\\*swiper\\*$")))
 
 (use-package smooth-scroll :ensure t
   :config (progn
@@ -482,20 +506,13 @@
             )
   :diminish smooth-scroll-mode)
 
-;; (use-package org-bullets
-;;   :config (progn
-;;             (setq org-bullets-face-name (quote org-bullet-face))
-;;             (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-;;             (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))))
-
 (use-package origami :ensure t :pin melpa
   :defer 5
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
 
-(use-package git-timemachine :ensure t
-  :defer 5)
+(use-package git-timemachine :ensure t :defer 10)
 
 (use-package swiper :ensure t)
 
@@ -508,17 +525,17 @@
 
 (use-package fireplace :defer 10 :ensure t)
 
-(use-package restclient :ensure t :pin melpa)
+(use-package restclient :ensure t :pin melpa :defer 10)
 
 (use-package company-restclient :ensure t :pin melpa
-  :defer 10
+  :defer 15
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
 
-(use-package restclient-helm :defer 10 :ensure t :pin melpa)
+(use-package restclient-helm :defer 15 :ensure t :pin melpa)
 
-(use-package dumb-jump :ensure t
+(use-package dumb-jump :ensure t :defer 5
   :config
   (dumb-jump-mode t)
   (global-set-key (kbd "<f12>") 'dumb-jump-go)
@@ -570,16 +587,16 @@
   :diminish super-save-mode)
 
 ;; temporarily highlight changes from yanking, etc
-(use-package volatile-highlights :ensure t
+(use-package volatile-highlights :ensure t :defer 5
+  :diminish volatile-highlights-mode
   :config
-  (volatile-highlights-mode +1)
-  :diminish volatile-highlights-mode)
+  (volatile-highlights-mode t))
 
 (use-package yaml-mode :defer 10 :ensure t)
 
 (use-package all-the-icons :ensure t)
 
-(use-package neotree :ensure t
+(use-package neotree :ensure t :defer 5
   :config
   (global-set-key [f7] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
@@ -591,7 +608,7 @@
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
 
-(use-package s3ed :ensure t :pin melpa
+(use-package s3ed :ensure t :pin melpa :defer 15
   :config
   (global-set-key (kbd "C-c s f") 's3ed-find-file)
   (global-set-key (kbd "C-c s s") 's3ed-save-file))
@@ -600,7 +617,7 @@
 
 (use-package fontawesome :ensure t)
 
-(use-package emojify :ensure t
+(use-package emojify :ensure t :defer 5
   :config
   (setq
         emojify-prog-contexts           "comments"
@@ -609,9 +626,9 @@
     (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
   (add-hook 'after-init-hook #'global-emojify-mode))
 
-(use-package elixir-mode :ensure t)
+(use-package elixir-mode :ensure t :defer 5)
 
-(use-package lsp-mode :ensure t
+(use-package lsp-mode :ensure t :defer 10
   :commands lsp
   :diminish lsp-mode
   :hook (elixir-mode . lsp)
