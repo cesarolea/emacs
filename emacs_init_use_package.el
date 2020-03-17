@@ -171,6 +171,7 @@
                   ido-use-filename-at-point t)))
 
 (use-package projectile :ensure t
+  :defer 5
   :init
   (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
   :config
@@ -219,6 +220,7 @@
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
+  :defer 10
   :config
   (defun contextual-helm-projectile ()
     (if (and (buffer-file-name)
@@ -535,7 +537,9 @@
 
 (use-package restclient-helm :defer 15 :ensure t :pin melpa)
 
-(use-package dumb-jump :ensure t :defer 5
+(use-package dumb-jump
+  :pin melpa
+  :ensure t :defer 5
   :config
   (dumb-jump-mode t)
   (global-set-key (kbd "<f12>") 'dumb-jump-go)
