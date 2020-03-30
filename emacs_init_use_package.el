@@ -56,7 +56,7 @@
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
-(use-package rainbow-mode :diminish rainbow-mode :ensure t :pin melpa)
+(use-package rainbow-mode :diminish rainbow-mode :ensure t :pin gnu)
 
 (use-package popwin :config (popwin-mode 1) :ensure t)
 
@@ -282,7 +282,7 @@
           (eyebrowse-switch-to-window-config-0))
   :diminish eyebrowse-mode)
 
-(use-package undo-tree :ensure t :pin melpa
+(use-package undo-tree :ensure t :pin gnu
   :config
   (global-undo-tree-mode 1)
   (setq undo-tree-history-dir (let ((dir (concat user-emacs-directory
