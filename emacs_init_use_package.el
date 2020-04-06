@@ -14,18 +14,10 @@
 
 (use-package use-package-ensure-system-package :ensure t)
 
-;; (use-package auto-package-update
-;;   :ensure t
-;;   :config
-;;   (setq auto-package-update-delete-old-versions t)
-;;   (setq auto-package-update-hide-results t)
-;;   (auto-package-update-maybe))
-
 (use-package flycheck
   :ensure t
-  :config (progn
-            (add-hook 'after-init-hook #'global-flycheck-mode)
-            (provide 'emacs_init_packages))
+  :hook ((prog-mode . flycheck-mode)
+         (org-mode  . flycheck-mode))
   :diminish flycheck-mode)
 
 (use-package magit
@@ -60,15 +52,6 @@
 
 (use-package popwin :config (popwin-mode 1) :ensure t)
 
-;; (use-package recentf :ensure t
-;;   :defer 5
-;;   :config
-;;   (recentf-mode 1)
-;;   (setq recentf-max-menu-items 25)
-;;   (add-to-list 'recentf-exclude
-;;                (expand-file-name "~/.emacs.d/ido.last"))
-;;   :bind ("\C-x\ \C-r" . recentf-open-files))
-
 (use-package recentf
   :ensure t
   :defer 5
@@ -102,10 +85,6 @@
   :hook
   (focus-out-hook . (ladicle/recentf-save-list-silence ladicle/recentf-cleanup-silence)))
 
-;; (use-package saveplace
-;;   :init
-;;   (save-place-mode 1))
-
 (use-package savehist :ensure t
   :config
   (setq savehist-additional-variables
@@ -123,11 +102,15 @@
   (windmove-default-keybindings))
 
 (use-package company :ensure t
+  :hook (prog-mode . company-mode)
   :config
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (setq company-tooltip-align-annotations t
+        company-minimum-prefix-length 1)
   (global-set-key (kbd "C-'") 'company-complete)
   (global-company-mode)
   :diminish company-mode)
+
+(use-package company-lsp :ensure t)
 
 (use-package js2-mode :ensure t
   :config
@@ -630,12 +613,21 @@
     (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
   (add-hook 'after-init-hook #'global-emojify-mode))
 
-(use-package elixir-mode :ensure t :defer 5)
-
-(use-package lsp-mode :ensure t :defer 10
+(use-package lsp-mode :ensure t
   :commands lsp
   :diminish lsp-mode
-  :hook (elixir-mode . lsp)
   :init (add-to-list 'exec-path "/home/cesaro/workspace/elixir-ls/release")
   :config
-  (setq lsp-enable-snippet nil))
+  (setq lsp-enable-snippet nil)
+  (require 'lsp-clients))
+
+(use-package elixir-mode :ensure t :defer 5
+  :hook (elixir-mode . lsp))
+
+(use-package rust-mode :ensure t :defer 5
+  :config
+  (setq rust-format-on-save t)
+  :hook (rust-mode . lsp))
+
+(use-package flycheck-rust :ensure t :defer 5
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
