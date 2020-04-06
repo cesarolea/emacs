@@ -105,7 +105,8 @@
   :hook (prog-mode . company-mode)
   :config
   (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1)
+        company-minimum-prefix-length 1
+        company-idle-delay 0.0)
   (global-set-key (kbd "C-'") 'company-complete)
   (global-company-mode)
   :diminish company-mode)
@@ -121,37 +122,37 @@
         js-indent-level 2))
 
 (use-package ido :ensure t
-  :config (progn
-            (ido-mode 1)
-            (setq ido-everywhere t)
-            (setq ido-use-faces t)
-            (setq ido-use-filename-at-point 'guess)
-            (setq ido-use-url-at-point nil)
-            (setq ido-enable-flex-matching t)
-            ;; restrict to current directory
-            (setq ido-auto-merge-work-directories-length -1)
+  :config
+  (ido-mode 1)
+  (setq ido-everywhere t)
+  (setq ido-use-faces t)
+  (setq ido-use-filename-at-point 'guess)
+  (setq ido-use-url-at-point nil)
+  (setq ido-enable-flex-matching t)
+  ;; restrict to current directory
+  (setq ido-auto-merge-work-directories-length -1)
 
-            (defun recentf-ido-find-file ()
-              "Find a recent file using ido."
-              (interactive)
-              (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-                (when file
-                  (find-file file))))
+  (defun recentf-ido-find-file ()
+    "Find a recent file using ido."
+    (interactive)
+    (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+      (when file
+        (find-file file))))
 
-            (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)))
+  (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file))
 
 (use-package ido-vertical-mode :ensure t
-  :config (progn
-            (ido-mode 1)
-            (ido-vertical-mode 1)
-            (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)))
+  :config
+  (ido-mode 1)
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
 
 (use-package flx-ido :ensure t
-  :config (progn
-            (flx-ido-mode 1)
-            (setq ido-enable-flex-matching t
-                  ido-use-faces t
-                  ido-use-filename-at-point t)))
+  :config
+  (flx-ido-mode 1)
+  (setq ido-enable-flex-matching t
+        ido-use-faces t
+        ido-use-filename-at-point t))
 
 (use-package projectile :ensure t
   :defer 5
@@ -622,12 +623,12 @@
   (require 'lsp-clients))
 
 (use-package elixir-mode :ensure t :defer 5
-  :hook (elixir-mode . lsp))
+  :hook (elixir-mode . lsp-deferred))
 
 (use-package rust-mode :ensure t :defer 5
   :config
   (setq rust-format-on-save t)
-  :hook (rust-mode . lsp))
+  :hook (rust-mode . lsp-deferred))
 
 (use-package flycheck-rust :ensure t :defer 5
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
