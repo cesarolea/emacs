@@ -68,6 +68,9 @@
 ;; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
 
+;; elpa.gnu.org uses TLS1.2, not TLS1.3
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 ;; sources
 (package-initialize)
 ; sources
