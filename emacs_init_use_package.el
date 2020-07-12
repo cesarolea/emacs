@@ -5,6 +5,8 @@
 
 (defconst cesaro-savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
+(use-package use-package-chords :ensure t :config (key-chord-mode 1))
+
 (use-package diminish :ensure t)
 
 (eval-after-load "visual-line" '(diminish 'visual-line-mode))
@@ -384,6 +386,7 @@
 (use-package clojure-mode :ensure t
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
+  :config (require 'flycheck-clj-kondo)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
@@ -474,11 +477,11 @@
                                         (diff-hl-mode 1)))))
 
 (use-package buffer-flip :ensure t :defer 5
-  :bind  (("M-<tab>" . buffer-flip)
-          :map buffer-flip-map
-          ( "M-<tab>" .   buffer-flip-forward)
-          ( "M-S-<tab>" . buffer-flip-backward)
-          ( "M-ESC" .     buffer-flip-abort))
+  :chords (("u8" . buffer-flip))
+  :bind  (:map buffer-flip-map
+               ( "8" . buffer-flip-forward)
+               ( "*" . buffer-flip-backward)
+               ( "C-g" . buffer-flip-abort))
   :config (setq buffer-flip-skip-patterns
                 '("^\\*helm\\b"
                   "^\\*swiper\\*$")))
@@ -632,3 +635,5 @@
 
 (use-package flycheck-rust :ensure t :defer 5
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(use-package flycheck-clj-kondo :ensure t)
