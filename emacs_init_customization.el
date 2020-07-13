@@ -130,7 +130,6 @@
 (add-hook 'prog-mode-hook (lambda ()
                             (electric-pair-mode 1)
                             (rainbow-mode 1)
-                            (flyspell-mode 1)
                             (visual-line-mode 0)
                             (toggle-truncate-lines 1)
                             (show-paren-mode t)

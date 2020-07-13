@@ -23,15 +23,15 @@
   :diminish flycheck-mode)
 
 (use-package magit
- :ensure t
- :bind ("<f10>" . magit-status)
- :config
- (setq magit-last-seen-setup-instructions "1.4.0")
- (setq magit-push-always-verify nil)
- (setq magit-branch-read-upstream-first t)
- (if (bound-and-true-p magit-auto-revert-mode)
-     (diminish 'magit-auto-revert-mode))
- :diminish magit-mode)
+  :ensure t
+  :bind ("<f10>" . magit-status)
+  :config
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (setq magit-push-always-verify nil)
+  (setq magit-branch-read-upstream-first t)
+  (if (bound-and-true-p magit-auto-revert-mode)
+      (diminish 'magit-auto-revert-mode))
+  :diminish magit-mode)
 
 (use-package zerodark-theme :ensure t
   :config (zerodark-setup-modeline-format))
@@ -221,7 +221,7 @@
         )))
   (contextual-helm-projectile)
   (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
-  ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
+                                        ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
   (helm-projectile-on))
 
 (use-package helm-ag :ensure t
@@ -254,8 +254,7 @@
   :defer 10
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
-                                        (auto-highlight-symbol-mode t)
-                                        (flyspell-prog-mode))))
+                                        (auto-highlight-symbol-mode t))))
   :diminish auto-highlight-symbol-mode)
 
 (use-package smartparens :ensure t)
@@ -360,7 +359,7 @@
   ;; exporters
   (require 'ox-md)     ; markdown
   (require 'ox-reveal) ; nice presentations
-)
+  )
 
 (use-package paredit :ensure t
   :config (progn
@@ -611,8 +610,8 @@
 (use-package emojify :ensure t :defer 5
   :config
   (setq
-        emojify-prog-contexts           "comments"
-        emojify-point-entered-behaviour "echo")
+   emojify-prog-contexts           "comments"
+   emojify-point-entered-behaviour "echo")
   (when (member "EmojiOne Color" (font-family-list))
     (set-fontset-font t 'unicode "EmojiOne Color" nil 'prepend))
   (add-hook 'after-init-hook #'global-emojify-mode))
