@@ -99,5 +99,5 @@
 
 (load "~/.emacs.d/packages.el")
 (load "~/.emacs.d/customization.el")
-(load "~/.emacs.d/utility.el.el")
+(load "~/.emacs.d/utility.el")
 (load "~/.emacs.d/keymaps.el")
