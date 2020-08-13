@@ -33,8 +33,15 @@
       (diminish 'magit-auto-revert-mode))
   :diminish magit-mode)
 
-(use-package zerodark-theme :ensure t
-  :config (zerodark-setup-modeline-format))
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :config
+  (defun enable-doom-modeline-icons (_frame)
+    (setq doom-modeline-icon t))
+
+  (add-hook 'after-make-frame-functions
+            #'enable-doom-modeline-icons))
 
 (use-package doom-themes :ensure t
   :config
@@ -54,38 +61,15 @@
 
 (use-package popwin :config (popwin-mode 1) :ensure t)
 
-(use-package recentf
-  :ensure t
-  :defer 5
+(use-package recentf :ensure t
   :hook (after-init . recentf-mode)
   :bind ("\C-x\ \C-r" . recentf-open-files)
-  :custom
+  :config
   (recentf-mode 1)
-  (setq recentf-max-menu-items 25)
-  (recentf-max-saved-items 20000000)
-  (recentf-exclude '((expand-file-name package-user-dir)
-                     ".cache"
-                     "cache"
-                     "recentf"
-                     "~/.emacs.d/ido.last"
-                     "COMMIT_EDITMSG\\'"))
-  :preface
-  (defun ladicle/recentf-save-list-silence ()
-    (interactive)
-    (let ((message-log-max nil))
-      (if (fboundp 'shut-up)
-          (shut-up (recentf-save-list))
-        (recentf-save-list)))
-    (message ""))
-  (defun ladicle/recentf-cleanup-silence ()
-    (interactive)
-    (let ((message-log-max nil))
-      (if shutup-p
-          (shut-up (recentf-cleanup))
-        (recentf-cleanup)))
-    (message ""))
-  :hook
-  (focus-out-hook . (ladicle/recentf-save-list-silence ladicle/recentf-cleanup-silence)))
+  (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/ido.last" (getenv "HOME")))
+  (setq recentf-max-menu-items 25
+        recentf-max-saved-items 20000000))
 
 (use-package savehist :ensure t
   :config
@@ -157,7 +141,6 @@
         ido-use-filename-at-point t))
 
 (use-package projectile :ensure t
-  :defer 5
   :init
   (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
   :config
@@ -206,7 +189,6 @@
             (global-set-key (kbd "<f9>") 'helm-bookmarks)))
 
 (use-package helm-projectile :ensure t
-  :defer 10
   :config
   (defun contextual-helm-projectile ()
     (if (and (buffer-file-name)
@@ -225,7 +207,6 @@
   (helm-projectile-on))
 
 (use-package helm-ag :ensure t
-  :defer 10
   :config
   (setq helm-ag-fuzzy-match t)
   (defun helm-ag-projectile-root (&optional ARG)
@@ -238,12 +219,10 @@
     (helm-do-ag (projectile-project-root))))
 
 (use-package flyspell :ensure t
-  :defer 10
   :bind ("C-c C-SPC" . ispell-word)
   :diminish flyspell-mode)
 
 (use-package highlight-symbol :ensure t
-  :defer 10
   :config (progn
             (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
             (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
@@ -251,7 +230,6 @@
             (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace)))
 
 (use-package auto-highlight-symbol :ensure t :pin melpa
-  :defer 10
   :config (progn
             (add-hook 'prog-mode-hook (lambda ()
                                         (auto-highlight-symbol-mode t))))
@@ -279,7 +257,6 @@
   :diminish undo-tree-mode)
 
 (use-package web-mode :ensure t
-  :defer 10
   :config (progn
             (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
             (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -433,7 +410,6 @@
 
 
 (use-package reveal-in-osx-finder :ensure t
-  :defer 5
   :bind ("C-c C-f" . reveal-in-osx-finder))
 
 (use-package anzu :ensure t
@@ -463,7 +439,6 @@
                                           (bm-repository-save)))))
 
 (use-package impatient-mode :ensure t
-  :defer 10
   :config
   (setq httpd-port 8181))
 
@@ -475,15 +450,17 @@
             (add-hook 'prog-mode-hook (lambda ()
                                         (diff-hl-mode 1)))))
 
-(use-package buffer-flip :ensure t :defer 5
-  :chords (("u8" . buffer-flip))
-  :bind  (:map buffer-flip-map
-               ( "8" . buffer-flip-forward)
-               ( "*" . buffer-flip-backward)
-               ( "C-g" . buffer-flip-abort))
-  :config (setq buffer-flip-skip-patterns
-                '("^\\*helm\\b"
-                  "^\\*swiper\\*$")))
+(use-package buffer-flip
+  :ensure t
+  :bind  (("M-<tab>" . buffer-flip)
+          :map buffer-flip-map
+          ( "M-<tab>" .   buffer-flip-forward)
+          ( "<M-iso-lefttab>" . buffer-flip-backward)
+          ( "M-ESC" .     buffer-flip-abort))
+  :config
+  (setq buffer-flip-skip-patterns
+        '("^\\*helm\\b"
+          "^\\*swiper\\*$")))
 
 (use-package smooth-scroll :ensure t
   :config (progn
@@ -495,12 +472,11 @@
   :diminish smooth-scroll-mode)
 
 (use-package origami :ensure t :pin melpa
-  :defer 5
   :config (progn
             (add-hook 'prog-mode-hook 'origami-mode)
             (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
 
-(use-package git-timemachine :ensure t :defer 10)
+(use-package git-timemachine :ensure t)
 
 (use-package swiper :ensure t)
 
@@ -511,21 +487,20 @@
 (use-package crux :ensure t
   :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
 
-(use-package fireplace :defer 10 :ensure t)
+(use-package fireplace :ensure t)
 
-(use-package restclient :ensure t :pin melpa :defer 10)
+(use-package restclient :ensure t :pin melpa)
 
 (use-package company-restclient :ensure t :pin melpa
-  :defer 15
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
 
-(use-package restclient-helm :defer 15 :ensure t :pin melpa)
+(use-package restclient-helm :ensure t :pin melpa)
 
 (use-package dumb-jump
   :pin melpa
-  :ensure t :defer 5
+  :ensure t
   :config
   (dumb-jump-mode t)
   (global-set-key (kbd "<f12>") 'dumb-jump-go)
@@ -553,7 +528,7 @@
                         (member method '("su" "sudo")))))))))
 
 (use-package atomic-chrome :ensure t
-  :defer 10 :pin melpa
+  :pin melpa
   :config
   (setq atomic-chrome-default-major-mode  'text-mode)
   (setq atomic-chrome-buffer-open-style   'frame
@@ -566,7 +541,6 @@
   :diminish AtomicChrome)
 
 (use-package dockerfile-mode :ensure t
-  :defer 10
   :diminish Dockerfile)
 
 (use-package super-save :ensure t
@@ -577,16 +551,16 @@
   :diminish super-save-mode)
 
 ;; temporarily highlight changes from yanking, etc
-(use-package volatile-highlights :ensure t :defer 5
+(use-package volatile-highlights :ensure t
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 
-(use-package yaml-mode :defer 10 :ensure t)
+(use-package yaml-mode :ensure t)
 
 (use-package all-the-icons :ensure t)
 
-(use-package neotree :ensure t :defer 5
+(use-package neotree :ensure t
   :config
   (global-set-key [f7] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
@@ -598,16 +572,16 @@
     (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
   (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
 
-(use-package s3ed :ensure t :pin melpa :defer 15
+(use-package s3ed :ensure t :pin melpa
   :config
   (global-set-key (kbd "C-c s f") 's3ed-find-file)
   (global-set-key (kbd "C-c s s") 's3ed-save-file))
 
-(use-package php-mode :defer 10 :ensure t)
+(use-package php-mode :ensure t)
 
 (use-package fontawesome :ensure t)
 
-(use-package emojify :ensure t :defer 5
+(use-package emojify :ensure t
   :config
   (setq
    emojify-prog-contexts           "comments"
@@ -619,20 +593,16 @@
 (use-package lsp-mode :ensure t
   :commands lsp
   :diminish lsp-mode
-  :init (add-to-list 'exec-path "/home/cesaro/workspace/elixir-ls/release")
   :config
   (setq lsp-enable-snippet nil)
   (require 'lsp-clients))
 
-(use-package elixir-mode :ensure t :defer 5
-  :hook (elixir-mode . lsp-deferred))
-
-(use-package rust-mode :ensure t :defer 5
+(use-package rust-mode :ensure t
   :config
   (setq rust-format-on-save t)
   :hook (rust-mode . lsp-deferred))
 
-(use-package flycheck-rust :ensure t :defer 5
+(use-package flycheck-rust :ensure t
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package flycheck-clj-kondo :ensure t)
