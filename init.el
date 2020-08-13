@@ -40,10 +40,10 @@
 (setq mac-right-option-modifier nil)
 
 ; Themes
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
 
 ; I don't like Customize customizing my init.el
-(setq custom-file "~/.emacs.d/lisp/custom.el")
+(setq custom-file "~/.config/emacs/lisp/custom.el")
 
 ; don't display startup message
 (setq inhibit-startup-message t)
@@ -81,12 +81,12 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-(load "~/.emacs.d/emacs_init_use_package.el")
+(load "~/.config/emacs/emacs_init_use_package.el")
 
 ; custom init files
-(load "~/.emacs.d/emacs_init_customization.el")
-(load "~/.emacs.d/emacs_init_utility.el")
-(load "~/.emacs.d/emacs_init_keymaps.el")
+(load "~/.config/emacs/emacs_init_customization.el")
+(load "~/.config/emacs/emacs_init_utility.el")
+(load "~/.config/emacs/emacs_init_keymaps.el")
 
 (load custom-file)
 (put 'erase-buffer 'disabled nil)

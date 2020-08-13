@@ -406,7 +406,7 @@
 (use-package move-text :ensure t)
 
 (use-package hydra :ensure t
-  :config (load "~/.emacs.d/hydras.el"))
+  :config (load "~/.config/emacs/hydras.el"))
 
 
 (use-package reveal-in-osx-finder :ensure t
