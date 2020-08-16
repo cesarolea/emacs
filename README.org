@@ -1,7 +1,13 @@
-#+TITLE: My Emacs Configuration
+#+TITLE: My emacs configuration
 #+AUTHOR: César Olea
 
-#+BEGIN_SRC emacs-lisp
+* Preface
+This is my Emacs configuration file. It's my first attempt at using
+literate programming for configuration, after several (unsuccessful)
+attempts at better organization, and going through many Emacs
+configuration bankruptcies.
+
+#+begin_src emacs-lisp
 ; Turn off mouse interface early in startup to avoid momentary display
 (dolist (mode
          '(tool-bar-mode                ; No toolbars, more room for text.
@@ -104,4 +110,4 @@
 (load (concat user-emacs-directory "keymaps.el"))
 
 (put 'list-threads 'disabled nil)
-#+END_SRC
+#+end_src
