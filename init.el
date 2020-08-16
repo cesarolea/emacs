@@ -6,101 +6,97 @@
            menu-bar-mode))
   (funcall mode 0))
 
-(setq create-lockfiles nil)
+(setq create-lockfiles nil                    ; disable the creation of lockfiles
+      auto-save-default nil                   ; don't create autosave files
+      load-prefer-newer t                     ; always load newest bytecode
+      initial-major-mode 'fundamental-mode    ; prevent loading text mode at startup
+      initial-scratch-message (concat "# Welcome " (user-login-name) "!\n# Happy Hacking...\n\n") ; welcome
+      mac-command-modifier 'super             ; OSX keybindings
+      ns-function-modifier 'hyper
+      mac-option-key-is-meta t
+      mac-right-option-modifier nil
+      custom-file (concat user-emacs-directory "lisp/custom.el") ; avoid adding to init.el
+      inhibit-startup-message t               ; don't display startup message
+      ns-use-srgb-colorspace t                ; use srgb
+      gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3" ; elpa.gnu.org uses TLS1.2, not TLS1.3
+      package-archives '(("org"          . "https://orgmode.org/elpa/")
+                         ("gnu"          . "https://elpa.gnu.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("melpa"        . "https://melpa.org/packages/"))
+      exec-path (append exec-path '("/usr/local/bin"))
+      confirm-kill-processes nil              ; don't prompt for killing processes
+      ns-use-proxy-icon nil
+      recenter-positions '(top middle bottom) ; enable saveplace
+      next-line-add-newlines t                ; add newlines at the end of line with C-n
+      ns-pop-up-frames nil                    ; force new frames into existing window
+      ring-bell-function 'ignore              ; no bell
+      standard-indent 2
+      next-line-add-newlines nil              ; no newlines past EOF
+      confirm-nonexistent-file-or-buffer nil  ; no confirm opening non-existant files/buffers
+      large-file-warning-threshold 100000000  ; warn on opening files bigger than 100MB
+      ido-create-new-buffer 'always           ; no prompt for new buffer creation in ido
+      kill-buffer-query-functions (remq 'process-kill-buffer-query-function
+					kill-buffer-query-functions)
+      doc-view-continuous t                   ; scroll PDFs with the mouse wheel
+      doc-view-resolution 300                 ; so PDFs don't hurt my eyes
+      suggest-key-bindings nil                ; stop telling me the menu command key
+      display-line-numbers-grow-only t
+      display-line-numbers-type "relative"
+      whitespace-line-column 100              ; limit line length
+      whitespace-style '(face tabs empty trailing lines-tail tab-mark)
+      whitespace-display-mappings '((trailing-mark 32 [183] [46])
+                                    (newline-mark 10 [182 10])
+                                    (tab-mark 9 [9655 9] [92 9]))
+      default-major-mode 'text-mode
+      x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      dired-listing-switches "-alh"
+      search-default-mode #'char-fold-to-regexp
+      gc-cons-threshold (* 100 1024 1024)
+      jit-lock-defer-time nil
+      jit-lock-stealth-nice 0.1
+      jit-lock-stealth-time 0.2
+      jit-lock-stealth-verbose nil
+      auto-window-vscroll nil
+      scroll-margin 10
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1
+      frame-title-format '((:eval (if (buffer-file-name)
+                                      (abbreviate-file-name (buffer-file-name))
+                                    "%b")))
+      require-final-newline nil
+      dired-recursive-deletes 'always
+      dired-recursive-copies 'always
+      dired-dwim-target t
+      )
 
-; Avoid garbage collection during startup
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6)
+; themes
+(add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
-;; Always load newest byte code
-(setq load-prefer-newer t)
-
-;; Prevent resizing frame when setting new font (adds 1s to startup)
-(setq frame-inhibit-implied-resize t)
-
-;; Prevent loading text mode at startup
-(setq initial-major-mode 'fundamental-mode)
-
-;; Welcome
-(setq initial-scratch-message (concat "# Welcome " (user-login-name) "!\n# Happy Hacking...\n\n"))
-
-(defvar doom--file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-
-; Package.el initialization is expensive, so disable it! package.el is sneaky though,
-; it will initialize itself if you’re not careful. Not on my watch, criminal scum!
-(setq package-enable-at-startup nil ; don't auto-initialize!
-      ;; don't add that `custom-set-variables' block to my initl!
-      package--init-file-ensured t)
-
-;: OSX keybindings
-(setq mac-command-modifier 'super)
-(setq ns-function-modifier 'hyper)
-(setq mac-option-key-is-meta t)
-(setq mac-right-option-modifier nil)
-
-; Themes
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-
-; I don't like Customize customizing my init.el
-(setq custom-file "~/.config/emacs/lisp/custom.el")
-
-; don't display startup message
-(setq inhibit-startup-message t)
-
-; use srgb
-(setq ns-use-srgb-colorspace t)
-
-; use a different ispell
-;(cond
-; ((executable-find "aspell")
-;  (setq-default ispell-program-name "aspell")))
+; default spell
+(setq-default ispell-program-name "aspell")
 
 ; custom font size depending on resolution
+; doesn't work for emacs daemon instances
 (defun fontify-frame (frame)
   (interactive)
   (set-frame-parameter frame 'font "IBM Plex Mono 14"))
 
-;; Fontify any future frames
+; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
-
-;; elpa.gnu.org uses TLS1.2, not TLS1.3
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-;; sources
-(package-initialize)
-; sources
-(setq package-archives '(("org"          . "https://orgmode.org/elpa/")
-                         ("gnu"          . "https://elpa.gnu.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("melpa"        . "https://melpa.org/packages/")))
-
-
 
 ; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
 
-(load "~/.config/emacs/emacs_init_use_package.el")
-
-; custom init files
-(load "~/.config/emacs/emacs_init_customization.el")
-(load "~/.config/emacs/emacs_init_utility.el")
-(load "~/.config/emacs/emacs_init_keymaps.el")
-
-(load custom-file)
-(put 'erase-buffer 'disabled nil)
-
-(add-hook 'whitespace-mode-hook '(lambda () (diminish 'whitespace-mode)))
-
-(put 'dired-find-alternate-file 'disabled nil)
-
-;; Fontify current frame
+; fontify current frame
 (fontify-frame nil)
 
-; Reset GC as late as possible;
-(add-hook 'emacs-startup-hook
-          '(lambda ()
-             (setq gc-cons-threshold 50000000)
-             (setq gc-cons-percentage 0.1)
-             (setq file-name-handler-alist doom--file-name-handler-alist)))
+(load (concat user-emacs-directory "packages.el"))
+(load (concat user-emacs-directory "customization.el"))
+(load (concat user-emacs-directory "utility.el"))
+(load (concat user-emacs-directory "keymaps.el"))
+
+(put 'list-threads 'disabled nil)
