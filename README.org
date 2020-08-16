@@ -1,4 +1,4 @@
-#+TITLE: My emacs configuration
+#+TITLE: cesarolea Emacs Configuration
 #+AUTHOR: César Olea
 
 * Preface
@@ -104,10 +104,968 @@ configuration bankruptcies.
 ; fontify current frame
 (fontify-frame nil)
 
-(load (concat user-emacs-directory "packages.el"))
+(put 'list-threads 'disabled nil)
+#+end_src
+
+* Packages
+I use [[https://github.com/jwiegley/use-package][~use-package~]] for isolating package configuration. By default
+all packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages
+may be pinned to regular MELPA if they are not found in the stable
+Rep, or if a newer version is desired.
+
+** Basic Configuration
+~use-package~ can also install selected packages by using the
+~:ensure~ key. By having this setting set to ~true~ for all packages,
+we can clone this configuration from the repository and, at first
+load, it will fetch all packages and install them.
+
+#+begin_src emacs-lisp
+(require 'package)
+
+(setq use-package-always-pin "melpa-stable"
+      use-package-always-ensure t)
+#+end_src
+
+*** Diminish
+ This is an add-on to ~use-package~ to be able to specify directly in
+ the package declaration, that we want to diminish that mode.
+
+ #+begin_src emacs-lisp
+ (use-package diminish)
+
+ (eval-after-load "visual-line" '(diminish 'visual-line-mode))
+ (eval-after-load "abbrev" '(diminish 'abbrev-mode))
+ (eval-after-load "eldoc" '(diminish 'eldoc-mode))
+ (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
+ #+end_src
+
+*** Ensure system package
+ This package allows you to install related binary (or system) programs
+ are installed when certain packages are installed.
+
+ #+begin_src emacs-lisp
+ (use-package use-package-ensure-system-package)
+ #+end_src
+
+*** Theme
+ I use the Doom theme with the Doom modeline. This requires icon
+ configuration. The modeline configuration has a fix so that icons are
+ shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
+
+ #+begin_src emacs-lisp
+ (use-package all-the-icons)
+
+ (use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-one t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
+  (global-hl-line-mode 1))
+
+ (use-package doom-modeline
+   :init (doom-modeline-mode 1)
+   :config
+   ;; so that modeline icons work in emacsclient
+   (defun enable-doom-modeline-icons (_frame)
+     (setq doom-modeline-icon t))
+
+   (add-hook 'after-make-frame-functions
+             #'enable-doom-modeline-icons)
+
+   (setq doom-modeline-buffer-encoding t
+         doom-modeline-modal-icon t
+         doom-modeline-env-version t
+         inhibit-compacting-font-caches t))
+ #+end_src
+
+*** Exec path
+ This package ensures that your Emacs instance is able to use the same
+ environment variables as your shell. Especially useful if you use
+ non-standard shells such as the fish shell.
+
+ #+begin_src emacs-lisp
+ (use-package exec-path-from-shell
+   :config
+   (when (memq window-system '(mac ns x))
+     (exec-path-from-shell-initialize)))
+ #+end_src
+
+*** Popwin mode
+ Popwin is a popup window manager for Emacs which makes you free from
+ the hell of annoying buffers that popup all over the place.
+
+ #+begin_src emacs-lisp
+ (use-package popwin :config (popwin-mode 1))
+ #+end_src
+
+*** Window movement
+ Use shift + arrow keys to switch between visible buffers. Also
+ ~ace-window~ for quickly jumping back and forth between windows.
+
+ #+begin_src emacs-lisp
+ (use-package windmove
+   :config (windmove-default-keybindings))
+
+ (use-package ace-window
+   :init (progn
+           (define-key global-map (kbd "M-'") 'ace-window)
+           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
+           (define-key global-map (kbd "C-x o") nil)))
+ #+end_src
+
+*** Smooth scrolling
+ What says in the label.
+
+ #+begin_src emacs-lisp
+ (use-package smooth-scroll
+   :config (progn
+             (smooth-scroll-mode 1)
+             (setq smooth-scroll-margin 5))
+   :diminish smooth-scroll-mode)
+ #+end_src
+** Flycheck
+On the fly linter and syntax checker. I want this enabled in all
+programming modes.
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :hook ((prog-mode . flycheck-mode)
+         (org-mode  . flycheck-mode))
+  :diminish flycheck-mode)
+#+end_src
+
+*** Additional checkers
+Add Flycheck support for both Rust and Clojure.
+
+#+begin_src emacs-lisp
+(use-package flycheck-clj-kondo)
+
+(use-package flycheck-rust
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+end_src
+
+** Magit
+The mighty Magit. Some consider this to be the killer application for
+Emacs. Don't use git without it.
+
+I have it bound to <f10>. Also:
+
+- ~magit-last-seen-setup-instructions~ is so that magit doesn't prompt
+  you to see setup instructions on first load.
+- ~magit-push-always-verify~ is related to an option added at some
+  point that allows you to make magit confirm certain push
+  operations. Setting it to ~nil~ makes push commands behave as
+  expected.
+- ~magit-branch-read-upstream-first~ When creating a branch, whether
+  to read the upstream branch before the name of the branch that is to
+  be created.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :bind ("<f10>" . magit-status)
+  :config
+  (setq magit-last-seen-setup-instructions "1.4"
+        magit-push-always-verify nil
+        magit-branch-read-upstream-first nil)
+  (if (bound-and-true-p magit-auto-revert-mode)
+      (diminish 'magit-auto-revert-mode))
+  :diminish magit-mode)
+#+end_src
+
+** savehist
+Savehist mode saves some of your session history in between
+restart. Since I use Emacs as a daemon this is not as needed now, but
+still nice when using standalone Emacs sessions.
+
+It is configured to save search ring entries, and to keep the saved
+history in a ~savehist~ file inside the configuration directory.
+
+#+begin_src emacs-lisp
+(use-package savehist
+  :config
+  (setq savehist-additional-variables
+        ;; search entries
+        '(search-ring regexp-search-ring)
+        ;; save every minute
+        savehist-autosave-interval 60
+        ;; keep the home clean
+        savehist-file (expand-file-name "savehist"
+(expand-file-name "savefile" user-emacs-directory)))
+  (savehist-mode 1))
+#+end_src
+
+** Rainbow mode
+So that typing the name of a color or its hex value, displays the
+actual color.
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode :diminish rainbow-mode :pin gnu)
+#+end_src
+
+** Recentf
+Keeps track of your most recent opened files so you can get back to
+them easily. You can specify files to ignore, which is useful for
+files that get visited automatically and fill up your recent file history.
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :hook (after-init . recentf-mode)
+  :bind ("\C-x\ \C-r" . recentf-open-files)
+  :config
+  (recentf-mode 1)
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
+  (setq recentf-max-menu-items 25
+        recentf-max-saved-items 20000000))
+#+end_src
+
+** Completion engine
+Company is a completion engine for Emacs. You can install several
+backends. Useful in programming modes. I'm installing the lsp backend
+for using company completion in languages that use LSP (such as rust).
+
+#+begin_src emacs-lisp
+(use-package company
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-tooltip-align-annotations t
+        company-minimum-prefix-length 1
+        company-idle-delay 0.0)
+  (global-set-key (kbd "C-'") 'company-complete)
+  (global-company-mode)
+  :diminish company-mode)
+
+(use-package company-lsp)
+#+end_src
+
+** Ido mode
+One of those things you wonder why it's not default in Emacs. It's
+basically a completion and search engine, and much more. Several other
+packages either support or depend on Ido. I like to pair it with
+vertical mode so that candidates appear in a vertical instead of
+horizontal list, and flex ido for fuzzy matching.
+
+#+begin_src emacs-lisp
+(use-package ido
+  :config
+  (ido-mode 1)
+  (setq ido-everywhere t)
+  (setq ido-use-faces t)
+  (setq ido-use-filename-at-point 'guess)
+  (setq ido-use-url-at-point nil)
+  (setq ido-enable-flex-matching t)
+  ;; restrict to current directory
+  (setq ido-auto-merge-work-directories-length -1)
+
+  (defun recentf-ido-find-file ()
+    "Find a recent file using ido."
+    (interactive)
+    (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+      (when file
+        (find-file file))))
+
+  (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file))
+
+(use-package ido-vertical-mode
+  :config
+  (ido-mode 1)
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
+
+(use-package flx-ido
+  :config
+  (flx-ido-mode 1)
+  (setq ido-enable-flex-matching t
+        ido-use-faces t
+        ido-use-filename-at-point t))
+#+end_src
+
+** Project management
+Projectile is the /de facto/ project management package. I rarely
+interact with Projectile directly, rather through its integration with
+Helm.
+
+It has many options to tweak it to your own needs, and its
+documentation website is excellent
+[[https://docs.projectile.mx/projectile/configuration.html]]
+
+Here I'm tweaking three settings:
+
+1. Project search path: so that Projectile knows where all my projects
+   are located. If you don't set this, simply opening any file of a
+   project will add it to the Projectile list of known projects.
+2. Madeline function: So it doesn't waste too much space in the
+   modeline, I change it to read simply ~P[name of the project]~.
+3. Indexing method: There are several indexing methods available. Some
+   are native to Emacs, thus portable and don't rely on external
+   tools, and some are external to Emacs and rely on external tools
+   being present. The main advantage of the external ones are speed. I
+   use the "alien" indexing method, which shells out to get a list of
+   files. It makes sense because all my projects are kept in VC.
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :init
+  (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+  :config
+  (projectile-mode t)
+  (setq projectile-project-search-path '("~/workspace/")
+        projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+        projectile-indexing-method 'alien))
+#+end_src
+
+** Helm
+
+*** TODO Documentation
+
+ #+begin_src emacs-lisp
+ (use-package helm-flx :ensure t :pin melpa
+   :config (helm-flx-mode +1))
+
+ (use-package helm
+   :config
+             ;; so helm adapts to your usage
+             (helm-adaptive-mode 1)
+
+             ;; window management
+             (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
+             (add-hook 'helm-after-initialize-hook (lambda ()
+                                                     (popwin:display-buffer helm-buffer t)
+                                                     (popwin-mode -1)))
+
+             ;;  Restore popwin-mode after a Helm session finishes.
+             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+
+             (setq helm-idle-delay 0.1)
+             (setq helm-input-idle-delay 0.1)
+             (setq helm-follow-mode-persistent t)
+             (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
+             (setq helm-for-files-preferred-list
+                   '(helm-source-buffers-list
+                     helm-source-recentf
+                     helm-source-bookmarks
+                     helm-source-file-cache
+                     helm-source-files-in-current-dir
+                     helm-source-locate))
+             (global-set-key "\C-x\ a" 'helm-for-files)
+             (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+             ;; replace M-x with helm's version
+             (global-set-key (kbd "M-x") 'helm-M-x)
+             ;; replace C-x b with helm's version
+             (global-set-key "\C-x\ b" 'helm-mini)
+             (global-set-key "\C-x\ \C-r" 'helm-recentf)
+             (global-set-key (kbd "<f9>") 'helm-bookmarks))
+
+ (use-package helm-projectile
+   :config
+   (defun contextual-helm-projectile ()
+     (if (and (buffer-file-name)
+              (projectile-project-p))
+         (progn
+           (global-unset-key "\C-x\ a")
+           (global-set-key "\C-x\ a" 'helm-projectile)
+           )
+       (progn
+         (global-unset-key "\C-x\ a")
+         (global-set-key "\C-x\ a" 'helm-for-files)
+         )))
+   (contextual-helm-projectile)
+   (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+                                         ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
+   (helm-projectile-on))
+
+ (use-package helm-ag
+   :config
+   (setq helm-ag-fuzzy-match t)
+   (defun helm-ag-projectile-root (&optional ARG)
+     "Search from projectile-project-root` which defaults to current directory if no project."
+     (interactive)
+     (helm-ag (projectile-project-root)))
+   (defun helm-do-ag-projectile-root (&optional ARG)
+     "Search from projectile-project-root` which defaults to current directory if no project."
+     (interactive)
+     (helm-do-ag (projectile-project-root))))
+ #+end_src
+
+** Spellchecker
+#+begin_src emacs-lisp
+(use-package flyspell
+  :bind ("C-c C-SPC" . ispell-word)
+  :diminish flyspell-mode)
+#+end_src
+
+** Paredit
+Structured editing for Lisp and Lisp-like languages.
+
+#+begin_src emacs-lisp
+(use-package paredit
+  :config (progn
+            (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+            (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+            (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+            (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+            (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+            (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+            (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+            (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
+            (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
+
+            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+
+            (defun override-slime-repl-bindings-with-paredit ()
+              (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key) nil))
+            (add-hook 'slime-repl-mode-hook
+                      'override-slime-repl-bindings-with-paredit t))
+  :diminish paredit-mode)
+#+end_src
+
+** Eyebrowse
+Implements "workspaces" for Emacs. Each workspace can keep different
+split settings, and you can switch back and forth between them.
+
+#+begin_src emacs-lisp
+(use-package eyebrowse
+  :init (progn
+          (setq eyebrowse-wrap-around t
+                eyebrowse-new-workspace t)
+          (eyebrowse-mode 1)
+          (eyebrowse-switch-to-window-config-0))
+  :diminish eyebrowse-mode)
+#+end_src
+
+** Org mode
+The gateway drug to Emacs. Org mode is difficult to put in a single
+word; it's a note taking application, agenda, markup language,
+organizer, documentation engine and more. Org mode organizes your life
+in text mode. Most of the options used in this package are documented
+as source code comments.
+
+Org mode is able to export to several other formats, and some of them
+require additional packages.
+
+#+begin_src emacs-lisp
+(use-package org
+  :config
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
+
+  ;; where to put captured notes
+  (setq org-default-notes-file "~/Sync/Org/refile.org"
+
+        ;; capture timestamps and notes when TODO state
+        ;; changes to DONE
+        org-log-done t
+
+        ;; when clocking time for tasks, persist history across
+        ;; emacs sessions. Used together with
+        ;; (org-clock-persistence-insinuate)
+        org-clock-persist 'history
+
+        ;; Default is nil. Source code is indented. This indentation
+        ;; applies during export or tangling, and depending on the
+        ;; context, may alter leading spaces and tabs. When non-nil,
+        ;; source code is aligned with the leftmost column. No lines
+        ;; are modified during export or tangling, which is very
+        ;; useful for white-space sensitive languages, such as Python.
+        ;;
+        ;; Local variables can be used to set this to true on specific
+        ;; buffers only:
+        ;; M-x add-file-local-variable RET org-src-preserve-indentation RET t
+        ;; and press C-c on the header arguments
+        org-src-preserve-indentation nil
+
+        ;; preserve native color scheme for target source code
+        org-src-fontify-natively t
+
+        ;; smart quotes on export
+        org-export-with-smart-quotes t
+        )
+
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+  (add-hook 'org-mode-hook (lambda ()
+                             (flyspell-mode 1)
+                             (electric-pair-mode 1)
+                             (delete '("\\.pdf\\'" . default) org-file-apps)
+                             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+
+  (defun set-exec-path-from-shell-PATH ()
+    (let ((path-from-shell
+           (replace-regexp-in-string "[[:space:]\n]*$" ""
+                                     (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
+      (setenv "PATH" path-from-shell)
+      (setq exec-path (split-string path-from-shell path-separator))))
+  (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
+
+  ;; see org-clock-persist above
+  (org-clock-persistence-insinuate)
+
+  (define-key org-mode-map (kbd "s-u") #'org-goto)
+  (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+
+  (add-hook 'org-mode-hook #'auto-fill-mode)
+
+  ;; exporters
+  (require 'ox-md)     ; markdown
+  (require 'ox-reveal) ; nice presentations
+
+  ;; literate programming
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (emacs-lisp . t)
+     (latex . t)
+     (js . t)
+     (python . t)
+     (scheme . t)
+     (shell . t)
+     (clojure . t)
+     (sql . t)
+     ))
+  )
+#+end_src
+
+*** Reveal
+    So that you can export Org files to Reveal.js presentations
+
+#+begin_src emacs-lisp
+(use-package ox-reveal :pin melpa
+  :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
+#+end_src
+
+** Hydra
+Hydras are useful bindings grouped together with automatic UI.
+
+*** TODO Convert hydras.el to literate style.
+
+#+begin_src emacs-lisp
+(use-package hydra
+  :config (load (concat user-emacs-directory "hydras.el")))
+#+end_src
+
+** Fontawesome
+Fontawesome support.
+
+#+begin_src emacs-lisp
+(use-package fontawesome)
+#+end_src
+
+** Swiper
+Swiper is a completion and narrowing package, similar to Ido.
+
+#+begin_src emacs-lisp
+(use-package swiper)
+
+(use-package swiper-helm
+  :config (progn (global-set-key "\C-s" 'swiper)
+                 (global-set-key "\C-r" 'swiper)))
+#+end_src
+
+** Super Save
+Save when Emacs loses focus or when idle.
+
+#+begin_src emacs-lisp
+(use-package super-save
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t
+        auto-save-default nil)
+  :diminish super-save-mode)
+#+end_src
+
+** Fireplace
+Add a fireplace to your Emacs session.
+
+#+begin_src emacs-lisp
+(use-package fireplace)
+#+end_src
+** Neotree
+Display your filesystem in a tree structure UI.
+
+#+begin_src emacs-lisp
+(use-package neotree
+  :config
+  (global-set-key [f7] 'neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
+        neo-smart-open t
+        neo-autorefresh nil
+        neo-window-width (if (> (x-display-pixel-width) 5000) 40 35)
+        projectile-switch-project-action 'neotree-projectile-action)
+  (defun text-scale-once ()
+    (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
+  (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
+#+end_src
+
+** Editing
+Useful packages for text editing.
+
+*** Expand region
+ A very useful package to select regions delimited by various
+ means. You can progressively expand and contract the selected region
+ using the keyboard.
+
+ #+begin_src emacs-lisp
+ (use-package expand-region
+   :config
+   (global-set-key (kbd "C-=") 'er/expand-region)
+   (global-set-key (kbd "C-M-=") 'er/contract-region))
+ #+end_src
+
+*** Undo tree
+ One of the coolest features of Emacs, one you wonder why not more
+ editors have included it as a standard feature. It organizes your
+ undo/redo operations as a tree structure, and gives you a visual
+ representation of it so you can navigate the tree.
+
+ Never again fear a undo/redo operation makes you lose important edits!
+
+ #+begin_src emacs-lisp
+ (use-package undo-tree :pin gnu
+   :config
+   (global-undo-tree-mode 1)
+   (setq undo-tree-history-dir (let ((dir (concat user-emacs-directory
+                                                  "undo-tree-history/")))
+                                 (make-directory dir :parents)
+                                 dir))
+   (setq undo-tree-history-directory-alist `(("." . ,undo-tree-history-dir)))
+   (defalias 'redo 'undo-tree-redo)
+   :diminish undo-tree-mode)
+ #+end_src
+
+*** Move text
+ Allows you to move lines of text or selected regions up and down.
+
+ #+begin_src emacs-lisp
+ (use-package move-text)
+ #+end_src
+
+*** Anzu
+ Search and replace.
+
+ #+begin_src emacs-lisp
+ (use-package anzu
+   :config
+   (global-anzu-mode)
+   (set-face-attribute 'anzu-mode-line nil :foreground "white" :weight 'bold)
+   :bind ("M-%" . anzu-query-replace)
+   :diminish anzu-mode)
+ #+end_src
+
+*** Shrink whitepace
+ Another of those useful editing packages. This one allows you to
+ remove whitespace in front of the cursor.
+
+ #+begin_src emacs-lisp
+ (use-package shrink-whitespace
+   :bind ("M-SPC" . shrink-whitespace))
+ #+end_src
+*** Tramp
+    Edit files remotely.
+
+#+begin_src emacs-lisp
+(use-package tramp
+  :config
+  ;; Turn off auto-save for tramp files
+  (defun tramp-set-auto-save ()
+    (auto-save-mode -1))
+  (with-eval-after-load 'tramp-cache
+    (setq tramp-persistency-file-name (concat user-emacs-directory "tramp")))
+  (setq tramp-default-method "ssh"
+        tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
+        tramp-adb-program "adb"
+        tramp-auto-save-directory (concat user-emacs-directory "tramp-autosave")
+        tramp-verbose 6
+        ;; use the settings in ~/.ssh/config instead of Tramp's
+        tramp-use-ssh-controlmaster-options nil
+        backup-enable-predicate
+        (lambda (name)
+          (and (normal-backup-enable-predicate name)
+               (not (let ((method (file-remote-p name 'method)))
+                      (when (stringp method)
+                        (member method '("su" "sudo")))))))))
+#+end_src
+*** Atomic Chrome
+    Edit browser text areas in Emacs.
+
+#+begin_src emacs-lisp
+(use-package atomic-chrome
+  :pin melpa
+  :config
+  (setq atomic-chrome-default-major-mode  'text-mode)
+  (setq atomic-chrome-buffer-open-style   'frame
+        atomic-chrome-buffer-frame-width  100
+        atomic-chrome-buffer-frame-height 25)
+  ;; (setq atomic-chrome-url-major-mode-alist
+  ;;       '(("flotiya\\.local" . js2-mode)
+  ;;         ("phabricator" . text-mode)))
+  (atomic-chrome-start-server)
+  :diminish AtomicChrome)
+#+end_src
+*** Crux
+Move to the beginning of line. Wherever that may be.
+
+#+begin_src emacs-lisp
+(use-package crux
+  :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
+#+end_src
+
+** Code tools
+Packages related to code editing, navigation and related tools.
+
+*** Dumb jump
+Jump to definition without generating etags or external tools.
+
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :pin melpa
+  :ensure t
+  :config
+  (dumb-jump-mode t)
+  (global-set-key (kbd "<f12>") 'dumb-jump-go)
+  (setq dumb-jump-selector 'helm))
+#+end_src
+
+*** Diffing
+ Display diff marks.
+
+ #+begin_src emacs-lisp
+ (use-package diff-hl
+   :config (progn
+             (add-hook 'prog-mode-hook (lambda ()
+                                         (diff-hl-mode 1)))))
+ #+end_src
+
+*** Rainbow delimiters
+ Colorful parens...
+
+ #+begin_src emacs-lisp
+ (use-package rainbow-delimiters)
+ #+end_src
+
+*** Highlight symbols
+ This package implements symbol highlighting, so for example when the
+ cursor is in a certain variable name, all instances of that variable
+ are highlighted. You can also navigate between all highlights. Very
+ useful for programming.
+
+ #+begin_src emacs-lisp
+ (use-package highlight-symbol
+   :config
+   (global-set-key (kbd "<f13>") 'highlight-symbol-at-point)
+   (global-set-key (kbd "<f14>") 'highlight-symbol-prev)
+   (global-set-key (kbd "<f15>") 'highlight-symbol-next)
+   (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace))
+
+ (use-package auto-highlight-symbol :pin melpa
+   :config
+   (add-hook 'prog-mode-hook (lambda ()
+                                         (auto-highlight-symbol-mode t)))
+   :diminish auto-highlight-symbol-mode)
+ #+end_src
+
+*** Visual bookmarks
+ Visible, buffer local bookmarks. Bookmarks are displayed in the fringe
+ area, and you can jump between them.
+
+ #+begin_src emacs-lisp
+ (use-package bm
+   :config (progn
+             (define-fringe-bitmap 'bm-marker-left [#xF8
+                                                    #xFC
+                                                    #xFE
+                                                    #x0F
+                                                    #x0F
+                                                    #xFE
+                                                    #xFC
+                                                    #xF8])
+             (setq bm-highlight-style 'bm-highlight-only-fringe)
+             (setq-default bm-buffer-persistence t)
+             (add-hook 'after-init-hook 'bm-repository-load)
+             (add-hook 'find-file-hooks 'bm-buffer-restore)
+             (add-hook 'kill-buffer-hook 'bm-buffer-save)
+             (add-hook 'kill-emacs-hook '(lambda nil
+                                           (bm-buffer-save-all)
+                                           (bm-repository-save)))))
+ #+end_src
+
+*** Git history
+Navigate your git repository history. Allows you to temporarily revert
+a file to a previous version.
+
+#+begin_src emacs-lisp
+(use-package git-timemachine)
+#+end_src
+
+*** Code folding
+    Collapse code regions
+
+#+begin_src emacs-lisp
+(use-package origami :pin melpa
+  :config (progn
+            (add-hook 'prog-mode-hook 'origami-mode)
+            (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
+#+end_src
+
+*** S3 editing
+    Edit files from S3.
+
+#+begin_src emacs-lisp
+(use-package s3ed :pin melpa
+  :config
+  (global-set-key (kbd "C-c s f") 's3ed-find-file)
+  (global-set-key (kbd "C-c s s") 's3ed-save-file))
+#+end_src
+
+*** REST client
+    Add a rest client to your Emacs.
+
+#+begin_src emacs-lisp
+(use-package restclient :pin melpa)
+
+(use-package company-restclient :pin melpa
+  :config (progn
+            (add-hook 'restclient-mode-hook #'company-mode)
+            (add-to-list 'company-backends 'company-restclient)))
+
+(use-package restclient-helm :pin melpa)
+#+end_src
+
+** Programming modes
+These are packages related to adding Emacs support for multiple
+programming languages.
+
+*** Web
+    Web programming is especially tricky, as you typically need to use
+    several other modes in the same file. I don't do a lot of Web
+    programming these days, but when I need to, Web mode is good
+    enough.
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :config (progn
+            (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+            (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+            (setq web-mode-markup-indent-offset 4)
+            (setq web-mode-code-indent-offset 4)))
+#+end_src
+
+*** JavaScript
+    ~js2-mode~ is a JavaScript mode that keeps an AST for syntax
+ checking and coloring.
+
+#+begin_src emacs-lisp
+ (use-package js2-mode
+   :config
+   (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+   (setq js2-mode-show-parse-errors nil
+         js2-mode-show-strict-warnings nil
+         js2-basic-offset 2
+         js-indent-level 2))
+#+end_src
+
+*** Clojure
+#+begin_src emacs-lisp
+(use-package clojure-mode
+  :mode (("\\.clj\\'" . clojure-mode)
+         ("\\.edn\\'" . clojure-mode))
+  :config (require 'flycheck-clj-kondo)
+  :init
+  (add-hook 'clojure-mode-hook (lambda () (progn
+                                            (subword-mode t)
+                                            (diminish 'subword-mode))))
+  (add-hook 'clojure-mode-hook #'eldoc-mode)
+  (diminish 'eldoc-mode))
+
+(use-package cider
+  :config
+  (defun company-remove-ispell ()
+    (when (boundp 'company-backends)
+      (make-local-variable 'company-backends)
+      ;; remove ispell
+      (setq company-backends (delete 'company-dabbrev company-backends))))
+  (add-hook 'prog-mode-hook 'company-remove-ispell)
+
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'clojure-mode-hook #'company-mode)
+
+  (setq nrepl-hide-special-buffers t
+        cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+        cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+        cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+        cider-repl-display-help-banner nil ; don't display start banner
+        nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+        cider-repl-wrap-history t ; wrap around history when end is reached
+        cider-save-file-on-load t ; don't prompt when eval, just save
+        cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
+        org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
+        )
+
+  (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
+
+(use-package helm-cider :pin melpa
+  :config (helm-cider-mode 1))
+#+end_src
+*** Docker
+    Support for working with Docker files.
+
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :diminish Dockerfile)
+#+end_src
+*** Rust
+    Support for working with Rust projects
+
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :config
+  (setq rust-format-on-save t)
+  :hook (rust-mode . lsp-deferred))
+#+end_src
+*** PHP
+#+begin_src emacs-lisp
+(use-package php-mode)
+#+end_src
+*** YAML
+    Support for editing YAML files.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode)
+#+end_src
+*** LSP
+    Support for language server protocol.
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :commands lsp
+  :diminish lsp-mode
+  :config
+  (setq lsp-enable-snippet nil)
+  (require 'lsp-clients))
+#+end_src
+* Customization
+
+* Other Configuration
+This section contains legacy configuration not yet converted to
+literate style.
+
+#+begin_src emacs-lisp
 (load (concat user-emacs-directory "customization.el"))
 (load (concat user-emacs-directory "utility.el"))
 (load (concat user-emacs-directory "keymaps.el"))
-
-(put 'list-threads 'disabled nil)
 #+end_src
