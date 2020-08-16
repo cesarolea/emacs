@@ -296,7 +296,7 @@
             (global-set-key (kbd "C-M-=") 'er/contract-region)))
 
 (use-package ox-reveal :ensure t :pin melpa
-  :config (progn (setq org-reveal-root "file:///Users/cesarolea/workspace/reveal.js")))
+  :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
 
 (use-package org :ensure t
   :config
@@ -305,8 +305,37 @@
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
 
-  (setq org-default-notes-file "~/Sync/Org/refile.org")
-  (setq org-log-done t)
+  ;; where to put captured notes
+  (setq org-default-notes-file "~/Sync/Org/refile.org"
+
+        ;; capture timestamps and notes when TODO state
+        ;; changes to DONE
+        org-log-done t
+
+        ;; when clocking time for tasks, persist history across
+        ;; emacs sessions. Used together with
+        ;; (org-clock-persistence-insinuate)
+        org-clock-persist 'history
+
+        ;; Default is nil. Source code is indented. This indentation
+        ;; applies during export or tangling, and depending on the
+        ;; context, may alter leading spaces and tabs. When non-nil,
+        ;; source code is aligned with the leftmost column. No lines
+        ;; are modified during export or tangling, which is very
+        ;; useful for white-space sensitive languages, such as Python.
+        ;;
+        ;; Local variables can be used to set this to true on specific
+        ;; buffers only:
+        ;; M-x add-file-local-variable RET org-src-preserve-indentation RET t
+        ;; and press C-c on the header arguments
+        org-src-preserve-indentation nil
+
+        ;; preserve native color scheme for target source code
+        org-src-fontify-natively t
+
+        ;; smart quotes on export
+        org-export-with-smart-quotes t
+        )
 
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   (add-hook 'org-mode-hook (lambda ()
@@ -323,22 +352,8 @@
       (setq exec-path (split-string path-from-shell path-separator))))
   (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
-  ;; (defun company-add-ispell ()
-  ;;   (when (boundp 'company-backends)
-  ;;     (make-local-variable 'company-backends)
-  ;;     ;; add ispell
-  ;;     (add-to-list 'company-backends 'company-ispell)))
-  ;; (add-hook 'text-mode-hook 'company-add-ispell)
-
-  (setq org-clock-persist 'history)
+  ;; see org-clock-persist above
   (org-clock-persistence-insinuate)
-
-  ;; when evaluating, reinsert and preserve indentation
-  (setq org-src-preserve-indentation t)
-  ;; preserve native color scheme for target source code
-  (setq org-src-fontify-natively t)
-  ;; smart quotes on export
-  (setq org-export-with-smart-quotes t)
 
   (define-key org-mode-map (kbd "s-u") #'org-goto)
   (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
@@ -348,6 +363,20 @@
   ;; exporters
   (require 'ox-md)     ; markdown
   (require 'ox-reveal) ; nice presentations
+
+  ;; literate programming
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (emacs-lisp . t)
+     (latex . t)
+     (js . t)
+     (python . t)
+     (scheme . t)
+     (shell . t)
+     (clojure . t)
+     (sql . t)
+     ))
   )
 
 (use-package paredit :ensure t
@@ -408,6 +437,7 @@
         cider-repl-wrap-history t ; wrap around history when end is reached
         cider-save-file-on-load t ; don't prompt when eval, just save
         cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
+        org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
         )
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
