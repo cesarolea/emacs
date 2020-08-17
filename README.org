@@ -661,7 +661,7 @@ multiple hydras in succession (for example for movement commands)
 
 **** Switch to mode
      Switch to a major mode. A menu is presented with common major
-     modes. 
+     modes.
 
  #+begin_src emacs-lisp
  (defhydra hydra-major (:color blue)
@@ -719,7 +719,7 @@ multiple hydras in succession (for example for movement commands)
 
 **** Moving around
      Collection of move commands. Useful for jumping around large
-     files. 
+     files.
 
  #+begin_src emacs-lisp
  (defhydra hydra-movement (:color blue)
@@ -1060,7 +1060,10 @@ Useful packages for text editing.
  Allows you to move lines of text or selected regions up and down.
 
  #+begin_src emacs-lisp
- (use-package move-text)
+(use-package move-text
+   :config
+   :bind (("M-S-<up>" . move-text-up)
+          ("M-S-<down>" . move-text-down)))
  #+end_src
 
 *** Anzu
@@ -1137,7 +1140,7 @@ Useful packages for text editing.
   (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
   (global-set-key [(shift return)] #'crux-smart-open-line)
   (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
-  (global-set-key [remap kill-whole-line] #'crux-kill-whole-line) 
+  (global-set-key [remap kill-whole-line] #'crux-kill-whole-line)
   (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
   )
 #+end_src
@@ -1419,26 +1422,54 @@ programming languages.
 #+end_src
 
 * Customization
-Customization and custom utility functions. 
+Customization and custom utility functions. Over the years I've
+accumulated many functions I don't actually use. My hope is that by
+documenting them I can either set proper bindings or simply remove
+them.
+
+The following modes are enabled:
+
+- ~save-place-mode~ When you visit a file, point goes to the last
+  place where it was when you previously visited the same
+  file. Defaults to a file ~places~ stored in your configuration
+  directory.
+- ~blink-cursor-mode~ Disable cursor blinking. The line containing the
+  cursor is visible by highlighting it.
+- ~delete-selection-mode~ Insert while having something highlighted
+  makes the highlighted text disappear. You know, like a normal
+  editor.
+- ~column-number-mode~ Display the column number in the modeline.
+- ~global-visual-line-mode~ Wrap lines at the word boundary.
+- ~auto-revert-mode~ Pick up changes to files on disk automatically
+  (ie, after git pull)
+- ~which-function-mode~ Displays the name of the function where the
+  cursor is located, in the modeline. It also works with Org headers.
 
 #+begin_src emacs-lisp
-;; Fancy titlebar for MacOS
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
-
+(setq save-place-file (concat user-emacs-directory "places"))
 (save-place-mode 1)
 
-;; stop blinking cursor
 (blink-cursor-mode -1)
+
+(delete-selection-mode t)
+
+(column-number-mode t)
+
+(global-visual-line-mode t)
+
+(global-auto-revert-mode t)
+
+(which-function-mode t)
+#+end_src
+
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
 
 ;; Move to the previous window
 (global-set-key (kbd "C-x O") (lambda ()
                                 (interactive)
                                 (other-window -1)))
-
-;; Erase region on insert
-(delete-selection-mode 1)
-(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
 
 (setq-default tab-width 2
 	      c-basic-offset 4
@@ -1452,17 +1483,8 @@ Customization and custom utility functions.
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 
-;; show column number in bar
-(column-number-mode t)
-
 ;; highlight incremental search
 (defconst search-highlight t)
-
-;; wrap lines in a tasteful way
-(global-visual-line-mode 1)
-
-;; pick up changes to files on disk automatically (ie, after git pull)
-(global-auto-revert-mode t)
 
 ;; for commenting lines or blocks
 (global-set-key "\C-c\ -" 'comment-region)
@@ -1487,6 +1509,8 @@ Customization and custom utility functions.
                             (visual-line-mode 0)
                             (toggle-truncate-lines 1)
                             (show-paren-mode t)
+                            (setq display-fill-column-indicator-column 110)
+                            (display-fill-column-indicator-mode 1)
                             (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
                             (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
@@ -1497,19 +1521,7 @@ Customization and custom utility functions.
 (add-hook 'clojure-mode-hook 'whitespace-mode)
 (add-hook 'emacs-lisp-mode-hook 'whitespace-mode)
 
-(add-hook 'text-mode-hook (lambda ()
-                            (electric-pair-mode 0)
-                            (flycheck-mode 0)))
-
-;; which function
-(which-function-mode)
-
-;; move naturally between open windows
-(windmove-default-keybindings)
-
-;; move text lines or regions
-(global-set-key [M-S-up] 'move-text-up)
-(global-set-key [M-S-down] 'move-text-down)
+(add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
 
 ;; drag and drop arrangement
 (defun th/swap-window-buffers-by-dnd (drag-event)
