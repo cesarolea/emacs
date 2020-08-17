@@ -638,14 +638,346 @@ require additional packages.
 #+end_src
 
 ** Hydra
-Hydras are useful bindings grouped together with automatic UI.
+Hydras are useful bindings grouped together. Once an hydra is invoked,
+you are presented with a set of options related to the hydra. It's
+useful to group related functionality that is not frequently used, so
+you can remember the bindings.
 
-*** TODO Convert hydras.el to literate style.
+Hydras have various modes, called "colors". The most common are red
+and blue. The different colors represent what the hydra does once
+invoked. Blue hydras terminate after invocation, making repeated
+invocation impossible. Red hydras stick around, so you can invoke
+multiple hydras in succession (for example for movement commands)
 
 #+begin_src emacs-lisp
-(use-package hydra
-  :config (load (concat user-emacs-directory "hydras.el")))
+(use-package hydra)
 #+end_src
+
+*** Various hydras
+    This is a collection of various hydras I've accumulated over the
+    years. Most of them are rarely used, but some (like [[Window
+    operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out
+    for them and I don't remember the "native" keybinding.
+
+**** Switch to mode
+     Switch to a major mode. A menu is presented with common major
+     modes. 
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-major (:color blue)
+   "major mode"
+   ("q" sql-mode "SQL")
+   ("o" org-mode "org")
+   ("t" text-mode "text")
+   ("w" web-mode "web")
+   ("j" js2-mode "JavaScript")
+   ("m" markdown-mode "Markdown"))
+ (global-set-key (kbd "C-c m") 'hydra-major/body)
+ #+end_src
+
+**** Window operations
+     Common window operations. Splitting, resizing, swapping and
+     deleting.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-window (:color red :hint nil)
+   "
+  Split: _v_ert _x_:horz
+ Delete: _o_ther ace-_d_elete
+ Resize: _h_:splitter left  _j_:splitter down  _k_:splitter up  _l_:splitter right _b_alance windows
+   Move: _s_wap
+   Misc: _a_ce-window _+_:text increase _-_:text decrease _=_:text adjust
+ "
+   ("v" split-window-right)
+   ("x" split-window-below)
+   ("A" hydra-move-splitter-left)
+   ("S" hydra-move-splitter-down)
+   ("W" hydra-move-splitter-up)
+   ("D" hydra-move-splitter-right)
+   ("s" ace-swap-window)
+   ("d" ace-delete-window)
+   ("|" (lambda ()
+          (interactive)
+          (split-window-right)
+          (windmove-right)) "Split right and move")
+   ("_" (lambda ()
+          (interactive)
+          (split-window-below)
+          (windmove-down)) "Split below and move")
+   ("o" delete-other-windows "Delete other windows" :exit t)
+   ("h" shrink-window-horizontally)
+   ("j" enlarge-window)
+   ("k" shrink-window)
+   ("l" enlarge-window-horizontally)
+   ("b" balance-windows)
+   ("a" ace-window "Ace window" :exit t)
+   ("+" text-scale-increase)
+   ("-" text-scale-decrease)
+   ("=" text-scale-adjust :exit t))
+ (global-set-key (kbd "C-c w") 'hydra-window/body)
+ #+end_src
+
+**** Moving around
+     Collection of move commands. Useful for jumping around large
+     files. 
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-movement (:color blue)
+   "movement"
+   ("c" avy-goto-char-2 "Go to char")
+   ("l" avy-goto-line "Go to line")
+   ("L" goto-line "Go to line number")
+   ("w" avy-goto-word-1 "Go to word"))
+ (global-set-key (kbd "C-c g") 'hydra-movement/body)
+
+ (global-set-key (kbd "C-x w") 'avy-goto-word-1)
+ (global-set-key (kbd "C-x g") 'avy-goto-line)
+ (global-set-key (kbd "M-.") 'avy-goto-char-2)
+ #+end_src
+
+**** Github gists
+     Collection of functions to work with gists.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-gist (:color blue)
+   "gists"
+   ("l" gist-list "List gists")
+   ("g" gitst-region-or-buffer "Gist region or buffer")
+   ("P" gist-region-or-buffer-private "Gist region or buffer private")
+   ("r" gist-region "Gist region")
+   ("R" gist-region-private "Private gist")
+   ("b" gist-buffer "Gist buffer")
+   ("B" gist-buffer-private "Gist buffer private"))
+ (global-set-key (kbd "C-c q") 'hydra-gist/body)
+ #+end_src
+
+**** Org mode
+     Moving around an Org mode file.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-org (:color red :hint nil)
+   "
+ Capture^       ^Navigation^
+ -----------------------------------------------------------
+ capture         _j_ next heading
+ last capture    _k_ prev heading
+                 _h_ next heading (same level)
+                 _l_ prev heading (same level)
+                 _u_p higher heading
+                 _t_oggle
+                 _g_o to
+ "
+   ("j" outline-next-visible-heading)
+   ("k" outline-previous-visible-heading)
+   ("h" org-forward-heading-same-level)
+   ("l" org-backward-heading-same-level)
+   ("u" outline-up-heading)
+   ("t" org-cycle)
+   ("g" org-goto :exit t))
+ (global-set-key (kbd "C-c o") 'hydra-org/body)
+ #+end_src
+
+**** Utility
+     Some miscelaneous functions that don't have a home some place
+     else.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-utility (:color blue :hint nil)
+   "
+ URL^             ^Format^  ^Misc^
+ --------------------------------------------------------
+ _h_umanify        _j_son    _c_opy filename to clipboard
+ _d_ecode region   _x_ml     _s_how filename of buffer
+                         _i_nsert filename to buffer
+                         _t_oggle letter case"
+   ("h" url-humanify)
+   ("d" url-decode-region)
+   ("j" json-pretty-print)
+   ("x" xml-format)
+   ("c" copy-file-name-to-clipboard)
+   ("s" show-file-name-of-current-buffer)
+   ("t" toggle-letter-case :color red)
+   ("i" bjm/insert-file-name))
+ (global-set-key (kbd "C-c u") 'hydra-utility/body)
+ #+end_src
+
+**** Eyebrowse
+     Controlling eyebrowse. Switching to workspaces and navigation.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-eyebrowse (:color blue :hint nil)
+   "
+ Workspace^                     ^Navigation^
+ ------------------------------------------------
+ Workspace _1_   Workspace _6_   _n_ext workspace
+ Workspace _2_   Workspace _7_   _p_rev workspace
+ Workspace _3_   Workspace _8_   _l_ast workspace
+ Workspace _4_   Workspace _9_   _c_lose workspace
+ Workspace _5_   Workspace _0_
+ "
+   ("1" eyebrowse-switch-to-window-config-0)
+   ("2" eyebrowse-switch-to-window-config-2)
+   ("3" eyebrowse-switch-to-window-config-3)
+   ("4" eyebrowse-switch-to-window-config-4)
+   ("5" eyebrowse-switch-to-window-config-5)
+   ("6" eyebrowse-switch-to-window-config-6)
+   ("7" eyebrowse-switch-to-window-config-7)
+   ("8" eyebrowse-switch-to-window-config-8)
+   ("9" eyebrowse-switch-to-window-config-9)
+   ("0" eyebrowse-switch-to-window-config-0)
+   ("n" eyebrowse-next-window-config)
+   ("p" eyebrowse-prev-window-config)
+   ("l" eyebrowse-last-window-config)
+   ("c" eyebrowse-close-window-config))
+ (global-set-key (kbd "C-c e") 'hydra-eyebrowse/body)
+ #+end_src
+
+**** Flycheck
+     Using flycheck. Mainly moving around errors in the current buffer.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-flycheck (:color red :hint nil)
+   "
+ Navigation^  ^Buffer^
+ ------------------
+ _j_ Next      _C_lear
+ _k_ Prev      _B_uffer
+ _h_ First     _D_isable
+ _l_ List      _S_etup
+ "
+   ("j" flycheck-next-error)
+   ("k" flycheck-previous-error)
+   ("h" flycheck-first-error)
+   ("l" flycheck-list-errors :color blue)
+   ("C" flycheck-clear)
+   ("B" flycheck-buffer)
+   ("D" flycheck-disable-checker :color blue)
+   ("S" flycheck-verify-setup :color blue))
+ (global-set-key (kbd "C-c k") 'hydra-flycheck/body)
+ #+end_src
+
+**** Visual bookmarks
+     Working with visual bookmarks. Bindings to moving around existing
+     bookmarks, creating and toggling.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-bm (:color red :hint nil :timeout 1.0)
+   "Bookmarks"
+   ("t" bm-toggle "Toggle")
+   ("T" bm-toggle "Toggle" :color blue)
+   ("j" bm-next "Next")
+   ("k" bm-previous "Previous")
+   ("l" bm-show "Show local")
+   ("A" bm-show-all "Show all")
+   ("x" bm-remove-all-current-buffer :color blue)
+   ("X" bm-remove-all-all-buffers :color blue))
+ (global-set-key (kbd "C-c b") 'hydra-bm/body)
+ #+end_src
+
+**** Origami
+     Working with the Origami code folding package.
+
+ #+begin_src emacs-lisp
+ (defhydra hydra-origami (:color red :hint nil :timeout 1.0)
+     "
+ Code Folds^       ^Navigation^
+ ---------------------------------
+ _t_ Toggle       _j_ Move to next
+ _T_ Toggle All   _k_ Move to previous
+ _u_ undo
+ _r_ redo
+ _R_ Reset
+ "
+   ("t" origami-recursively-toggle-node)
+   ("T" origami-toggle-all-nodes)
+   ("u" origami-undo)
+   ("r" origami-redo)
+   ("j" origami-next-fold)
+   ("k" origami-previous-fold)
+   ("R" origami-reset))
+ (global-set-key (kbd "C-c f") 'hydra-origami/body)
+ #+end_src
+
+**** Timestamp
+     Insert various timestamps.
+
+ #+begin_src emacs-lisp
+ (defhydra help/hydra/timestamp (:color blue :hint nil)
+   "
+ Timestamps: (_q_uit)
+       Date: _I_SO, _U_S, US With _Y_ear and _D_ashes, US In _W_ords
+  Date/Time: _N_o Colons or _w_ith
+   Org-Mode: _R_ight Now or _c_hoose
+ "
+   ("q" nil)
+
+   ("I" help/insert-datestamp)
+   ("U" help/insert-datestamp-us)
+   ("Y" help/insert-datestamp-us-full-year)
+   ("D" help/insert-datestamp-us-full-year-and-dashes)
+   ("W" help/insert-datestamp-us-words)
+
+   ("N" help/insert-timestamp-no-colons)
+   ("w" help/insert-timestamp)
+
+   ("R" help/org-time-stamp-with-seconds-now)
+   ("c" org-time-stamp))
+ (global-set-key (kbd "C-c t") #'help/hydra/timestamp/body)
+ (defun help/insert-datestamp ()
+   "Produces and inserts a partial ISO 8601 format timestamp."
+   (interactive)
+   (insert (format-time-string "%F")))
+ (defun help/insert-datestamp-us ()
+   "Produces and inserts a US datestamp."
+   (interactive)
+   (insert (format-time-string "%m/%d/%y")))
+ (defun help/insert-datestamp-us-full-year-and-dashes ()
+   "Produces and inserts a US datestamp with full year and dashes."
+   (interactive)
+   (insert (format-time-string "%m-%d-%Y")))
+ (defun help/insert-datestamp-us-full-year ()
+   "Produces and inserts a US datestamp with full year."
+   (interactive)
+   (insert (format-time-string "%m/%d/%Y")))
+ (defun help/insert-datestamp-us-words ()
+   "Produces and inserts a US datestamp using words."
+   (interactive)
+   (insert (format-time-string "%A %B %d, %Y")))
+ (defun help/insert-timestamp-no-colons ()
+   "Inserts a full ISO 8601 format timestamp with colons replaced by hyphens."
+   (interactive)
+   (insert (help/get-timestamp-no-colons)))
+ (defun help/insert-datestamp ()
+   "Produces and inserts a partial ISO 8601 format timestamp."
+   (interactive)
+   (insert (format-time-string "%F")))
+ (defun help/get-timestamp-no-colons ()
+   "Produces a full ISO 8601 format timestamp with colons replaced by hyphens."
+   (interactive)
+   (let* ((timestamp (help/get-timestamp))
+          (timestamp-no-colons (replace-regexp-in-string ":" "-" timestamp)))
+     timestamp-no-colons))
+ (defun help/get-timestamp ()
+   "Produces a full ISO 8601 format timestamp."
+   (interactive)
+   (let* ((timestamp-without-timezone (format-time-string "%Y-%m-%dT%T"))
+          (timezone-name-in-numeric-form (format-time-string "%z"))
+          (timezone-utf-offset
+           (concat (substring timezone-name-in-numeric-form 0 3)
+                   ":"
+                   (substring timezone-name-in-numeric-form 3 5)))
+          (timestamp (concat timestamp-without-timezone
+                             timezone-utf-offset)))
+     timestamp))
+ (defun help/insert-timestamp ()
+   "Inserts a full ISO 8601 format timestamp."
+   (interactive)
+   (insert (help/get-timestamp)))
+ (defun help/org-time-stamp-with-seconds-now ()
+   (interactive)
+   (let ((current-prefix-arg '(16)))
+     (call-interactively 'org-time-stamp)))
+ #+end_src
 
 ** Fontawesome
 Fontawesome support.
@@ -817,8 +1149,27 @@ Useful packages for text editing.
   (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
   (global-set-key [(shift return)] #'crux-smart-open-line)
   (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
-  (global-set-key [remap kill-whole-line] #'crux-kill-whole-line)
+  (global-set-key [remap kill-whole-line] #'crux-kill-whole-line) 
+  (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
   )
+#+end_src
+
+*** Buffer flip
+    One of the most common operations is switching between open files
+    in a buffer. This package allows you to flip between open buffers
+    or cancel the flip operation, returning to the original buffer.
+
+#+begin_src emacs-lisp
+(use-package buffer-flip
+  :bind  (("M-<tab>" . buffer-flip)
+  :map buffer-flip-map
+          ( "M-<tab>" .   buffer-flip-forward)
+          ( "M-<iso-lefttab>" . buffer-flip-backward)
+          ( "M-ESC" .     buffer-flip-abort))
+  :config
+  (setq buffer-flip-skip-patterns
+        '("^\\*helm\\b"
+          "^\\*swiper\\*$")))
 #+end_src
 
 ** Code tools
