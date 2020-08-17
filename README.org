@@ -108,7 +108,7 @@ configuration bankruptcies.
 #+end_src
 
 * Packages
-I use [[https://github.com/jwiegley/use-package][~use-package~]] for isolating package configuration. By default
+I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default
 all packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages
 may be pinned to regular MELPA if they are not found in the stable
 Rep, or if a newer version is desired.
@@ -806,11 +806,19 @@ Useful packages for text editing.
   :diminish AtomicChrome)
 #+end_src
 *** Crux
-Move to the beginning of line. Wherever that may be.
+    Crux is an acronym for a Collection of Ridiculously Useful
+    eXtensions for Emacs. It's basically a collection of functions
+    accumulated over the years, from Bozhidar Batsov, creator of CIDER
+    and Emacs Prelude.
 
 #+begin_src emacs-lisp
 (use-package crux
-  :config (progn (global-set-key "\M-m" 'crux-move-beginning-of-line)))
+  :config
+  (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+  (global-set-key [(shift return)] #'crux-smart-open-line)
+  (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+  (global-set-key [remap kill-whole-line] #'crux-kill-whole-line)
+  )
 #+end_src
 
 ** Code tools
