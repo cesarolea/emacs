@@ -413,7 +413,8 @@ Here I'm tweaking three settings:
   (projectile-mode t)
   (setq projectile-project-search-path '("~/workspace/")
         projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
-        projectile-indexing-method 'alien))
+        projectile-indexing-method 'alien
+        projectile-completion-system 'helm))
 #+end_src
 
 ** Helm
