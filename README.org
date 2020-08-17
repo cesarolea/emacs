@@ -421,7 +421,7 @@ Here I'm tweaking three settings:
 *** TODO Documentation
 
  #+begin_src emacs-lisp
- (use-package helm-flx :ensure t :pin melpa
+ (use-package helm-flx :pin melpa
    :config (helm-flx-mode +1))
 
  (use-package helm
@@ -439,9 +439,8 @@ Here I'm tweaking three settings:
              (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
 
              (setq helm-idle-delay 0.1)
-             (setq helm-input-idle-delay 0.1)
-             (setq helm-follow-mode-persistent t)
-             (setq helm-c-locate-command "locate-with-mdfind %.0s %s")
+;             (setq helm-input-idle-delay 0.1)
+;             (setq helm-follow-mode-persistent t)
              (setq helm-for-files-preferred-list
                    '(helm-source-buffers-list
                      helm-source-recentf
