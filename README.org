@@ -7,15 +7,24 @@ literate programming for configuration, after several (unsuccessful)
 attempts at better organization, and going through many Emacs
 configuration bankruptcies.
 
+** In the beginning
+First and foremost we need to turn off the mouse interface to avoid
+momentary display. Also some performance tuning.
+
 #+begin_src emacs-lisp
-; Turn off mouse interface early in startup to avoid momentary display
 (dolist (mode
          '(tool-bar-mode                ; No toolbars, more room for text.
            scroll-bar-mode              ; No scroll bars either.
            tool-bar-mode
            menu-bar-mode))
   (funcall mode 0))
+#+end_src
 
+Then a ton of configuration variables I've accumulated over the
+years. Some I know what they do and are documented. Some I don't have
+an idea...
+
+#+begin_src emacs-lisp
 (setq create-lockfiles nil                    ; disable the creation of lockfiles
       auto-save-default nil                   ; don't create autosave files
       load-prefer-newer t                     ; always load newest bytecode
@@ -65,7 +74,8 @@ configuration bankruptcies.
       mouse-yank-at-point t
       dired-listing-switches "-alh"
       search-default-mode #'char-fold-to-regexp
-      gc-cons-threshold (* 100 1024 1024)
+      gc-cons-threshold 100000000
+      read-process-output-max (* 1024 1024)
       jit-lock-defer-time nil
       jit-lock-stealth-nice 0.1
       jit-lock-stealth-time 0.2
@@ -119,7 +129,13 @@ Rep, or if a newer version is desired.
 we can clone this configuration from the repository and, at first
 load, it will fetch all packages and install them.
 
+In order to use ~use-package~, we must first install it.
+
 #+begin_src emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
 (require 'package)
 
 (setq use-package-always-pin "melpa-stable"
@@ -138,6 +154,18 @@ load, it will fetch all packages and install them.
  (eval-after-load "eldoc" '(diminish 'eldoc-mode))
  (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
  #+end_src
+
+*** Which key
+Which key makes it easier to discover the major mode you are in.
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :bind ("s-W" . which-key-show-major-mode)
+  :diminish
+  :config (which-key-mode)
+          (which-key-setup-side-window-right-bottom)
+          (setq which-key-idle-delay 2))
+#+end_src
 
 *** Ensure system package
  This package allows you to install related binary (or system) programs
@@ -456,6 +484,7 @@ Here I'm tweaking three settings:
              ;; replace C-x b with helm's version
              (global-set-key "\C-x\ b" 'helm-mini)
              (global-set-key "\C-x\ \C-r" 'helm-recentf)
+             (global-set-key "\C-h\ a" 'helm-apropos)
              (global-set-key (kbd "<f9>") 'helm-bookmarks))
 
  (use-package helm-projectile
@@ -1394,10 +1423,11 @@ programming languages.
     Support for working with Rust projects
 
 #+begin_src emacs-lisp
-(use-package rust-mode
+(use-package rustic :pin melpa
   :config
-  (setq rust-format-on-save t)
-  :hook (rust-mode . lsp-deferred))
+  (setq lsp-rust-analyzer-server-command (quote ("/home/cesaro/.local/bin/rust-analyzer")))
+  (setq lsp-rust-server (quote rust-analyzer)))
+
 #+end_src
 *** PHP
 #+begin_src emacs-lisp
@@ -1417,8 +1447,18 @@ programming languages.
   :commands lsp
   :diminish lsp-mode
   :config
-  (setq lsp-enable-snippet nil)
+  (setq lsp-enable-snippet nil
+        lsp-enable-links   nil
+        lsp-completion-provider :capf
+        lsp-idle-delay 0.500)
   (require 'lsp-clients))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package helm-lsp
+  :config
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 #+end_src
 
 * Customization
