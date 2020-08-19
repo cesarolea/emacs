@@ -62,7 +62,7 @@ an idea...
       display-line-numbers-grow-only t
       display-line-numbers-type "relative"
       whitespace-line-column 100              ; limit line length
-      whitespace-style '(face tabs empty trailing lines-tail tab-mark)
+      whitespace-style '(face tabs empty trailing tab-mark)
       whitespace-display-mappings '((trailing-mark 32 [183] [46])
                                     (newline-mark 10 [182 10])
                                     (tab-mark 9 [9655 9] [92 9]))
@@ -582,6 +582,7 @@ require additional packages.
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
+  (global-set-key "\C-cr" 'org-list-repair)
 
   ;; where to put captured notes
   (setq org-default-notes-file "~/Sync/Org/refile.org"
