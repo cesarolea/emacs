@@ -636,6 +636,7 @@ require additional packages.
 
   (define-key org-mode-map (kbd "s-u") #'org-goto)
   (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+  (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
 
   (add-hook 'org-mode-hook #'auto-fill-mode)
 
