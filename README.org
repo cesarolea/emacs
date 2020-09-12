@@ -271,7 +271,10 @@ Add Flycheck support for both Rust and Clojure.
 (use-package flycheck-clj-kondo)
 
 (use-package flycheck-rust
-  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+  (setenv "PATH" (concat (getenv "PATH") ":~/.cargo/bin"))
+  (setq exec-path (append exec-path '("~/.cargo/bin"))))
 #+end_src
 
 ** Magit
@@ -289,6 +292,8 @@ I have it bound to <f10>. Also:
 - ~magit-branch-read-upstream-first~ When creating a branch, whether
   to read the upstream branch before the name of the branch that is to
   be created.
+- ~global-magit-file-mode~ Enable certain magit actions in files that
+  are part of a git repository.
 
 #+begin_src emacs-lisp
 (use-package magit
@@ -296,7 +301,8 @@ I have it bound to <f10>. Also:
   :config
   (setq magit-last-seen-setup-instructions "1.4"
         magit-push-always-verify nil
-        magit-branch-read-upstream-first nil)
+        magit-branch-read-upstream-first nil
+        global-magit-file-mode 1)
   (if (bound-and-true-p magit-auto-revert-mode)
       (diminish 'magit-auto-revert-mode))
   :diminish magit-mode)
@@ -375,6 +381,10 @@ packages either support or depend on Ido. I like to pair it with
 vertical mode so that candidates appear in a vertical instead of
 horizontal list, and flex ido for fuzzy matching.
 
+Finally, ~ido-completing-read+~ replaces stock emacs completion with
+ido completion wherever it is possible to do so without breaking
+things.
+
 #+begin_src emacs-lisp
 (use-package ido
   :config
@@ -408,6 +418,10 @@ horizontal list, and flex ido for fuzzy matching.
   (setq ido-enable-flex-matching t
         ido-use-faces t
         ido-use-filename-at-point t))
+
+(use-package ido-completing-read+
+  :config
+  (ido-ubiquitous-mode 1))
 #+end_src
 
 ** Project management
