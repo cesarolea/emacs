@@ -597,88 +597,109 @@ Org mode is able to export to several other formats, and some of them
 require additional packages.
 
 #+begin_src emacs-lisp
-(use-package org
-  :config
-  (global-set-key "\C-cl" 'org-store-link)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cb" 'org-iswitchb)
-  (global-set-key "\C-cr" 'org-list-repair)
+  (use-package org
+    :config
+    (global-set-key "\C-cl" 'org-store-link)
+    (global-set-key "\C-cc" 'org-capture)
+    (global-set-key "\C-ca" 'org-agenda)
+    (global-set-key "\C-cb" 'org-iswitchb)
+    (global-set-key "\C-cr" 'org-list-repair)
 
-  ;; where to put captured notes
-  (setq org-default-notes-file "~/Sync/Org/refile.org"
+    ;; where to put captured notes
+    (setq org-default-notes-file "~/Sync/Org/refile.org"
 
-        ;; capture timestamps and notes when TODO state
-        ;; changes to DONE
-        org-log-done t
+          ;; capture timestamps and notes when TODO state
+          ;; changes to DONE
+          org-log-done t
 
-        ;; when clocking time for tasks, persist history across
-        ;; emacs sessions. Used together with
-        ;; (org-clock-persistence-insinuate)
-        org-clock-persist 'history
+          ;; when clocking time for tasks, persist history across
+          ;; emacs sessions. Used together with
+          ;; (org-clock-persistence-insinuate)
+          org-clock-persist 'history
 
-        ;; Default is nil. Source code is indented. This indentation
-        ;; applies during export or tangling, and depending on the
-        ;; context, may alter leading spaces and tabs. When non-nil,
-        ;; source code is aligned with the leftmost column. No lines
-        ;; are modified during export or tangling, which is very
-        ;; useful for white-space sensitive languages, such as Python.
-        ;;
-        ;; Local variables can be used to set this to true on specific
-        ;; buffers only:
-        ;; M-x add-file-local-variable RET org-src-preserve-indentation RET t
-        ;; and press C-c on the header arguments
-        org-src-preserve-indentation nil
+          ;; Default is nil. Source code is indented. This indentation
+          ;; applies during export or tangling, and depending on the
+          ;; context, may alter leading spaces and tabs. When non-nil,
+          ;; source code is aligned with the leftmost column. No lines
+          ;; are modified during export or tangling, which is very
+          ;; useful for white-space sensitive languages, such as Python.
+          ;;
+          ;; Local variables can be used to set this to true on specific
+          ;; buffers only:
+          ;; M-x add-file-local-variable RET org-src-preserve-indentation RET t
+          ;; and press C-c on the header arguments
+          org-src-preserve-indentation nil
 
-        ;; preserve native color scheme for target source code
-        org-src-fontify-natively t
+          ;; preserve native color scheme for target source code
+          org-src-fontify-natively t
 
-        ;; smart quotes on export
-        org-export-with-smart-quotes t
-        )
+          ;; smart quotes on export
+          org-export-with-smart-quotes t
+          )
 
-  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (add-hook 'org-mode-hook (lambda ()
-                             (flyspell-mode 1)
-                             (electric-pair-mode 1)
-                             (delete '("\\.pdf\\'" . default) org-file-apps)
-                             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+    (add-hook 'org-mode-hook (lambda ()
+                               (flyspell-mode 1)
+                               (electric-pair-mode 1)
+                               (delete '("\\.pdf\\'" . default) org-file-apps)
+                               (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
-  (defun set-exec-path-from-shell-PATH ()
-    (let ((path-from-shell
-           (replace-regexp-in-string "[[:space:]\n]*$" ""
-                                     (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
-      (setenv "PATH" path-from-shell)
-      (setq exec-path (split-string path-from-shell path-separator))))
-  (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
+    (defun set-exec-path-from-shell-PATH ()
+      (let ((path-from-shell
+             (replace-regexp-in-string "[[:space:]\n]*$" ""
+                                       (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
+        (setenv "PATH" path-from-shell)
+        (setq exec-path (split-string path-from-shell path-separator))))
+    (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
-  ;; see org-clock-persist above
-  (org-clock-persistence-insinuate)
+    ;; see org-clock-persist above
+    (org-clock-persistence-insinuate)
 
-  (define-key org-mode-map (kbd "s-u") #'org-goto)
-  (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
+    (define-key org-mode-map (kbd "s-u") #'org-goto)
+    (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+    (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
 
-  (add-hook 'org-mode-hook #'auto-fill-mode)
+    (add-hook 'org-mode-hook #'auto-fill-mode)
 
-  ;; exporters
-  (require 'ox-md)     ; markdown
-  (require 'ox-reveal) ; nice presentations
+    ;; exporters
+    (require 'ox-md)     ; markdown
+    (require 'ox-reveal) ; nice presentations
+    )
+#+end_src
 
-  ;; literate programming
+*** Literate programming
+    A very powerful feature of Org is literate programming. Out of the
+    box it is able to execute code blocks from many different
+    programming languages. Here I am adding a rest client as well, so
+    that you can document an API.
+
+#+begin_src emacs-lisp
+  (use-package ob-restclient :pin melpa)
+
   (org-babel-do-load-languages
-   'org-babel-load-languages
-   '(
-     (emacs-lisp . t)
-     (latex . t)
-     (js . t)
-     (python . t)
-     (scheme . t)
-     (shell . t)
-     (clojure . t)
-     (sql . t)
-     ))
-  )
+     'org-babel-load-languages
+     '(
+       (emacs-lisp . t)
+       (latex . t)
+       (js . t)
+       (python . t)
+       (scheme . t)
+       (shell . t)
+       (clojure . t)
+       (sql . t)
+       (restclient . t)
+       ))
+#+end_src
+
+    Executing code locally can be dangerous of course. However there
+    might be times when you want to override the confirmation
+    dialog. The following snippet does just that
+
+#+begin_src emacs-lisp
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("restclient" "emacs-lisp"))))
+
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+end_src
 
 *** Reveal
