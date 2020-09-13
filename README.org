@@ -133,11 +133,14 @@ In order to use ~use-package~, we must first install it.
 
 #+begin_src emacs-lisp
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 (require 'package)
 
+;; Default to using melpa-stable, unless we override at the package level.
 (setq use-package-always-pin "melpa-stable"
       use-package-always-ensure t)
 #+end_src
