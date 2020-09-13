@@ -1,4 +1,4 @@
-#+TITLE: cesarolea Emacs Configuration
+#+TITLE: cesarolea's Emacs Configuration
 #+AUTHOR: César Olea
 
 * Preface
@@ -1593,30 +1593,46 @@ function does.
 Defines hooks for many editing modes. For example the configuration
 for ~prog-mode~.
 
+Specifically in ~prog-mode~, the following is enabled:
+- ~electric-pair-mode~ for automatically inserting matching
+  delimiters.
+- ~rainbow-mode~ for colorizing color names in the buffer. Works with
+  both color names and hex codes.
+- ~visual-line-mode~ disabled for preserving long lines.
+- ~toggle-truncate-lines~ for truncating long lines and displaying an
+  arrow in the fringe instead.
+- ~show-paren-mode~ for highlighting the matching paren at point.
+- ~whitespace-mode~ for displaying spurious whitespace.
+- ~display-fill-column-indicator-column~ for displaying the column
+  indicator at the 110 column.
+- ~display-fill-column-indicator-mode~ for enabling the fill column
+  indicator.
+
+Finally a ~before-save-hook~ is set to cleanup whitespace when the
+file is saved.
+
 #+begin_src emacs-lisp
-;; prog mode setup
-(add-hook 'prog-mode-hook (lambda ()
-                            (electric-pair-mode 1)
-                            (rainbow-mode 1)
-                            (visual-line-mode 0)
-                            (toggle-truncate-lines 1)
-                            (show-paren-mode t)
-                            (setq display-fill-column-indicator-column 110)
-                            (display-fill-column-indicator-mode 1)
-                            (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
-                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
+  ;; prog mode setup
+  (add-hook 'prog-mode-hook (lambda ()
+                              (electric-pair-mode 1)
+                              (rainbow-mode 1)
+                              (visual-line-mode 0)
+                              (toggle-truncate-lines 1)
+                              (show-paren-mode t)
+                              (whitespace-mode t)
+                              (setq display-fill-column-indicator-column 110)
+                              (display-fill-column-indicator-mode 1)
+                              (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
+                              (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
-;; but only lisps should have rainbow delimiters
-(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+  ;; but only lisps should have rainbow delimiters
+  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-(add-hook 'clojure-mode-hook 'whitespace-mode)
-(add-hook 'emacs-lisp-mode-hook 'whitespace-mode)
+  (add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
 
-(add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
-
-;; If all you use is magit anyway, this is not really a loss
-(remove-hook 'find-file-hooks 'vc-find-file-hook)
+  ;; If all you use is magit anyway, this is not really a loss
+  (remove-hook 'find-file-hooks 'vc-find-file-hook)
 #+end_src
 
 ** Defaults
