@@ -1382,6 +1382,19 @@ programming languages.
 #+end_src
 
 *** Clojure
+    Emacs has fantastic support for Clojure with Cider. It provides
+    support for interactive programming with Clojure. Over the years
+    I've been accumulating tweaks to Cider, but the stock
+    configuration is very comprehensible.
+
+    ~subword-mode~ is enabled in ~clojure-mode~ and it treats
+    camelCase, snake_case and kebab-case as multiple words. That is,
+    the cursor stops in between as in ~some|Word~, ~some|_word~ and
+    ~some|-word~.
+
+    Most Cider options tweaks are documented inline. For more
+    information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
+
 #+begin_src emacs-lisp
 (use-package clojure-mode
   :mode (("\\.clj\\'" . clojure-mode)
@@ -1436,7 +1449,7 @@ programming languages.
   :diminish Dockerfile)
 #+end_src
 *** Rust
-    Support for working with Rust projects
+    Support for working with Rust projects.
 
 #+begin_src emacs-lisp
 (use-package rustic :pin melpa
@@ -1456,18 +1469,21 @@ programming languages.
 (use-package yaml-mode)
 #+end_src
 *** LSP
-    Support for language server protocol.
+    A Language Server Protocol client for Emacs. ~lsp-mode~ supports
+    many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the
+    moment.
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp
   :diminish lsp-mode
+  :hook ((rust-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :config
   (setq lsp-enable-snippet nil
         lsp-enable-links   nil
         lsp-completion-provider :capf
-        lsp-idle-delay 0.500)
-  (require 'lsp-clients))
+        lsp-idle-delay 0.500))
 
 (use-package lsp-ui
   :commands lsp-ui-mode)
