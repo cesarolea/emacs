@@ -44,8 +44,8 @@ an idea...
                            ("melpa"        . "https://melpa.org/packages/"))
         exec-path (append exec-path '("/usr/local/bin"))
         confirm-kill-processes nil              ; don't prompt for killing processes
-        ns-use-proxy-icon nil
-        recenter-positions '(top middle bottom) ; enable saveplace
+        ns-use-proxy-icon nil                   ; don't display icons in the titlebar
+        recenter-positions '(top middle bottom) ; so recentering goes to top, middle and bottom of the frame, in that order
         next-line-add-newlines t                ; add newlines at the end of line with C-n
         ns-pop-up-frames nil                    ; force new frames into existing window
         ring-bell-function 'ignore              ; no bell
@@ -59,8 +59,8 @@ an idea...
         doc-view-continuous t                   ; scroll PDFs with the mouse wheel
         doc-view-resolution 300                 ; so PDFs don't hurt my eyes
         suggest-key-bindings nil                ; stop telling me the menu command key
-        display-line-numbers-grow-only t
-        display-line-numbers-type "relative"
+        display-line-numbers-grow-only t        ; avoid growing the line number fringe (ie. when going from 99 to 100) causing buffer content shift to the right
+        display-line-numbers-type "relative"    ; don't count continuation lines in line numbering
         whitespace-line-column 100              ; limit line length
         whitespace-style '(face tabs empty trailing tab-mark)
         whitespace-display-mappings '((trailing-mark 32 [183] [46])
