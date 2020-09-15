@@ -122,10 +122,10 @@ an idea...
 #+end_src
 
 * Packages
-I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default
-all packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages
-may be pinned to regular MELPA if they are not found in the stable
-Rep, or if a newer version is desired.
+I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default all
+packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages may
+be pinned to regular MELPA if they are not found in the stable repo,
+or if a newer version is desired.
 
 ** Basic Configuration
 ~use-package~ can also install selected packages by using the
