@@ -288,7 +288,7 @@ Add Flycheck support for both Rust and Clojure.
 The mighty Magit. Some consider this to be the killer application for
 Emacs. Don't use git without it.
 
-I have it bound to <f10>. Also:
+I have it bound to ~<f10>~. Also:
 
 - ~magit-last-seen-setup-instructions~ is so that magit doesn't prompt
   you to see setup instructions on first load.
@@ -445,7 +445,7 @@ Here I'm tweaking three settings:
 1. Project search path: so that Projectile knows where all my projects
    are located. If you don't set this, simply opening any file of a
    project will add it to the Projectile list of known projects.
-2. Madeline function: So it doesn't waste too much space in the
+2. Modeline function: So it doesn't waste too much space in the
    modeline, I change it to read simply ~P[name of the project]~.
 3. Indexing method: There are several indexing methods available. Some
    are native to Emacs, thus portable and don't rely on external
