@@ -121,6 +121,21 @@ an idea...
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
 #+end_src
 
+
+** Backups
+   By default, Emacs will create backup files (files ending in ~~~) in
+   the same directory as your regular files. This can be a lifesaver,
+   but annoying. We can take them out of the way to their own
+   directory:
+
+#+begin_src emacs-lisp
+(setq version-control t     ;; Use version numbers for backups.
+      kept-new-versions 10  ;; Number of newest versions to keep.
+      kept-old-versions 0   ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      backup-by-copying t)  ;; Copy all files, don't rename them.
+#+end_src
+
 * Packages
 I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default all
 packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages may
