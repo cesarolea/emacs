@@ -615,6 +615,10 @@ Org mode is able to export to several other formats, and some of them
 require additional packages.
 
 #+begin_src emacs-lisp
+(use-package ox-hugo)
+#+end_src
+
+#+begin_src emacs-lisp
   (use-package org
     :config
     (global-set-key "\C-cl" 'org-store-link)
@@ -682,6 +686,7 @@ require additional packages.
     ;; exporters
     (require 'ox-md)     ; markdown
     (require 'ox-reveal) ; nice presentations
+    (require 'ox-hugo)   ; blogging
     )
 #+end_src
 
