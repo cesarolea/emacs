@@ -634,6 +634,9 @@ require additional packages.
           ;; changes to DONE
           org-log-done t
 
+          ;; show plain text links by default
+          org-descriptive-links nil
+
           ;; when clocking time for tasks, persist history across
           ;; emacs sessions. Used together with
           ;; (org-clock-persistence-insinuate)
