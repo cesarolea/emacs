@@ -701,7 +701,7 @@ require additional packages.
     :hook (after-init . org-roam-mode)
     :config
     (setq org-roam-completion-system 'ivy
-          org-roam-db-location "~/Sync/Org/roam/")
+          org-roam-db-location "~/Sync/Org/org-roam.db")
     (require 'org-roam-protocol)
     :custom (org-roam-directory "~/Sync/Org/roam/")
     :bind (:map org-roam-mode-map
@@ -1354,24 +1354,24 @@ Jump to definition without generating etags or external tools.
  area, and you can jump between them.
 
  #+begin_src emacs-lisp
- (use-package bm
-   :config (progn
-             (define-fringe-bitmap 'bm-marker-left [#xF8
-                                                    #xFC
-                                                    #xFE
-                                                    #x0F
-                                                    #x0F
-                                                    #xFE
-                                                    #xFC
-                                                    #xF8])
-             (setq bm-highlight-style 'bm-highlight-only-fringe)
-             (setq-default bm-buffer-persistence t)
-             (add-hook 'after-init-hook 'bm-repository-load)
-             (add-hook 'find-file-hooks 'bm-buffer-restore)
-             (add-hook 'kill-buffer-hook 'bm-buffer-save)
-             (add-hook 'kill-emacs-hook '(lambda nil
-                                           (bm-buffer-save-all)
-                                           (bm-repository-save)))))
+   (use-package bm
+     :config (progn
+               (define-fringe-bitmap 'bm-marker-left [#xF8
+                                                      #xFC
+                                                      #xFE
+                                                      #x0F
+                                                      #x0F
+                                                      #xFE
+                                                      #xFC
+                                                      #xF8])
+               (setq bm-highlight-style 'bm-highlight-only-fringe)
+               (setq-default bm-buffer-persistence t)
+               (add-hook 'after-init-hook 'bm-repository-load)
+               (add-hook 'find-file-hooks 'bm-buffer-restore)
+               (add-hook 'kill-buffer-hook 'bm-buffer-save)
+               (add-hook 'kill-emacs-hook '(lambda nil
+                                             (bm-buffer-save-all)
+                                             (bm-repository-save)))))
  #+end_src
 
 *** Git history
