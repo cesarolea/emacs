@@ -386,17 +386,24 @@ backends. Useful in programming modes. I'm installing the lsp backend
 for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
-(use-package company
-  :hook (prog-mode . company-mode)
-  :config
-  (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1
-        company-idle-delay 0.0)
-  (global-set-key (kbd "C-'") 'company-complete)
-  (global-company-mode)
-  :diminish company-mode)
+  (use-package company
+    :hook ((cider-repl-mode . company-mode)
+           (cider-mode      . company-mode)
+           (clojure-mode    . company-mode))
+    :bind (:map company-active-map
+                ("C-n" .   company-select-next)
+                ("C-p" .   company-select-previous)
+                ("RET" .   company-complete-selection)
+                ("<ret>" . company-complete-selection))
+    :config
+    (setq company-tooltip-align-annotations t
+          company-minimum-prefix-length 1
+          company-idle-delay 0.0)
+    (global-set-key (kbd "C-'") 'company-complete)
+    ;(global-company-mode)
+    :diminish company-mode)
 
-(use-package company-lsp)
+  (use-package company-lsp)
 #+end_src
 
 ** Ido mode
@@ -635,7 +642,7 @@ require additional packages.
           org-log-done t
 
           ;; show plain text links by default
-          org-descriptive-links nil
+          ;; org-descriptive-links nil
 
           ;; when clocking time for tasks, persist history across
           ;; emacs sessions. Used together with
@@ -712,6 +719,21 @@ require additional packages.
                 :map org-mode-map
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate))))
+
+  (use-package org-roam-server
+    :pin melpa
+    :config
+    (setq org-roam-server-host "127.0.0.1"
+          org-roam-server-port 8080
+          org-roam-server-authenticate nil
+          org-roam-server-export-inline-images t
+          org-roam-server-serve-files nil
+          org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+          org-roam-server-network-poll t
+          org-roam-server-network-arrows nil
+          org-roam-server-network-label-truncate t
+          org-roam-server-network-label-truncate-length 60
+          org-roam-server-network-label-wrap-length 20))
 #+end_src
 
 *** Literate programming
@@ -1495,9 +1517,6 @@ programming languages.
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode)
-  (add-hook 'clojure-mode-hook #'company-mode)
 
   (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
