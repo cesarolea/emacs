@@ -708,7 +708,9 @@ require additional packages.
     :hook (after-init . org-roam-mode)
     :config
     (setq org-roam-completion-system 'ivy
-          org-roam-db-location "~/Sync/Org/org-roam.db")
+          org-roam-db-location "~/Sync/Org/org-roam.db"
+          org-roam-index-file "20201109112056-index.org"
+          org-roam-graph-exclude-matcher '("dailies"))
     (require 'org-roam-protocol)
     :custom (org-roam-directory "~/Sync/Org/roam/")
     :bind (:map org-roam-mode-map
@@ -719,7 +721,16 @@ require additional packages.
                 :map org-mode-map
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate))))
+#+end_src
 
+**** Roam Server
+
+     Org Roam already comes with graphing built in, but Roam Server
+     displays your note graph in a Web page that you can navigate, see
+     previews of your notes by hovering in each node, as well as
+     clicking a node to open the corresponding note in Emacs.
+
+#+begin_src emacs-lisp
   (use-package org-roam-server
     :pin melpa
     :config
@@ -734,6 +745,20 @@ require additional packages.
           org-roam-server-network-label-truncate t
           org-roam-server-network-label-truncate-length 60
           org-roam-server-network-label-wrap-length 20))
+#+end_src
+
+**** Deft
+
+     Provides full text search capabilities for finding roam notes.
+
+#+begin_src emacs-lisp
+  (use-package deft
+    :bind ("s-F" . deft)
+    :commands (deft)
+    :config
+    (setq deft-extensions '("org")
+          deft-directory "~/Sync/Org/roam"
+          deft-recursive t))
 #+end_src
 
 *** Literate programming
