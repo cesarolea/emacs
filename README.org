@@ -369,15 +369,18 @@ them easily. You can specify files to ignore, which is useful for
 files that get visited automatically and fill up your recent file history.
 
 #+begin_src emacs-lisp
-(use-package recentf
-  :hook (after-init . recentf-mode)
-  :bind ("\C-x\ \C-r" . recentf-open-files)
-  :config
-  (recentf-mode 1)
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
-  (setq recentf-max-menu-items 25
-        recentf-max-saved-items 20000000))
+  (use-package recentf
+    :hook (after-init . recentf-mode)
+    :bind ("\C-x\ \C-r" . recentf-open-files)
+    :config
+    (recentf-mode 1)
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/Sync/Org/roam/.*" (getenv "HOME")))
+    (setq recentf-max-menu-items 25
+          recentf-max-saved-items 20000000))
 #+end_src
 
 ** Completion engine
