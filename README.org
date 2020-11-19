@@ -782,13 +782,13 @@ require additional packages.
      'org-babel-load-languages
      '(
        (emacs-lisp . t)
-       (latex . t)
-       (js . t)
-       (python . t)
-       (scheme . t)
-       (shell . t)
-       (clojure . t)
-       (sql . t)
+       (latex      . t)
+       (js         . t)
+       (python     . t)
+       (scheme     . t)
+       (shell      . t)
+       (clojure    . t)
+       (sql        . t)
        (restclient . t)
        ))
 #+end_src
