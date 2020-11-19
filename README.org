@@ -5,11 +5,14 @@
 This is my Emacs configuration file. It's my first attempt at using
 literate programming for configuration, after several (unsuccessful)
 attempts at better organization, and going through many Emacs
-configuration bankruptcies.
+[[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][configuration bankruptcies]].
+
+Initial load time is not a priority in this configuration, as I use
+Emacs as a daemon.
 
 ** In the beginning
 First and foremost we need to turn off the mouse interface to avoid
-momentary display. Also some performance tuning.
+momentary display.
 
 #+begin_src emacs-lisp
 (dolist (mode
@@ -278,6 +281,7 @@ Which key makes it easier to discover the major mode you are in.
              (setq smooth-scroll-margin 5))
    :diminish smooth-scroll-mode)
  #+end_src
+
 ** Flycheck
 On the fly linter and syntax checker. I want this enabled in all
 programming modes.
@@ -809,7 +813,7 @@ require additional packages.
 #+end_src
 
 ** Hydra
-Hydras are useful bindings grouped together. Once an hydra is invoked,
+Hydras are useful bindings grouped together. Once a hydra is invoked,
 you are presented with a set of options related to the hydra. It's
 useful to group related functionality that is not frequently used, so
 you can remember the bindings.
@@ -817,8 +821,9 @@ you can remember the bindings.
 Hydras have various modes, called "colors". The most common are red
 and blue. The different colors represent what the hydra does once
 invoked. Blue hydras terminate after invocation, making repeated
-invocation impossible. Red hydras stick around, so you can invoke
-multiple hydras in succession (for example for movement commands)
+invocation cumbersome (you have to invoke the hydra again). Red hydras
+stick around, so you can invoke multiple commands in the same hydra in
+succession (for example for movement commands)
 
 #+begin_src emacs-lisp
 (use-package hydra)
