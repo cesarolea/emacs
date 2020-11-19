@@ -380,7 +380,8 @@ files that get visited automatically and fill up your recent file history.
     (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/Sync/Org/roam/.*" (getenv "HOME")))
     (setq recentf-max-menu-items 25
-          recentf-max-saved-items 20000000))
+          recentf-max-saved-items 20000000
+          recentf-auto-cleanup 10))
 #+end_src
 
 ** Completion engine
