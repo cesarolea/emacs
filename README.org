@@ -718,6 +718,13 @@ require additional packages.
     (setq org-roam-completion-system 'ivy
           org-roam-db-location "~/Sync/Org/org-roam.db"
           org-roam-index-file "20201109112056-index.org"
+          org-roam-dailies-directory "~/Sync/org/roam/dailies/"
+          org-roam-dailies-capture-templates
+          '(("d" "default" entry
+             #'org-roam-capture--get-point
+             "* %?"
+             :file-name "~/Sync/org/roam/dailies/%<%Y-%m-%d>"
+             :head "#+title: %<%Y-%m-%d>\n\n"))
           org-roam-graph-exclude-matcher '("dailies"))
     (require 'org-roam-protocol)
     :custom (org-roam-directory "~/Sync/Org/roam/")
@@ -976,6 +983,30 @@ succession (for example for movement commands)
    ("i" bjm/insert-file-name))
  (global-set-key (kbd "C-c u") 'hydra-utility/body)
  #+end_src
+
+**** Org roam dailies
+     Org roam has its own dedicated keybindings. This is a hydra only
+     for the dailies functionality.
+
+#+begin_src emacs-lisp
+  (defhydra hydra-roam-dailies (:color blue :hint nil)
+    "
+  Capture^         ^Find^        ^Navigation^
+  --------------------------------------------------------
+  _t_oday           t_o_day
+  _y_esterday       y_e_sterday   _p_revious note
+  _d_ate            d_a_te        _n_ext note"
+    ("t" org-roam-dailies-capture-today)
+    ("y" org-roam-dailies-capture-yesterday)
+    ("d" org-roam-dailies-capture-date)
+    ("o" org-roam-dailies-find-today)
+    ("e" org-roam-dailies-find-yesterday)
+    ("a" org-roam-dailies-find-date)
+    ("p" org-roam-dailies-find-previous-note :color red)
+    ("n" org-roam-dailies-find-next-note :color red))
+
+  (global-set-key (kbd "C-c i") 'hydra-roam-dailies/body)
+#+end_src
 
 **** Eyebrowse
      Controlling eyebrowse. Switching to workspaces and navigation.
