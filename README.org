@@ -842,21 +842,20 @@ succession (for example for movement commands)
     operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out
     for them and I don't remember the "native" keybinding.
 
-**** Switch to mode
-     Switch to a major mode. A menu is presented with common major
-     modes.
+**** Dumb jump
+#+begin_src emacs-lisp
+  (defhydra dumb-jump-hydra (:color blue :columns 3)
+      "Dumb Jump"
+      ("j" xref-find-definitions "Go")
+      ("o" dumb-jump-go-other-window "Other window")
+      ("e" dumb-jump-go-prefer-external "Go external")
+      ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+      ("i" dumb-jump-go-prompt "Prompt")
+      ("l" dumb-jump-quick-look "Quick look")
+      ("b" xref-pop-marker-stack "Back"))
 
- #+begin_src emacs-lisp
- (defhydra hydra-major (:color blue)
-   "major mode"
-   ("q" sql-mode "SQL")
-   ("o" org-mode "org")
-   ("t" text-mode "text")
-   ("w" web-mode "web")
-   ("j" js2-mode "JavaScript")
-   ("m" markdown-mode "Markdown"))
- (global-set-key (kbd "C-c m") 'hydra-major/body)
- #+end_src
+  (global-set-key (kbd "C-c j") 'dumb-jump-hydra/body)
+#+end_src
 
 **** Window operations
      Common window operations. Splitting, resizing, swapping and
@@ -1389,13 +1388,13 @@ Packages related to code editing, navigation and related tools.
 Jump to definition without generating etags or external tools.
 
 #+begin_src emacs-lisp
-(use-package dumb-jump
-  :pin melpa
-  :ensure t
-  :config
-  (dumb-jump-mode t)
-  (global-set-key (kbd "<f12>") 'dumb-jump-go)
-  (setq dumb-jump-selector 'helm))
+  (use-package dumb-jump
+    :pin melpa
+    :config
+    (dumb-jump-mode t)
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+    (global-set-key (kbd "<f12>") 'xref-find-definitions)
+    (setq dumb-jump-selector 'helm))
 #+end_src
 
 *** Diffing
