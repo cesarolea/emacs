@@ -644,6 +644,7 @@ require additional packages.
 
     ;; where to put captured notes
     (setq org-default-notes-file "~/Sync/Org/refile.org"
+          org-agenda-files '("~/Sync/Org/life.org")
 
           ;; capture timestamps and notes when TODO state
           ;; changes to DONE
@@ -675,6 +676,10 @@ require additional packages.
 
           ;; smart quotes on export
           org-export-with-smart-quotes t
+
+          ;; modules
+          org-modules (quote (org-habit))
+          org-habit-graph-column 50
           )
 
     (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
