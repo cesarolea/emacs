@@ -1,3 +1,5 @@
+.cache/
+.dap-breakpoints
 README.el
 .org-id-locations
 config.el

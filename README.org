@@ -325,16 +325,17 @@ I have it bound to ~<f10>~. Also:
   are part of a git repository.
 
 #+begin_src emacs-lisp
-(use-package magit
-  :bind ("<f10>" . magit-status)
-  :config
-  (setq magit-last-seen-setup-instructions "1.4"
-        magit-push-always-verify nil
-        magit-branch-read-upstream-first nil
-        global-magit-file-mode 1)
-  (if (bound-and-true-p magit-auto-revert-mode)
-      (diminish 'magit-auto-revert-mode))
-  :diminish magit-mode)
+  (use-package magit
+    :bind (("<f10>" . magit-status)
+           ("s-m" . magit-status))
+    :config
+    (setq magit-last-seen-setup-instructions "1.4"
+          magit-push-always-verify nil
+          magit-branch-read-upstream-first nil
+          global-magit-file-mode 1)
+    (if (bound-and-true-p magit-auto-revert-mode)
+        (diminish 'magit-auto-revert-mode))
+    :diminish magit-mode)
 #+end_src
 
 ** savehist
@@ -504,79 +505,87 @@ Here I'm tweaking three settings:
 *** TODO Documentation
 
  #+begin_src emacs-lisp
- (use-package helm-flx :pin melpa
-   :config (helm-flx-mode +1))
+    (use-package helm-flx :pin melpa
+      :config (helm-flx-mode +1))
 
- (use-package helm
-   :config
-             ;; so helm adapts to your usage
-             (helm-adaptive-mode 1)
+   (use-package helm
+     :config
+     ;; so helm adapts to your usage
+     (helm-adaptive-mode 1)
 
-             ;; window management
-             (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
-             (add-hook 'helm-after-initialize-hook (lambda ()
-                                                     (popwin:display-buffer helm-buffer t)
-                                                     (popwin-mode -1)))
+     (when (executable-find "curl")
+       (setq helm-net-prefer-curl t))
 
-             ;;  Restore popwin-mode after a Helm session finishes.
-             (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+     ;; window management
+     (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
+     (add-hook 'helm-after-initialize-hook (lambda ()
+                                             (popwin:display-buffer helm-buffer t)
+                                             (popwin-mode -1)))
 
-             (setq helm-idle-delay 0.1)
-;             (setq helm-input-idle-delay 0.1)
-;             (setq helm-follow-mode-persistent t)
-             (setq helm-for-files-preferred-list
-                   '(helm-source-buffers-list
-                     helm-source-recentf
-                     helm-source-bookmarks
-                     helm-source-file-cache
-                     helm-source-files-in-current-dir
-                     helm-source-locate))
-             (global-set-key "\C-x\ a" 'helm-for-files)
-             (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
-             ;; replace M-x with helm's version
-             (global-set-key (kbd "M-x") 'helm-M-x)
-             ;; replace C-x b with helm's version
-             (global-set-key "\C-x\ b" 'helm-mini)
-             (global-set-key "\C-x\ \C-r" 'helm-recentf)
-             (global-set-key "\C-h\ a" 'helm-apropos)
-             (global-set-key (kbd "<f9>") 'helm-bookmarks))
+     ;;  Restore popwin-mode after a Helm session finishes.
+     (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
 
- (use-package helm-projectile
-   :config
-   (defun contextual-helm-projectile ()
-     (if (and (buffer-file-name)
-              (projectile-project-p))
-         (progn
-           (global-unset-key "\C-x\ a")
-           (global-set-key "\C-x\ a" 'helm-projectile)
-           )
-       (progn
-         (global-unset-key "\C-x\ a")
-         (global-set-key "\C-x\ a" 'helm-for-files)
-         )))
-   (contextual-helm-projectile)
-   (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
-                                         ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
-   (helm-projectile-on))
+     (setq helm-idle-delay 0.1)
+                                           ;             (setq helm-input-idle-delay 0.1)
+                                           ;             (setq helm-follow-mode-persistent t)
+     (setq helm-for-files-preferred-list
+           '(helm-source-buffers-list
+             helm-source-recentf
+             helm-source-bookmarks
+             helm-source-file-cache
+             helm-source-files-in-current-dir
+             helm-source-locate))
+     (global-set-key "\C-x\ a" 'helm-for-files)
+     (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+     ;; replace M-x with helm's version
+     (global-set-key (kbd "M-x") 'helm-M-x)
+     ;; replace C-x b with helm's version
+     (global-set-key "\C-x\ b" 'helm-mini)
+     (global-set-key "\C-x\ \C-r" 'helm-recentf)
+     (global-set-key "\C-h\ a" 'helm-apropos)
+     (global-set-key (kbd "<f9>") 'helm-bookmarks)
+     (global-set-key (kbd "s-b") 'helm-bookmarks)
+     (global-set-key (kbd "C-h C-l") 'helm-locate-library))
 
- (use-package helm-ag
-   :config
-   (setq helm-ag-fuzzy-match t)
-   (defun helm-ag-projectile-root (&optional ARG)
-     "Search from projectile-project-root` which defaults to current directory if no project."
-     (interactive)
-     (helm-ag (projectile-project-root)))
-   (defun helm-do-ag-projectile-root (&optional ARG)
-     "Search from projectile-project-root` which defaults to current directory if no project."
-     (interactive)
-     (helm-do-ag (projectile-project-root))))
+    (use-package helm-projectile
+      :config
+      (defun contextual-helm-projectile ()
+        (if (and (buffer-file-name)
+                 (projectile-project-p))
+            (progn
+              (global-unset-key "\C-x\ a")
+              (global-set-key "\C-x\ a" 'helm-projectile)
+              )
+          (progn
+            (global-unset-key "\C-x\ a")
+            (global-set-key "\C-x\ a" 'helm-for-files)
+            )))
+      (contextual-helm-projectile)
+      (add-hook 'window-configuration-change-hook #'contextual-helm-projectile)
+                                            ;(setq projectile-enable-caching t) ;; fix slow invocations of helm-projectile-find-file
+      (helm-projectile-on))
+
+    (use-package helm-ag
+      :config
+      (setq helm-ag-fuzzy-match t)
+      (defun helm-ag-projectile-root (&optional ARG)
+        "Search from projectile-project-root` which defaults to current directory if no project."
+        (interactive)
+        (helm-ag (projectile-project-root)))
+      (defun helm-do-ag-projectile-root (&optional ARG)
+        "Search from projectile-project-root` which defaults to current directory if no project."
+        (interactive)
+        (helm-do-ag (projectile-project-root))))
  #+end_src
 
 ** Spellchecker
 #+begin_src emacs-lisp
-(use-package flyspell
-  :bind ("C-c C-SPC" . ispell-word)
-  :diminish flyspell-mode)
+  (use-package flyspell
+    :bind ("C-c C-SPC" . ispell-word)
+    :hook (prog-mode . flyspell-prog-mode)
+    :config
+    (delq 'font-lock-string-face flyspell-prog-text-faces)
+    :diminish flyspell-mode)
 #+end_src
 
 ** Paredit
@@ -679,7 +688,7 @@ require additional packages.
 
           ;; modules
           org-modules (quote (org-habit))
-          org-habit-graph-column 50
+          ;; org-habit-graph-column 50
           )
 
     (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
@@ -1477,10 +1486,9 @@ a file to a previous version.
     Collapse code regions
 
 #+begin_src emacs-lisp
-(use-package origami :pin melpa
-  :config (progn
-            (add-hook 'prog-mode-hook 'origami-mode)
-            (global-set-key (kbd "<f5>") 'origami-recursively-toggle-node)))
+  (use-package origami :pin melpa
+    :bind (("<f5>" 'origami-recursively-toggle-mode))
+    :config (add-hook 'prog-mode-hook 'origami-mode))
 #+end_src
 
 *** S3 editing
@@ -1533,18 +1541,78 @@ programming languages.
             (setq web-mode-code-indent-offset 4)))
 #+end_src
 
+*** LSP
+    A Language Server Protocol client for Emacs. ~lsp-mode~ supports
+    many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the
+    moment.
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :commands lsp
+    :diminish lsp-mode
+    :hook ((rust-mode . lsp)
+           (lsp-mode . lsp-enable-which-key-integration))
+    :config
+    (setq lsp-enable-snippet nil
+          lsp-enable-links   nil
+          lsp-keymap-prefix "C-c l"
+          lsp-auto-configure t
+          lsp-completion-provider :capf
+          lsp-idle-delay 0.500))
+
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-doc-position 'at-point))
+
+  (use-package helm-lsp
+    :config
+    (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+
+  (use-package dap-mode :pin melpa
+    :config
+    (dap-mode 1))
+#+end_src
+
 *** JavaScript
     ~js2-mode~ is a JavaScript mode that keeps an AST for syntax
  checking and coloring.
 
 #+begin_src emacs-lisp
- (use-package js2-mode
-   :config
-   (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
-   (setq js2-mode-show-parse-errors nil
-         js2-mode-show-strict-warnings nil
-         js2-basic-offset 2
-         js-indent-level 2))
+  (use-package js2-mode
+    :hook (((js2-mode js2-mode-jsx) . js2-imenu-extras-mode)
+           (js2-mode . lsp)
+           (js2-mode . dap-mode)
+           (xref-backend-functions . dumb-jump-xref-activate))
+    :bind (:map js2-mode-map ("M-." . nil))
+    :mode "\\.\\(js\\|jsx\\)\\'"
+    :interpreter "node"
+    :config
+    (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+    (require 'dap-node)
+    (require 'dap-firefox)
+    (setq js-chain-indent t
+          js2-basic-offset 2
+          js2-highlight-external-variables t
+          js2-highlight-level 3
+          js2-idle-timer-delay 0.1
+          js2-mode-show-parse-errors nil
+          js2-mode-show-strict-warnings nil
+          js2-skip-preprocessor-directives t
+          js2-strict-missing-semi-warning nil
+          js2-strict-trailing-comma-warning nil))
+
+  (use-package nodejs-repl :pin melpa
+    :bind (:map js2-mode-map
+                ("C-x C-e" . nodejs-repl-send-last-expression)
+                ("C-c C-j" . nodejs-repl-send-line)
+                ("C-c C-r" . nodejs-repl-send-region)
+                ("C-c C-c" . nodejs-repl-send-buffer)
+                ("C-c C-l" . nodejs-repl-load-file)
+                ("C-c C-z" . nodejs-repl-switch-to-repl)))
+
+  (use-package prettier-js :pin melpa
+    :hook ((js2-mode js2-jsx-mode) . prettier-js-mode))
 #+end_src
 
 *** Clojure
@@ -1631,31 +1699,6 @@ programming languages.
 #+begin_src emacs-lisp
 (use-package yaml-mode)
 #+end_src
-*** LSP
-    A Language Server Protocol client for Emacs. ~lsp-mode~ supports
-    many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the
-    moment.
-
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :commands lsp
-  :diminish lsp-mode
-  :hook ((rust-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :config
-  (setq lsp-enable-snippet nil
-        lsp-enable-links   nil
-        lsp-completion-provider :capf
-        lsp-idle-delay 0.500))
-
-(use-package lsp-ui
-  :commands lsp-ui-mode)
-
-(use-package helm-lsp
-  :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
-#+end_src
-
 * Customization
 Customization and custom utility functions. Over the years I've
 accumulated many functions I don't actually use. My hope is that by
