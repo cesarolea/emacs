@@ -1442,7 +1442,7 @@ a file to a previous version.
 
 #+begin_src emacs-lisp
   (use-package origami :pin melpa
-    :bind (("<f5>" 'origami-recursively-toggle-mode))
+    :bind (("<f5>" . 'origami-recursively-toggle-mode))
     :config (add-hook 'prog-mode-hook 'origami-mode))
 #+end_src
 
