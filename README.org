@@ -532,6 +532,27 @@ things.
      :config
      (setq helm-ag-fuzzy-match t)
      (global-set-key (kbd "C-c p f") 'helm-do-ag-project-root))
+
+   (use-package projectile
+     :init
+     (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+     :config
+     (projectile-mode t)
+     (setq projectile-project-search-path '("~/workspace/")
+           projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+           projectile-indexing-method 'alien
+           projectile-completion-system 'helm))
+
+    (use-package helm-projectile
+      :config
+      (defun my-find-file ()
+        (interactive)
+        (if (and (buffer-file-name)
+                 (projectile-project-p))
+            (helm-projectile)
+          (helm-for-files)))
+      (global-set-key (kbd "C-x a") 'my-find-file)
+      (helm-projectile-on))
  #+end_src
 
 ** Spellchecker
