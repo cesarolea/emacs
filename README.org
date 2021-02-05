@@ -2143,6 +2143,15 @@ keyboard with no easy access to a compose key.
 #+end_src
 
 * Mail
+
+  Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for
+  synchronizing mail to a local folder using IMAP.
+
+  ~mu4e~ is installed outside of Emacs using the OS package
+  manager. The reason is that the version of ~mu~ and ~mu4e~ must
+  match. That's why a load path is used instead of installing from
+  MELPA.
+
 #+begin_src emacs-lisp
   (use-package mu4e
     :ensure nil
@@ -2153,7 +2162,8 @@ keyboard with no easy access to a compose key.
     (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
     (add-hook 'mu4e-compose-mode-hook #'(lambda () (auto-save-mode -1)))
 
-    ;; for capture templates
+    ;; for capture templates. In future versions of mu4e the name of this
+    ;; package is changed to mu4e-org
     (require 'org-mu4e)
 
     ;; This is set to 't' to avoid mail syncing issues when using mbsync
@@ -2161,6 +2171,8 @@ keyboard with no easy access to a compose key.
           mu4e-headers-skip-duplicates t
           mu4e-update-interval (* 5 60)
           mu4e-index-update-in-background t
+
+          ;; change to mbsync -a to sync all mail accounts
           mu4e-get-mail-command "mbsync loanpro"
           mu4e-maildir "~/Mail"
           mu4e-view-show-addresses t
@@ -2232,6 +2244,8 @@ keyboard with no easy access to a compose key.
     (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
     ;; Run in the background to sync mail periodically
+    ;; Uncomment this to have Emacs download mail even when mu4e
+    ;; is not explicitely started.
     ;; (mu4e t)
 
     (setq mu4e-contexts
@@ -2340,5 +2354,5 @@ keyboard with no easy access to a compose key.
         (concat
          "flag:unread"
          " AND NOT flag:trashed"
-         " AND NOT (maildir:\"/loanpro/[Gmail].All Mail\" OR maildir:\"/personal/[Gmail].All Mail\")")))
+         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/personal/[Gmail]/All Mail\")")))
 #+end_src
