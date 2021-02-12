@@ -75,7 +75,7 @@ an idea...
         save-interprogram-paste-before-kill t
         apropos-do-all t
         mouse-yank-at-point t
-        dired-listing-switches "-alh"
+        dired-listing-switches "-agho --group-directories-first"
         search-default-mode #'char-fold-to-regexp
         gc-cons-threshold 100000000
         read-process-output-max (* 1024 1024)
@@ -95,6 +95,9 @@ an idea...
         dired-recursive-copies 'always
         dired-dwim-target t
         system-time-locale "C"
+
+        ;; avoid duplicates in helm's M-x
+        history-delete-duplicates t
         )
 
   ; themes
@@ -188,12 +191,12 @@ In order to use ~use-package~, we must first install it.
 Which key makes it easier to discover the major mode you are in.
 
 #+begin_src emacs-lisp
-(use-package which-key
-  :bind ("s-W" . which-key-show-major-mode)
-  :diminish
-  :config (which-key-mode)
-          (which-key-setup-side-window-right-bottom)
-          (setq which-key-idle-delay 2))
+  (use-package which-key
+    :init (which-key-mode)
+    :bind ("s-W" . which-key-show-major-mode)
+    :diminish which-key-mode
+    :config (which-key-setup-side-window-right-bottom)
+            (setq which-key-idle-delay 0.3))
 #+end_src
 
 *** Ensure system package
@@ -416,6 +419,7 @@ files that get visited automatically and fill up your recent file history.
     (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/Sync/Org/roam/.*" (getenv "HOME")))
     (add-to-list 'recentf-exclude "/tmp/mu4e-*")
+    (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
     (setq recentf-max-menu-items 25
           recentf-max-saved-items 20000000
           recentf-auto-cleanup 10))
@@ -1134,81 +1138,82 @@ succession (for example for movement commands)
      Insert various timestamps.
 
  #+begin_src emacs-lisp
- (defhydra help/hydra/timestamp (:color blue :hint nil)
+   (defhydra help/hydra/timestamp (:color blue :hint nil)
+     "
+   Timestamps: (_q_uit)
+         Date: _I_SO, _U_S, US With _Y_ear and _D_ashes, US In _W_ords
+    Date/Time: _N_o Colons or _w_ith
+     Org-Mode: _R_ight Now, Inact_i_ve or _c_hoose
    "
- Timestamps: (_q_uit)
-       Date: _I_SO, _U_S, US With _Y_ear and _D_ashes, US In _W_ords
-  Date/Time: _N_o Colons or _w_ith
-   Org-Mode: _R_ight Now or _c_hoose
- "
-   ("q" nil)
+     ("q" nil)
 
-   ("I" help/insert-datestamp)
-   ("U" help/insert-datestamp-us)
-   ("Y" help/insert-datestamp-us-full-year)
-   ("D" help/insert-datestamp-us-full-year-and-dashes)
-   ("W" help/insert-datestamp-us-words)
+     ("I" help/insert-datestamp)
+     ("U" help/insert-datestamp-us)
+     ("Y" help/insert-datestamp-us-full-year)
+     ("D" help/insert-datestamp-us-full-year-and-dashes)
+     ("W" help/insert-datestamp-us-words)
 
-   ("N" help/insert-timestamp-no-colons)
-   ("w" help/insert-timestamp)
+     ("N" help/insert-timestamp-no-colons)
+     ("w" help/insert-timestamp)
 
-   ("R" help/org-time-stamp-with-seconds-now)
-   ("c" org-time-stamp))
- (global-set-key (kbd "C-c t") #'help/hydra/timestamp/body)
- (defun help/insert-datestamp ()
-   "Produces and inserts a partial ISO 8601 format timestamp."
-   (interactive)
-   (insert (format-time-string "%F")))
- (defun help/insert-datestamp-us ()
-   "Produces and inserts a US datestamp."
-   (interactive)
-   (insert (format-time-string "%m/%d/%y")))
- (defun help/insert-datestamp-us-full-year-and-dashes ()
-   "Produces and inserts a US datestamp with full year and dashes."
-   (interactive)
-   (insert (format-time-string "%m-%d-%Y")))
- (defun help/insert-datestamp-us-full-year ()
-   "Produces and inserts a US datestamp with full year."
-   (interactive)
-   (insert (format-time-string "%m/%d/%Y")))
- (defun help/insert-datestamp-us-words ()
-   "Produces and inserts a US datestamp using words."
-   (interactive)
-   (insert (format-time-string "%A %B %d, %Y")))
- (defun help/insert-timestamp-no-colons ()
-   "Inserts a full ISO 8601 format timestamp with colons replaced by hyphens."
-   (interactive)
-   (insert (help/get-timestamp-no-colons)))
- (defun help/insert-datestamp ()
-   "Produces and inserts a partial ISO 8601 format timestamp."
-   (interactive)
-   (insert (format-time-string "%F")))
- (defun help/get-timestamp-no-colons ()
-   "Produces a full ISO 8601 format timestamp with colons replaced by hyphens."
-   (interactive)
-   (let* ((timestamp (help/get-timestamp))
-          (timestamp-no-colons (replace-regexp-in-string ":" "-" timestamp)))
-     timestamp-no-colons))
- (defun help/get-timestamp ()
-   "Produces a full ISO 8601 format timestamp."
-   (interactive)
-   (let* ((timestamp-without-timezone (format-time-string "%Y-%m-%dT%T"))
-          (timezone-name-in-numeric-form (format-time-string "%z"))
-          (timezone-utf-offset
-           (concat (substring timezone-name-in-numeric-form 0 3)
-                   ":"
-                   (substring timezone-name-in-numeric-form 3 5)))
-          (timestamp (concat timestamp-without-timezone
-                             timezone-utf-offset)))
-     timestamp))
- (defun help/insert-timestamp ()
-   "Inserts a full ISO 8601 format timestamp."
-   (interactive)
-   (insert (help/get-timestamp)))
- (defun help/org-time-stamp-with-seconds-now ()
-   (interactive)
-   (let ((current-prefix-arg '(16)))
-     (call-interactively 'org-time-stamp)))
+     ("R" help/org-time-stamp-with-seconds-now)
+     ("c" org-time-stamp)
+     ("i" org-time-stamp-inactive))
+   (global-set-key (kbd "C-c t") #'help/hydra/timestamp/body)
+   (defun help/insert-datestamp ()
+     "Produces and inserts a partial ISO 8601 format timestamp."
+     (interactive)
+     (insert (format-time-string "%F")))
+   (defun help/insert-datestamp-us ()
+     "Produces and inserts a US datestamp."
+     (interactive)
+     (insert (format-time-string "%m/%d/%y")))
+   (defun help/insert-datestamp-us-full-year-and-dashes ()
+     "Produces and inserts a US datestamp with full year and dashes."
+     (interactive)
+     (insert (format-time-string "%m-%d-%Y")))
+   (defun help/insert-datestamp-us-full-year ()
+     "Produces and inserts a US datestamp with full year."
+     (interactive)
+     (insert (format-time-string "%m/%d/%Y")))
+   (defun help/insert-datestamp-us-words ()
+     "Produces and inserts a US datestamp using words."
+     (interactive)
+     (insert (format-time-string "%A %B %d, %Y")))
+   (defun help/insert-timestamp-no-colons ()
+     "Inserts a full ISO 8601 format timestamp with colons replaced by hyphens."
+     (interactive)
+     (insert (help/get-timestamp-no-colons)))
+   (defun help/insert-datestamp ()
+     "Produces and inserts a partial ISO 8601 format timestamp."
+     (interactive)
+     (insert (format-time-string "%F")))
+   (defun help/get-timestamp-no-colons ()
+     "Produces a full ISO 8601 format timestamp with colons replaced by hyphens."
+     (interactive)
+     (let* ((timestamp (help/get-timestamp))
+            (timestamp-no-colons (replace-regexp-in-string ":" "-" timestamp)))
+       timestamp-no-colons))
+   (defun help/get-timestamp ()
+     "Produces a full ISO 8601 format timestamp."
+     (interactive)
+     (let* ((timestamp-without-timezone (format-time-string "%Y-%m-%dT%T"))
+            (timezone-name-in-numeric-form (format-time-string "%z"))
+            (timezone-utf-offset
+             (concat (substring timezone-name-in-numeric-form 0 3)
+                     ":"
+                     (substring timezone-name-in-numeric-form 3 5)))
+            (timestamp (concat timestamp-without-timezone
+                               timezone-utf-offset)))
+       timestamp))
+   (defun help/insert-timestamp ()
+     "Inserts a full ISO 8601 format timestamp."
+     (interactive)
+     (insert (help/get-timestamp)))
+   (defun help/org-time-stamp-with-seconds-now ()
+     (interactive)
+     (let ((current-prefix-arg '(16)))
+       (call-interactively 'org-time-stamp)))
  #+end_src
 
 ** Fontawesome
@@ -1624,6 +1629,8 @@ programming languages.
 
   (use-package prettier-js :pin melpa
     :hook ((js2-mode js2-jsx-mode) . prettier-js-mode))
+
+  (use-package skewer-mode :pin melpa)
 #+end_src
 
 *** Clojure
@@ -1987,6 +1994,20 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 (define-key process-menu-mode-map (kbd "C-k") 'joaot/delete-process-at-point)
 #+end_src
 
+** Color emoji
+
+   Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color
+   Emoji]] font installed.
+
+#+begin_src emacs-lisp
+  (add-hook 'after-make-frame-functions
+            (lambda (_frame)
+              (set-fontset-font t 'symbol "Apple Color Emoji")
+              (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+              (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+              (set-fontset-font t 'symbol "Symbola" nil 'append)))
+#+end_src
+
 * Utility
 These functions have a dedicated [[Hydra]].
 
@@ -2173,7 +2194,7 @@ keyboard with no easy access to a compose key.
           mu4e-index-update-in-background t
 
           ;; change to mbsync -a to sync all mail accounts
-          mu4e-get-mail-command "mbsync loanpro"
+          mu4e-get-mail-command "mbsync -a"
           mu4e-maildir "~/Mail"
           mu4e-view-show-addresses t
           mu4e-compose-complete-only-personal t
@@ -2246,7 +2267,18 @@ keyboard with no easy access to a compose key.
     ;; Run in the background to sync mail periodically
     ;; Uncomment this to have Emacs download mail even when mu4e
     ;; is not explicitely started.
-    ;; (mu4e t)
+    (mu4e t)
+
+    (require 'smtpmail)
+
+    (defun mu4e-message-maildir-matches (msg rx)
+      (when rx
+        (if (listp rx)
+            ;; if rx is a list, try each one for a match
+            (or (mu4e-message-maildir-matches msg (car rx))
+                (mu4e-message-maildir-matches msg (cdr rx)))
+          ;; not a list, check rx
+          (string-match rx (mu4e-message-field msg :maildir)))))
 
     (setq mu4e-contexts
           (list
@@ -2255,7 +2287,18 @@ keyboard with no easy access to a compose key.
             :match-func
             (lambda (msg)
               (when msg
-                (string-prefix-p "^/loanpro" (mu4e-message-field msg :maildir))))
+                (mu4e-message-maildir-matches msg "^/loanpro")))
+            ;; (lambda (msg)
+            ;;   (when msg
+            ;;     (or
+            ;;      (mu4e-message-contact-field-matches
+            ;;       msg '(:from :to :cc :bcc) "cesar.olea@loanpro.io")
+            ;;      (mu4e-message-contact-field-matches
+            ;;       msg '(:from :to :cc :bcc) "cesaro@simnang.com"))))
+            ;; (lambda (msg)
+            ;;   (when msg
+            ;;     (mu4e-message (mu4e-message-field msg :maildir))
+            ;;     (string-prefix-p "^/loanpro" (mu4e-message-field msg :maildir))))
             :vars '((user-mail-address . "cesar.olea@loanpro.io")
                     (user-full-name . "César Olea")
                     (mu4e-drafs-folder . "/loanpro/[Gmail]/Drafts")
@@ -2263,24 +2306,21 @@ keyboard with no easy access to a compose key.
                     (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
                     (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
                     (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
-                    (mu4e-compose-signature . "<#part type=text/html>
-  <html><body><div style=\"line-height:1.2em;color:#27313f;font-family:roboto,sans-serif;font-size:0.9em\">
-    <div style=\"padding-bottom:3px\">
-      <a href=\"https://www.linkedin.com/in/cesarolea/\" style=\"color:rgb(39,49,63);font-weight:bold\" target=\"_blank\">CESAR OLEA</a>&nbsp;|
-      <span style=\"color:#4e627e\">Chief Technology Officer </span>
-    </div>
-    <div>
-      +52 (662) 172-5478&nbsp;|
-      <a href=\"mailto:cesar.olea@loanpro.io\" style=\"color:#27313f\" target=\"_blank\">cesar.olea@loanpro.io</a>
-    </div>
-    <div style=\"padding-top:5px\">
-      LEND | SERVICE | COLLECT
-    </div>
-    <a href=\"https://loanpro.io/\" target=\"_blank\">
-      <img alt=\"LoanPro\" src=\"https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\">
-      </a>
-    </div>
-  </body></html><#/part>")
+                    (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\" data-smartmail=\"gmail_signature\"><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-size:medium;font-family:&quot;Times New Roman&quot;;padding-bottom:3px\"><div style=\"line-height:1.2em;color:#27313f;font-family:roboto,sans-serif;font-size:0.9em\">
+      <div style=\"padding-bottom:3px\">
+          <a href=\"https://www.linkedin.com/in/cesarolea/\" style=\"color:rgb(39,49,63);font-weight:bold\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.linkedin.com/in/cesarolea/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNHtgXEnWWT34lkAbGLyjqAmXQWjgA\">CESAR OLEA</a>&nbsp;|
+          <span style=\"color:#4e627e\">Chief Technology Officer </span>
+      </div>
+      <div>
+          +52 (662) 172-5478&nbsp;|
+          <a href=\"mailto:cesar.olea@loanpro.io\" style=\"color:#27313f\" target=\"_blank\">cesar.olea@loanpro.io</a>
+      </div>
+      <div style=\"padding-top:5px\">
+          LEND | SERVICE | COLLECT
+      </div>
+      <a href=\"https://loanpro.io/\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNELplFoIvqyNTqsxkX-aX8yqAoYCQ\">
+          <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
+      </a></div><br></div></div></div><#/part>")
                     (smtpmail-smtp-server . "smtp.gmail.com")
                     (smtpmail-smtp-service . 465)
                     (smtpmail-stream-type . ssl)
@@ -2288,41 +2328,52 @@ keyboard with no easy access to a compose key.
                     (mu4e-sent-messages-behavior . delete)))
 
            (make-mu4e-context
-            :name "Personal"
+            :name "Fastmail"
             :match-func
             (lambda (msg)
               (when msg
-                (string-prefix-p "^/personal" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "cesarolea@gmail.com")
+                (mu4e-message-maildir-matches msg "^/fastmail")))
+            ;; (lambda (msg)
+            ;;   (when msg
+            ;;     (or
+            ;;      (mu4e-message-contact-field-matches
+            ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@cesarolea.com*$")
+            ;;      (mu4e-message-contact-field-matches
+            ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail.com*$"))))
+            ;; (lambda (msg)
+            ;;   (when msg
+            ;;     (mu4e-message (mu4e-message-field msg :maildir))
+            ;;     (string-prefix-p "^/fastmail" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "mail@cesarolea.com")
                     (user-full-name . "César Olea")
-                    (mu4e-drafs-folder . "/personal/[Gmail]/Drafts")
-                    (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
-                    (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-                    (mu4e-attachment-dir . "~/Downloads/mail-attachments/personal")
+                    (mu4e-drafs-folder . "/fastmail/Drafts")
+                    (mu4e-sent-folder . "/fastmail/Sent")
+                    (mu4e-refile-folder . "/fastmail/Archive")
+                    (mu4e-trash-folder . "/fastmail/Trash")
+                    (mu4e-attachment-dir . "~/Downloads/mail-attachments/fastmail")
                     (mu4e-compose-signature . "César Olea")
-                    (smtpmail-smtp-server . "smtp.gmail.com")
+                    (smtpmail-smtp-server . "smtp.fastmail.com")
                     (smtpmail-smtp-service . 465)
-                    (smtpmail-stream-type . ssl)
-                    (smtpmail-smtp-user . "cesarolea@gmail.com")
-                    (mu4e-sent-messages-behavior . delete)))))
+                    (smtpmail-stream-type  . ssl)
+                    (smtpmail-smtp-user . "mail@cesarolea.com")
+                    (mu4e-sent-messages-behavior . sent)))))
 
     (setq mu4e-maildir-shortcuts
-        '(("/loanpro/Inbox"             . ?i)
-          ("/loanpro/[Gmail]/Sent Mail" . ?s)
-          ("/loanpro/[Gmail]/Trash"     . ?t)
-          ("/loanpro/[Gmail]/Drafts"    . ?d)
-          ("/loanpro/[Gmail]/Important" . ?I)
-          ("/loanpro/[Gmail]/All Mail"  . ?a)))
+          '(("/loanpro/Inbox"             . ?i)
+            ("/loanpro/[Gmail]/Sent Mail" . ?s)
+            ("/loanpro/[Gmail]/Trash"     . ?t)
+            ("/loanpro/[Gmail]/Drafts"    . ?d)
+            ("/loanpro/[Gmail]/Important" . ?I)
+            ("/loanpro/[Gmail]/All Mail"  . ?a)))
 
     (setq mu4e-bookmarks
-          '(("maildir:\"/loanpro/Inbox\" AND NOT flag:trashed"              "LoanPro Inbox"           ?p)
-            ("maildir:\"/loanpro/[Gmail]/Important\" AND NOT flag:trashed"  "Important messages"      ?!)
-            ("maildir:\"/personal/[Gmail]/All Mail\" AND NOT flag:trashed"  "Personal Inbox"          ?l)
-            ("mime:application/pdf AND NOT flag:trashed"                    "Messages with PDF files" ?P)
-            ("flag:unread AND NOT flag:trashed"                             "Unread messages"         ?i)
-            ("date:today..now AND NOT flag:trashed"                         "Today's messages"        ?t)
-            ("date:today..nod AND maildir:\"/loanpro/[Gmail]/Sent Mail\""   "Sent messages"           ?s))))
+          '(("maildir:\"/loanpro/Inbox\" AND NOT flag:trashed"                                            "LoanPro Inbox"           ?p)
+            ("maildir:\"/loanpro/[Gmail]/Important\" AND NOT flag:trashed"                                "Important messages"      ?!)
+            ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                           "Fastmail Inbox"          ?P)
+            ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
+            ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
+            ("date:today..now AND NOT flag:trashed"                                                       "Today's messages"        ?t)
+            ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s))))
 
   (use-package org-mime
     :config
@@ -2337,11 +2388,11 @@ keyboard with no easy access to a compose key.
 
     ;; make it so it always htmlize the buffer
     ;; that's the sad reality of things
-    (add-hook 'message-send-hook 'org-mime-htmlize)
+    ;; (add-hook 'message-send-hook 'org-mime-htmlize)
 
     ;; alternatively, if you only want to be reminded when no htmlize was
     ;; used:
-    ;; (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+    (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
     )
 
   (use-package mu4e-alert
@@ -2354,5 +2405,5 @@ keyboard with no easy access to a compose key.
         (concat
          "flag:unread"
          " AND NOT flag:trashed"
-         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/personal/[Gmail]/All Mail\")")))
+         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
 #+end_src
