@@ -94,6 +94,7 @@ an idea...
         dired-recursive-deletes 'always
         dired-recursive-copies 'always
         dired-dwim-target t
+        delete-by-moving-to-trash t
         system-time-locale "C"
 
         ;; avoid duplicates in helm's M-x
