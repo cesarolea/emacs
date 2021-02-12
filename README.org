@@ -2221,7 +2221,7 @@ keyboard with no easy access to a compose key.
              "* TODO Read %:subject\nADDED:%t\n%a\n\n%i"
              :immediate-finish t)
             ("ms" "Schedule" entry (file+olp "~/Sync/Org/Mail.org" "Schedule")
-             "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
+             "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
              :immediate-finish t)))
 
     ;; store the current query as a link
