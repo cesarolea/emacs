@@ -317,6 +317,17 @@ Which key makes it easier to discover the major mode you are in.
     :hook (erc-mode . emojify-mode)
     :commands emojify-mode)
 #+end_src
+
+*** Diredfl
+    Dired comes included in Emacs. Direfl adds pretty colors to its
+    output.
+
+#+begin_src emacs-lisp
+  (use-package diredfl
+    :config
+    (diredfl-global-mode t))
+#+end_src
+
 ** Flycheck
 On the fly linter and syntax checker. I want this enabled in all
 programming modes.
@@ -628,20 +639,6 @@ Structured editing for Lisp and Lisp-like languages.
   :diminish paredit-mode)
 #+end_src
 
-** Eyebrowse
-Implements "workspaces" for Emacs. Each workspace can keep different
-split settings, and you can switch back and forth between them.
-
-#+begin_src emacs-lisp
-(use-package eyebrowse
-  :init (progn
-          (setq eyebrowse-wrap-around t
-                eyebrowse-new-workspace t)
-          (eyebrowse-mode 1)
-          (eyebrowse-switch-to-window-config-0))
-  :diminish eyebrowse-mode)
-#+end_src
-
 ** Org mode
 The gateway drug to Emacs. Org mode is difficult to put in a single
 word; it's a note taking application, agenda, markup language,
@@ -664,6 +661,17 @@ require additional packages.
     (global-set-key "\C-ca" 'org-agenda)
     (global-set-key "\C-cb" 'org-iswitchb)
     (global-set-key "\C-cr" 'org-list-repair)
+
+    ;; Save underlying org files when changing status of agenda items
+    (defmacro η (fnc)
+    "Return function that ignores its arguments and invokes FNC."
+    `(lambda (&rest _rest)
+       (funcall ,fnc)))
+
+    (advice-add 'org-deadline       :after (η #'org-save-all-org-buffers))
+    (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
+    (advice-add 'org-store-log-note :after (η #'org-save-all-org-buffers))
+    (advice-add 'org-todo           :after (η #'org-save-all-org-buffers))
 
     ;; where to put captured notes
     (setq org-default-notes-file "~/Sync/Org/refile.org"
@@ -1037,37 +1045,6 @@ succession (for example for movement commands)
 
   (global-set-key (kbd "C-c i") 'hydra-roam-dailies/body)
 #+end_src
-
-**** Eyebrowse
-     Controlling eyebrowse. Switching to workspaces and navigation.
-
- #+begin_src emacs-lisp
- (defhydra hydra-eyebrowse (:color blue :hint nil)
-   "
- Workspace^                     ^Navigation^
- ------------------------------------------------
- Workspace _1_   Workspace _6_   _n_ext workspace
- Workspace _2_   Workspace _7_   _p_rev workspace
- Workspace _3_   Workspace _8_   _l_ast workspace
- Workspace _4_   Workspace _9_   _c_lose workspace
- Workspace _5_   Workspace _0_
- "
-   ("1" eyebrowse-switch-to-window-config-0)
-   ("2" eyebrowse-switch-to-window-config-2)
-   ("3" eyebrowse-switch-to-window-config-3)
-   ("4" eyebrowse-switch-to-window-config-4)
-   ("5" eyebrowse-switch-to-window-config-5)
-   ("6" eyebrowse-switch-to-window-config-6)
-   ("7" eyebrowse-switch-to-window-config-7)
-   ("8" eyebrowse-switch-to-window-config-8)
-   ("9" eyebrowse-switch-to-window-config-9)
-   ("0" eyebrowse-switch-to-window-config-0)
-   ("n" eyebrowse-next-window-config)
-   ("p" eyebrowse-prev-window-config)
-   ("l" eyebrowse-last-window-config)
-   ("c" eyebrowse-close-window-config))
- (global-set-key (kbd "C-c e") 'hydra-eyebrowse/body)
- #+end_src
 
 **** Flycheck
      Using flycheck. Mainly moving around errors in the current buffer.
@@ -2191,7 +2168,7 @@ keyboard with no easy access to a compose key.
     ;; This is set to 't' to avoid mail syncing issues when using mbsync
     (setq mu4e-change-filenames-when-moving t
           mu4e-headers-skip-duplicates t
-          mu4e-update-interval (* 5 60)
+          mu4e-update-interval (* 10 60)
           mu4e-index-update-in-background t
 
           ;; change to mbsync -a to sync all mail accounts
@@ -2370,6 +2347,7 @@ keyboard with no easy access to a compose key.
     (setq mu4e-bookmarks
           '(("maildir:\"/loanpro/Inbox\" AND NOT flag:trashed"                                            "LoanPro Inbox"           ?p)
             ("maildir:\"/loanpro/[Gmail]/Important\" AND NOT flag:trashed"                                "Important messages"      ?!)
+            ("maildir:\"/fastmail/*\" AND flag:flagged"                                                   "Fastmail Pinned"         ?n)
             ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                           "Fastmail Inbox"          ?P)
             ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
             ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
