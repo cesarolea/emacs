@@ -2166,6 +2166,8 @@ keyboard with no easy access to a compose key.
     ;; package is changed to mu4e-org
     (require 'org-mu4e)
 
+
+
     ;; This is set to 't' to avoid mail syncing issues when using mbsync
     (setq mu4e-change-filenames-when-moving t
           mu4e-headers-skip-duplicates t
@@ -2353,7 +2355,15 @@ keyboard with no easy access to a compose key.
             ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
             ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
             ("date:today..now AND NOT flag:trashed"                                                       "Today's messages"        ?t)
-            ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s))))
+            ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s)))
+
+    ;; set own mail address from the context addresses
+    (setq mu4e-user-mail-address-list
+          (delq nil
+                (mapcar (lambda (context)
+                          (when (mu4e-context-vars context)
+                            (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                        mu4e-contexts))))
 
   (use-package org-mime
     :config
