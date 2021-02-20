@@ -745,6 +745,12 @@ require additional packages.
     (require 'ox-reveal) ; nice presentations
     (require 'ox-hugo)   ; blogging
     )
+
+  (use-package org-superstar :pin melpa
+    :hook ((org-mode . org-superstar-mode))
+    :config
+    (setq org-superstar-special-todo-items nil
+          org-superstar-prettify-item-bullets t))
 #+end_src
 
 *** Roam
@@ -789,16 +795,16 @@ require additional packages.
     :pin melpa
     :config
     (setq org-roam-server-host "127.0.0.1"
-          org-roam-server-port 8080
-          org-roam-server-authenticate nil
-          org-roam-server-export-inline-images t
-          org-roam-server-serve-files nil
-          org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-          org-roam-server-network-poll t
-          org-roam-server-network-arrows nil
-          org-roam-server-network-label-truncate t
-          org-roam-server-network-label-truncate-length 60
-          org-roam-server-network-label-wrap-length 20))
+	  org-roam-server-port 8080
+	  org-roam-server-authenticate nil
+	  org-roam-server-export-inline-images t
+	  org-roam-server-serve-files nil
+	  org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+	  org-roam-server-network-poll t
+	  org-roam-server-network-arrows nil
+	  org-roam-server-network-label-truncate t
+	  org-roam-server-network-label-truncate-length 60
+	  org-roam-server-network-label-wrap-length 20))
 #+end_src
 
 **** Deft
@@ -2183,6 +2189,7 @@ keyboard with no easy access to a compose key.
                                             "%Y-%m-%d"
                                             (time-subtract (current-time) (days-to-time 150)))
           mu4e-view-use-gnus nil
+          gnus-blocked-images "http"
           mu4e-compose-dont-reply-to-self t
           mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption)
           mu4e-confirm-quit nil
