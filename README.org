@@ -101,6 +101,9 @@ an idea...
         history-delete-duplicates t
         )
 
+  ; load the custom file that was defined earlier
+  (load custom-file)
+
   ; themes
   (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
@@ -214,31 +217,30 @@ Which key makes it easier to discover the major mode you are in.
  shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
 
  #+begin_src emacs-lisp
- (use-package all-the-icons)
+   (use-package all-the-icons :pin melpa)
 
- (use-package doom-themes
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config)
-  (global-hl-line-mode 1))
+   (use-package doom-themes :pin melpa
+    :config
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italic t)
+    (load-theme 'doom-nord t)
+    (doom-themes-neotree-config)
+    (doom-themes-org-config))
 
- (use-package doom-modeline
-   :init (doom-modeline-mode 1)
-   :config
-   ;; so that modeline icons work in emacsclient
-   (defun enable-doom-modeline-icons (_frame)
-     (setq doom-modeline-icon t))
+   (use-package doom-modeline :pin melpa
+     :init (doom-modeline-mode 1)
+     :config
+     ;; so that modeline icons work in emacsclient
+     (defun enable-doom-modeline-icons (_frame)
+       (setq doom-modeline-icon t))
 
-   (add-hook 'after-make-frame-functions
-             #'enable-doom-modeline-icons)
+     (add-hook 'after-make-frame-functions
+               #'enable-doom-modeline-icons)
 
-   (setq doom-modeline-buffer-encoding t
-         doom-modeline-modal-icon t
-         doom-modeline-env-version t
-         inhibit-compacting-font-caches t))
+     (setq doom-modeline-buffer-encoding t
+           doom-modeline-modal-icon t
+           doom-modeline-env-version t
+           inhibit-compacting-font-caches t))
  #+end_src
 
 *** Exec path
@@ -662,6 +664,23 @@ require additional packages.
     (global-set-key "\C-cb" 'org-iswitchb)
     (global-set-key "\C-cr" 'org-list-repair)
 
+    (require 'org-protocol)
+    (setq org-capture-templates
+          '(("w" "Work Workflow")
+            ("wt" "Task" entry (file+olp "~/Sync/Org/work.org" "To Do")
+             "* TODO %?\nADDED: %t\n\n%i" :empty-lines 1)
+            ;; these are for mu4e configured below
+            ("m" "Email Workflow")
+            ("mf" "Follow Up" entry (file+olp "~/Sync/Org/Mail.org" "Follow Up")
+                    "* TODO Follow up with %:fromname on %a\nADDED:%t\n\n%i"
+                    :immediate-finish t)
+            ("mr" "Read Later" entry (file+olp "~/Sync/Org/Mail.org" "Read Later")
+                    "* TODO Read %:subject\nADDED:%t\n%a\n\n%i"
+                    :immediate-finish t)
+            ("ms" "Schedule" entry (file+olp "~/Sync/Org/Mail.org" "Schedule")
+                    "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
+                    :immediate-finish t)))
+
     ;; Save underlying org files when changing status of agenda items
     (defmacro η (fnc)
     "Return function that ignores its arguments and invokes FNC."
@@ -672,6 +691,11 @@ require additional packages.
     (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
     (advice-add 'org-store-log-note :after (η #'org-save-all-org-buffers))
     (advice-add 'org-todo           :after (η #'org-save-all-org-buffers))
+
+    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+    ;; modules
+    (require 'org-habit)
+    (add-to-list 'org-modules 'org-habit t)
 
     ;; where to put captured notes
     (setq org-default-notes-file "~/Sync/Org/refile.org"
@@ -711,14 +735,13 @@ require additional packages.
           ;; smart quotes on export
           org-export-with-smart-quotes t
 
-          ;; modules
-          org-modules (quote (org-habit))
-          ;; org-habit-graph-column 50
+          org-habit-show-all-today nil
           )
 
-    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
     (add-hook 'org-mode-hook (lambda ()
                                (flyspell-mode 1)
+                               (hl-line-mode 1)
+                               (auto-fill-mode 1)
                                (electric-pair-mode 1)
                                (delete '("\\.pdf\\'" . default) org-file-apps)
                                (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
@@ -738,8 +761,6 @@ require additional packages.
     (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
     (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
 
-    (add-hook 'org-mode-hook #'auto-fill-mode)
-
     ;; exporters
     (require 'ox-md)     ; markdown
     (require 'ox-reveal) ; nice presentations
@@ -750,7 +771,12 @@ require additional packages.
     :hook ((org-mode . org-superstar-mode))
     :config
     (setq org-superstar-special-todo-items nil
-          org-superstar-prettify-item-bullets t))
+          org-superstar-prettify-item-bullets t
+          org-superstar-remove-leading-stars nil
+          org-hide-leading-stars nil
+          org-superstar-leading-bullet ?\s
+          org-indent-mode-turns-on-hiding-stars nil
+          inhibit-compacting-font-caches t))
 #+end_src
 
 *** Roam
@@ -1224,6 +1250,7 @@ Add a fireplace to your Emacs session.
 #+begin_src emacs-lisp
 (use-package fireplace)
 #+end_src
+
 ** Neotree
 Display your filesystem in a tree structure UI.
 
@@ -1551,7 +1578,11 @@ programming languages.
     :commands lsp
     :diminish lsp-mode
     :hook ((rust-mode . lsp)
-           (lsp-mode . lsp-enable-which-key-integration))
+           (lsp-mode  . lsp-enable-which-key-integration)
+           (c-mode    . lsp)
+           (c++-mode  . lsp))
+    :init
+    (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
     :config
     (setq lsp-enable-snippet nil
           lsp-enable-links   nil
@@ -1674,6 +1705,7 @@ programming languages.
 (use-package helm-cider :pin melpa
   :config (helm-cider-mode 1))
 #+end_src
+
 *** Docker
     Support for working with Docker files.
 
@@ -1681,6 +1713,7 @@ programming languages.
 (use-package dockerfile-mode
   :diminish Dockerfile)
 #+end_src
+
 *** Rust
     Support for working with Rust projects.
 
@@ -1691,16 +1724,19 @@ programming languages.
   (setq lsp-rust-server (quote rust-analyzer)))
 
 #+end_src
+
 *** PHP
 #+begin_src emacs-lisp
 (use-package php-mode)
 #+end_src
+
 *** YAML
     Support for editing YAML files.
 
 #+begin_src emacs-lisp
 (use-package yaml-mode)
 #+end_src
+
 * Customization
 Customization and custom utility functions. Over the years I've
 accumulated many functions I don't actually use. My hope is that by
@@ -1795,6 +1831,7 @@ file is saved.
   ;; prog mode setup
   (add-hook 'prog-mode-hook (lambda ()
                               (electric-pair-mode 1)
+                              (hl-line-mode t)
                               (rainbow-mode 1)
                               (visual-line-mode 0)
                               (toggle-truncate-lines 1)
@@ -2130,6 +2167,16 @@ This includes START but not END."
      (calendar-absolute-from-gregorian (org-date-to-gregorian start))))
 #+end_src
 
+Accessing encrypted passwords outside of emacs
+
+#+begin_src emacs-lisp
+  (defun efs/lookup-password (&rest keys)
+    (let ((result (apply #'auth-source-search keys)))
+      (if result
+          (funcall (plist-get (car result) :secret))
+          nil)))
+#+end_src
+
 * Keymaps
 I used these keymaps for easy typing of Spanish accented vowels. I
 don't use it nearly as much when I switched to Linux and using a
@@ -2161,7 +2208,7 @@ keyboard with no easy access to a compose key.
   (use-package mu4e
     :if (not (memq window-system '(mac ns)))
     :ensure nil
-    :load-path "/usr/share/emacs/site-lisp/mu4e/"
+    :load-path "/home/cesaro/workspace/mu/mu4e/"
     :config
     (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
     (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
@@ -2170,11 +2217,8 @@ keyboard with no easy access to a compose key.
 
     ;; for capture templates. In future versions of mu4e the name of this
     ;; package is changed to mu4e-org
-    (require 'org-mu4e)
+    (require 'mu4e-org)
 
-
-
-    ;; This is set to 't' to avoid mail syncing issues when using mbsync
     (setq mu4e-change-filenames-when-moving t
           mu4e-headers-skip-duplicates t
           mu4e-update-interval (* 10 60)
@@ -2197,19 +2241,9 @@ keyboard with no easy access to a compose key.
           mu4e-compose-format-flowed t
           mu4e-use-fancy-chars nil
           fill-flowed-encode-column 998
-          message-send-mail-function 'smtpmail-send-it)
-
-    (setq org-capture-templates
-          `(("m" "Email Workflow")
-            ("mf" "Follow Up" entry (file+olp "~/Sync/Org/Mail.org" "Follow Up")
-             "* TODO Follow up with %:fromname on %a\nADDED:%t\n\n%i"
-             :immediate-finish t)
-            ("mr" "Read Later" entry (file+olp "~/Sync/Org/Mail.org" "Read Later")
-             "* TODO Read %:subject\nADDED:%t\n%a\n\n%i"
-             :immediate-finish t)
-            ("ms" "Schedule" entry (file+olp "~/Sync/Org/Mail.org" "Schedule")
-             "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
-             :immediate-finish t)))
+          message-send-mail-function 'smtpmail-send-it
+          mu4e-view-use-gnus nil)
+    ;; templates for email processing workflow
 
     ;; store the current query as a link
     (defun efs/store-link-to-mu4e-query ()
@@ -2249,6 +2283,7 @@ keyboard with no easy access to a compose key.
     ;; HTML mails
     (require 'mu4e-contrib)
     (setq mu4e-html2text-command 'mu4e-shr2text
+          shr-color-visible-luminance-min 80
           mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
     (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
@@ -2404,3 +2439,4 @@ keyboard with no easy access to a compose key.
          " AND NOT flag:trashed"
          " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
 #+end_src
+
