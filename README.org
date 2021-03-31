@@ -587,7 +587,7 @@ things.
      (global-set-key "\C-h\ a" 'helm-apropos)
      (global-set-key (kbd "C-x C-f") 'helm-find-files)
      (global-set-key (kbd "<f9>") 'helm-bookmarks)
-     (global-set-key (kbd "s-b") 'helm-bookmarks)
+     (global-set-key (kbd "H-s-b") 'helm-bookmarks)
      (global-set-key (kbd "C-h C-l") 'helm-locate-library)
      (global-set-key (kbd "C-c p f") 'helm-browse-project)
      (global-set-key (kbd "C-c p k") 'helm-project-kill-buffers)
