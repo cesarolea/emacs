@@ -1,3 +1,5 @@
+.extension/
+eln-cache/
 .cache/
 .dap-breakpoints
 README.el
