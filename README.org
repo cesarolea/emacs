@@ -461,7 +461,7 @@ backends. Useful in programming modes. I'm installing the lsp backend
 for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
-  (use-package company
+  (use-package company :pin melpa
     :hook ((cider-repl-mode . company-mode)
            (cider-mode      . company-mode)
            (clojure-mode    . company-mode))
@@ -478,7 +478,7 @@ for using company completion in languages that use LSP (such as rust).
     ;(global-company-mode)
     :diminish company-mode)
 
-  (use-package company-lsp)
+  ;(use-package company-lsp :pin melpa)
 #+end_src
 
 ** Ido mode
@@ -539,9 +539,9 @@ things.
    (use-package helm-flx :pin melpa
      :config (helm-flx-mode +1))
 
-   (use-package helm-ls-git)
+   (use-package helm-ls-git :pin melpa)
 
-   (use-package helm
+   (use-package helm :pin melpa
      :config
      ;; so helm adapts to your usage
      (helm-adaptive-mode 1)
@@ -1591,7 +1591,7 @@ programming languages.
     moment.
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
+  (use-package lsp-mode :pin melpa
     :commands lsp
     :diminish lsp-mode
     :hook ((rust-mode . lsp)
@@ -1608,12 +1608,12 @@ programming languages.
           lsp-completion-provider :capf
           lsp-idle-delay 0.500))
 
-  (use-package lsp-ui
+  (use-package lsp-ui :pin melpa
     :commands lsp-ui-mode
     :config
     (setq lsp-ui-doc-position 'at-point))
 
-  (use-package helm-lsp
+  (use-package helm-lsp :pin melpa
     :config
     (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
