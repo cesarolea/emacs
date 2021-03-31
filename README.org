@@ -681,10 +681,26 @@ require additional packages.
     (global-set-key "\C-cr" 'org-list-repair)
 
     (require 'org-protocol)
+    (require 'org-capture)
+
+    (defadvice org-capture
+        (after make-full-window-frame activate)
+      "Advise capture to be the only window when used as a popup"
+      (if (equal "emacs-capture-win" (frame-parameter nil 'name))
+          (delete-other-windows)))
+
+    (defadvice org-capture-finalize
+        (after delete-capture-frame activate)
+      "Advise capture-finalize to close the frame"
+      (if (equal "emacs-capture-win" (frame-parameter nil 'name))
+          (delete-frame)))
+
     (setq org-capture-templates
           '(("w" "Work Workflow")
             ("wt" "Task" entry (file+olp "~/Sync/Org/work.org" "To Do")
-             "* TODO %?\nADDED: %t\n\n%i" :empty-lines 1)
+             "* TODO %?\n  ADDED: %t\n\n%i" :empty-lines 1)
+            ("wr" "Refile" entry (file+olp "~/Sync/Org/work.org" "Refile")
+             "* TODO %?\n  ADDED: %t\n\n%i" :empty-lines 1)
             ;; these are for mu4e configured below
             ("m" "Email Workflow")
             ("mf" "Follow Up" entry (file+olp "~/Sync/Org/Mail.org" "Follow Up")
@@ -703,6 +719,13 @@ require additional packages.
     `(lambda (&rest _rest)
        (funcall ,fnc)))
 
+    ;; Agenda list
+    ;; Ignores TODO items with a scheduled and/or deadline date that
+    ;; occur in the future. The idea is that those items have already
+    ;; been "taken care of" until it's time to start working on them
+    (setq org-agenda-todo-ignore-scheduled 'future
+          org-agenda-todo-ignore-deadlines 'future)
+
     (advice-add 'org-deadline       :after (η #'org-save-all-org-buffers))
     (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
     (advice-add 'org-store-log-note :after (η #'org-save-all-org-buffers))
@@ -719,6 +742,7 @@ require additional packages.
                              "~/Sync/Org/Mail.org"
                              "~/Sync/Org/work.org")
           org-directory "~/Sync/Org"
+          org-ellipsis " ▼"
 
           ;; capture timestamps and notes when TODO state
           ;; changes to DONE
@@ -759,6 +783,8 @@ require additional packages.
                                (hl-line-mode 1)
                                (auto-fill-mode 1)
                                (electric-pair-mode 1)
+                               (visual-line-mode 0)
+                               (toggle-truncate-lines 1)
                                (delete '("\\.pdf\\'" . default) org-file-apps)
                                (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
