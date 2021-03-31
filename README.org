@@ -109,6 +109,12 @@ an idea...
 
         ;; avoid duplicates in helm's M-x
         history-delete-duplicates t
+
+        ;; inhibit message on how to exit client frame
+        server-client-instructions nil
+
+        ;; regex test setting
+        reb-re-syntax 'string
         )
 
   ; load the custom file that was defined earlier
