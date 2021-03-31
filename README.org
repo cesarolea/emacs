@@ -830,18 +830,18 @@ require additional packages.
     :hook (after-init . org-roam-mode)
     :config
     (setq org-roam-completion-system 'ivy
-          org-roam-db-location "~/Sync/Org/org-roam.db"
+          org-roam-db-location "~/Sync/roam/org-roam.db"
           org-roam-index-file "20201109112056-index.org"
-          org-roam-dailies-directory "~/Sync/org/roam/dailies/"
+          org-roam-dailies-directory "~/Sync/roam/dailies/"
           org-roam-dailies-capture-templates
           '(("d" "default" entry
              #'org-roam-capture--get-point
              "* %?"
-             :file-name "~/Sync/org/roam/dailies/%<%Y-%m-%d>"
+             :file-name "~/Sync/roam/dailies/%<%Y-%m-%d>"
              :head "#+title: %<%Y-%m-%d>\n\n"))
           org-roam-graph-exclude-matcher '("dailies"))
     (require 'org-roam-protocol)
-    :custom (org-roam-directory "~/Sync/Org/roam/")
+    :custom (org-roam-directory "~/Sync/roam/")
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n f" . org-roam-find-file)
@@ -1539,9 +1539,9 @@ Jump to definition without generating etags or external tools.
                (add-hook 'after-init-hook 'bm-repository-load)
                (add-hook 'find-file-hooks 'bm-buffer-restore)
                (add-hook 'kill-buffer-hook 'bm-buffer-save)
-               (add-hook 'kill-emacs-hook '(lambda nil
-                                             (bm-buffer-save-all)
-                                             (bm-repository-save)))))
+               (add-hook 'kill-emacs-hook #'(lambda nil
+                                              (bm-buffer-save-all)
+                                              (bm-repository-save)))))
  #+end_src
 
 *** Git history
@@ -1807,20 +1807,20 @@ The following modes are enabled:
   cursor is located, in the modeline. It also works with Org headers.
 
 #+begin_src emacs-lisp
-(setq save-place-file (concat user-emacs-directory "places"))
-(save-place-mode 1)
+  (setq save-place-file (concat user-emacs-directory "places"))
+  (save-place-mode 1)
 
-(blink-cursor-mode -1)
+  (blink-cursor-mode -1)
 
-(delete-selection-mode t)
+  (delete-selection-mode t)
 
-(column-number-mode t)
+  (column-number-mode t)
 
-(global-visual-line-mode t)
+  (global-visual-line-mode t)
 
-(global-auto-revert-mode t)
+  (global-auto-revert-mode t)
 
-(which-function-mode t)
+  (which-function-mode t)
 #+end_src
 
 ** Global bindings
