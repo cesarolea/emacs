@@ -2483,12 +2483,12 @@ keyboard with no easy access to a compose key.
                  "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
                                "#E6E1DC" "#232323"))))
 
-    ;; make it so it always htmlize the buffer
-    ;; that's the sad reality of things
-    ;; (add-hook 'message-send-hook 'org-mime-htmlize)
+    make it so it always htmlize the buffer
+    that's the sad reality of things
+    (add-hook 'message-send-hook 'org-mime-htmlize)
 
-    ;; alternatively, if you only want to be reminded when no htmlize was
-    ;; used:
+    alternatively, if you only want to be reminded when no htmlize was
+    used:
     (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
     )
 
@@ -2497,7 +2497,7 @@ keyboard with no easy access to a compose key.
     :after (mu4e)
     :config
     (mu4e-alert-set-default-style 'libnotify)
-    ;; skip alerting for mails in All Mail
+    skip alerting for mails in All Mail
     (setq mu4e-alert-interesting-mail-query
         (concat
          "flag:unread"
