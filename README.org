@@ -213,7 +213,7 @@ Which key makes it easier to discover the major mode you are in.
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
-    :bind ("s-W" . which-key-show-major-mode)
+    :bind ("H-s-w" . which-key-show-major-mode)
     :diminish which-key-mode
     :config (which-key-setup-side-window-right-bottom)
             (setq which-key-idle-delay 0.3))
@@ -773,9 +773,10 @@ require additional packages.
     ;; see org-clock-persist above
     (org-clock-persistence-insinuate)
 
-    (define-key org-mode-map (kbd "s-u") #'org-goto)
-    (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
-    (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
+    (define-key org-mode-map (kbd "H-s-u") #'org-goto)
+    (define-key org-mode-map (kbd "H-s-U") #'org-mark-ring-goto)
+    (define-key org-mode-map (kbd "H-s-l") #'org-toggle-link-display)
+    (define-key org-mode-map (kbd "H-s-i") #'org-toggle-inline-images)
 
     ;; exporters
     (require 'ox-md)     ; markdown
