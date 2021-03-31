@@ -2046,6 +2046,28 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
               (set-fontset-font t 'symbol "Symbola" nil 'append)))
 #+end_src
 
+** Calendar
+   Display week numbers in calendar view.
+
+   #+begin_src emacs-lisp
+     (copy-face font-lock-constant-face 'calendar-iso-week-face)
+     (set-face-attribute 'calendar-iso-week-face nil
+                         :height 1.0 :foreground "salmon")
+     (setq calendar-week-start-day 1)
+     ;; (setq calendar-intermonth-text nil)
+
+     (setq calendar-intermonth-text
+           '(propertize
+             (format "%2d"
+                     (car
+                      (calendar-iso-from-absolute
+                       (calendar-absolute-from-gregorian (list month day year)))))
+             'font-lock-face 'calendar-iso-week-face))
+
+     (setq calendar-intermonth-header
+           (propertize "Wk" 'font-lock-face 'font-lock-keyword-face))
+   #+end_src
+
 * Utility
 These functions have a dedicated [[Hydra]].
 
