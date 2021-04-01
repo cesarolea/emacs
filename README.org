@@ -822,6 +822,32 @@ require additional packages.
           inhibit-compacting-font-caches t))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package org-ql :pin melpa)
+
+  (use-package helm-org-ql :pin melpa
+    :after (org-ql)
+    :config
+    (setq org-agenda-custom-commands
+          '(("os" "Custom: Staled scheduled items from the past"
+             ((org-ql-block '(and (todo)                        ;; all TODOs
+                                  (not (or (deadline)           ;; that are not a habit or don't have a deadline
+                                           (habit)))
+                                  (scheduled :from -90 :to -1)  ;; and were scheduled in the past 90 days
+                                  ))
+              ; (agenda)                                        ;; show agenda view
+              ))
+            ("oo" "Custom: Orphaned tasks"
+             ((org-ql-block '(and (todo)                        ;; all TODOs
+                                  (not (or (deadline)           ;; that are regular tasks. No habit, scheduled or deadline
+                                           (habit)
+                                           (scheduled)))
+                                  (or (ts :from -360 :to -7)
+                                      (not (ts)))
+                                  ))))))
+    )
+#+end_src
+
 *** Roam
 
 #+begin_src emacs-lisp
@@ -2483,13 +2509,13 @@ keyboard with no easy access to a compose key.
                  "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
                                "#E6E1DC" "#232323"))))
 
-    make it so it always htmlize the buffer
-    that's the sad reality of things
+    ;; make it so it always htmlize the buffer
+    ;; that's the sad reality of things
     (add-hook 'message-send-hook 'org-mime-htmlize)
 
-    alternatively, if you only want to be reminded when no htmlize was
-    used:
-    (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+    ;; alternatively, if you only want to be reminded when no htmlize was
+    ;; used:
+    ;; (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
     )
 
   (use-package mu4e-alert
