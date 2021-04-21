@@ -389,9 +389,9 @@ I have it bound to ~<f10>~. Also:
   are part of a git repository.
 
 #+begin_src emacs-lisp
-  (use-package magit
+  (use-package magit :pin melpa
     :bind (("<f10>" . magit-status)
-           ("s-m" . magit-status))
+           ("H-s-m" . magit-status))
     :config
     (setq magit-last-seen-setup-instructions "1.4"
           magit-push-always-verify nil
@@ -544,7 +544,7 @@ things.
    (use-package helm :pin melpa
      :config
      ;; so helm adapts to your usage
-     (helm-adaptive-mode 1)
+     ; (helm-adaptive-mode 1)
 
      (when (executable-find "curl")
        (setq helm-net-prefer-curl t))
@@ -566,8 +566,12 @@ things.
      ;;  Restore popwin-mode after a Helm session finishes.
      (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
 
-     (setq helm-idle-delay 0.1)
-                                           ;             (setq helm-input-idle-delay 0.1)
+     (setq helm-idle-delay 0.1
+           helm-input-idle-delay 0.1
+           helm-mode-fuzzy-match t
+           helm-completion-in-region-fuzzy-match t
+           helm-candidate-number-limit 50
+           history-lengt 50)
                                            ;             (setq helm-follow-mode-persistent t)
      (setq helm-for-files-preferred-list
            '(helm-source-buffers-list
@@ -594,12 +598,12 @@ things.
 
      (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring))
 
-   (use-package helm-ag
+   (use-package helm-ag :pin melpa
      :config
      (setq helm-ag-fuzzy-match t)
      (global-set-key (kbd "C-c p f") 'helm-do-ag-project-root))
 
-   (use-package projectile
+   (use-package projectile :pin melpa
      :init
      (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
      :config
@@ -609,13 +613,13 @@ things.
            projectile-indexing-method 'alien
            projectile-completion-system 'helm))
 
-    (use-package helm-projectile
+    (use-package helm-projectile :pin melpa
       :config
       (defun my-find-file ()
         (interactive)
         (if (and (buffer-file-name)
                  (projectile-project-p))
-            (helm-projectile)
+            (helm-projectile-find-file)
           (helm-for-files)))
       (global-set-key (kbd "C-x a") 'my-find-file)
       (helm-projectile-on))
@@ -677,8 +681,11 @@ require additional packages.
     (global-set-key "\C-cl" 'org-store-link)
     (global-set-key "\C-cc" 'org-capture)
     (global-set-key "\C-ca" 'org-agenda)
-    (global-set-key "\C-cb" 'org-iswitchb)
-    (global-set-key "\C-cr" 'org-list-repair)
+
+    (define-key org-mode-map (kbd "C-c r") #'org-list-repair)
+    (define-key org-mode-map (kbd "H-s-U") #'org-mark-ring-goto)
+    (define-key org-mode-map (kbd "H-s-l") #'org-toggle-link-display)
+    (define-key org-mode-map (kbd "H-s-i") #'org-toggle-inline-images)
 
     (require 'org-protocol)
     (require 'org-capture)
@@ -723,8 +730,10 @@ require additional packages.
     ;; Ignores TODO items with a scheduled and/or deadline date that
     ;; occur in the future. The idea is that those items have already
     ;; been "taken care of" until it's time to start working on them
-    (setq org-agenda-todo-ignore-scheduled 'future
-          org-agenda-todo-ignore-deadlines 'future)
+    (setq org-agenda-todo-ignore-scheduled  'future
+          org-agenda-todo-ignore-deadlines  'future
+          org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done  t)
 
     (advice-add 'org-deadline       :after (η #'org-save-all-org-buffers))
     (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
@@ -799,15 +808,22 @@ require additional packages.
     ;; see org-clock-persist above
     (org-clock-persistence-insinuate)
 
-    (define-key org-mode-map (kbd "H-s-u") #'org-goto)
-    (define-key org-mode-map (kbd "H-s-U") #'org-mark-ring-goto)
-    (define-key org-mode-map (kbd "H-s-l") #'org-toggle-link-display)
-    (define-key org-mode-map (kbd "H-s-i") #'org-toggle-inline-images)
-
     ;; exporters
     (require 'ox-md)     ; markdown
     (require 'ox-reveal) ; nice presentations
     (require 'ox-hugo)   ; blogging
+
+    (with-eval-after-load 'ox-latex
+      (add-to-list 'org-latex-classes
+                   '("org-plain-latex" "\\documentclass{article}
+                  [NO-DEFAULT-PACKAGES]
+                  [PACKAGES]
+                  [EXTRA]"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subpparagraph{%s}" . "\\subparagraph*{%s}"))))
     )
 
   (use-package org-superstar :pin melpa
@@ -835,7 +851,7 @@ require additional packages.
                                            (habit)))
                                   (scheduled :from -90 :to -1)  ;; and were scheduled in the past 90 days
                                   ))
-              ; (agenda)                                        ;; show agenda view
+                                          ; (agenda)                                        ;; show agenda view
               ))
             ("oo" "Custom: Orphaned tasks"
              ((org-ql-block '(and (todo)                        ;; all TODOs
@@ -844,7 +860,12 @@ require additional packages.
                                            (scheduled)))
                                   (or (ts :from -360 :to -7)
                                       (not (ts)))
-                                  ))))))
+                                  ))))
+            ("oc" "Custom: Completed today"
+             ((org-ql-block '(and (done)                        ;; all DONE tasks
+                                  (closed :on today)            ;; that were closed
+                                  ))))
+            ))
     )
 #+end_src
 
@@ -908,7 +929,7 @@ require additional packages.
 
 #+begin_src emacs-lisp
   (use-package deft
-    :bind ("s-F" . deft)
+    :bind ("H-s-F" . deft)
     :commands (deft)
     :config
     (setq deft-extensions '("org")
@@ -958,6 +979,16 @@ require additional packages.
 (use-package ox-reveal :pin melpa
   :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
 #+end_src
+
+** Calendar view
+
+   #+begin_src emacs-lisp
+     (use-package calfw
+       :ensure nil
+       :load-path "/home/cesaro/workspace/emacs-calfw")
+
+     (use-package calfw-org :pin melpa)
+   #+end_src
 
 ** Hydra
 Hydras are useful bindings grouped together. Once a hydra is invoked,
@@ -1294,13 +1325,6 @@ succession (for example for movement commands)
      (let ((current-prefix-arg '(16)))
        (call-interactively 'org-time-stamp)))
  #+end_src
-
-** Fontawesome
-Fontawesome support.
-
-#+begin_src emacs-lisp
-(use-package fontawesome)
-#+end_src
 
 ** Swiper
 Swiper is a completion and narrowing package, similar to Ido.
@@ -1732,47 +1756,47 @@ programming languages.
     information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
 
 #+begin_src emacs-lisp
-(use-package clojure-mode
-  :mode (("\\.clj\\'" . clojure-mode)
-         ("\\.edn\\'" . clojure-mode))
-  :config (require 'flycheck-clj-kondo)
-  :init
-  (add-hook 'clojure-mode-hook (lambda () (progn
-                                            (subword-mode t)
-                                            (diminish 'subword-mode))))
-  (add-hook 'clojure-mode-hook #'eldoc-mode)
-  (diminish 'eldoc-mode))
+  (use-package clojure-mode :pin melpa
+    :mode (("\\.clj\\'" . clojure-mode)
+           ("\\.edn\\'" . clojure-mode))
+    :config
+    (require 'flycheck-clj-kondo)
+    (setq clojure-indent-style 'always-align
+          clojure-align-forms-automatically t)
+    :init
+    (add-hook 'clojure-mode-hook (lambda () (progn
+                                              (subword-mode t)
+                                              (diminish 'subword-mode))))
+    (add-hook 'clojure-mode-hook #'eldoc-mode)
+    (diminish 'eldoc-mode))
 
-(use-package cider
-  :config
-  (defun company-remove-ispell ()
-    (when (boundp 'company-backends)
-      (make-local-variable 'company-backends)
-      ;; remove ispell
-      (setq company-backends (delete 'company-dabbrev company-backends))))
-  (add-hook 'prog-mode-hook 'company-remove-ispell)
+  (use-package cider
+    :config
+    (defun company-remove-ispell ()
+      (when (boundp 'company-backends)
+        (make-local-variable 'company-backends)
+        ;; remove ispell
+        (setq company-backends (delete 'company-dabbrev company-backends))))
+    (add-hook 'prog-mode-hook 'company-remove-ispell)
 
-  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-mode-hook 'eldoc-mode)
-  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+    (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+    (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+    (add-hook 'cider-mode-hook 'eldoc-mode)
+    (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
-  (setq nrepl-hide-special-buffers t
-        cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-        cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-        cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
-        cider-repl-display-help-banner nil ; don't display start banner
-        nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
-        cider-repl-wrap-history t ; wrap around history when end is reached
-        cider-save-file-on-load t ; don't prompt when eval, just save
-        cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
-        org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
-        )
+    (setq nrepl-hide-special-buffers t
+          cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+          cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+          cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+          cider-repl-display-help-banner nil ; don't display start banner
+          nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+          cider-repl-wrap-history t ; wrap around history when end is reached
+          cider-save-file-on-load t ; don't prompt when eval, just save
+          cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
+          org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
+          cider-repl-display-help-banner nil)
 
-  (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
-
-(use-package helm-cider :pin melpa
-  :config (helm-cider-mode 1))
+    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 #+end_src
 
 *** Docker
@@ -2325,6 +2349,7 @@ keyboard with no easy access to a compose key.
                                             (time-subtract (current-time) (days-to-time 150)))
           mu4e-view-use-gnus nil
           gnus-blocked-images "http"
+          mu4e-show-images t
           mu4e-compose-dont-reply-to-self t
           mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption)
           mu4e-confirm-quit nil
@@ -2332,8 +2357,7 @@ keyboard with no easy access to a compose key.
           mu4e-compose-format-flowed t
           mu4e-use-fancy-chars nil
           fill-flowed-encode-column 998
-          message-send-mail-function 'smtpmail-send-it
-          mu4e-view-use-gnus nil)
+          message-send-mail-function 'smtpmail-send-it)
     ;; templates for email processing workflow
 
     ;; store the current query as a link
