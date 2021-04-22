@@ -1330,11 +1330,12 @@ succession (for example for movement commands)
 Swiper is a completion and narrowing package, similar to Ido.
 
 #+begin_src emacs-lisp
-(use-package swiper)
+  (use-package swiper)
 
-(use-package swiper-helm
-  :config (progn (global-set-key "\C-s" 'swiper)
-                 (global-set-key "\C-r" 'swiper)))
+  (use-package swiper-helm
+    :config
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key "\C-r" 'swiper))
 #+end_src
 
 ** Fireplace
