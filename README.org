@@ -2541,6 +2541,10 @@ keyboard with no easy access to a compose key.
     ;; alternatively, if you only want to be reminded when no htmlize was
     ;; used:
     ;; (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+
+    (define-key mu4e-compose-mode-map (kbd "C-c C-e") 'org-mime-edit-mail-in-org-mode)
+    (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
+    (define-key mu4e-compose-mode-map (kbd "C-c C-t") 'org-mime-revert-to-plain-text-mail)
     )
 
   (use-package mu4e-alert
