@@ -832,7 +832,7 @@ require additional packages.
     (setq org-superstar-special-todo-items nil
           org-superstar-prettify-item-bullets t
           org-superstar-remove-leading-stars nil
-          org-hide-leading-stars nil
+          org-hide-leading-stars t
           org-superstar-leading-bullet ?\s
           org-indent-mode-turns-on-hiding-stars nil
           inhibit-compacting-font-caches t))
@@ -1345,22 +1345,6 @@ Add a fireplace to your Emacs session.
 (use-package fireplace)
 #+end_src
 
-** Neotree
-Display your filesystem in a tree structure UI.
-
-#+begin_src emacs-lisp
-  (use-package neotree
-    :config
-    (global-set-key [f7] 'neotree-toggle)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)
-          neo-smart-open t
-          neo-autorefresh nil
-          neo-window-width (if (> (x-display-pixel-width) 5000) 40 35))
-    (defun text-scale-once ()
-      (interactive)(progn(text-scale-adjust 0)(text-scale-decrease 1)))
-    (add-hook 'neo-after-create-hook (lambda (_)(call-interactively 'text-scale-once))))
-#+end_src
-
 ** Editing
 Useful packages for text editing.
 
@@ -1456,18 +1440,19 @@ Useful packages for text editing.
     Edit browser text areas in Emacs.
 
 #+begin_src emacs-lisp
-(use-package atomic-chrome
-  :pin melpa
-  :config
-  (setq atomic-chrome-default-major-mode  'text-mode)
-  (setq atomic-chrome-buffer-open-style   'frame
-        atomic-chrome-buffer-frame-width  100
-        atomic-chrome-buffer-frame-height 25)
-  ;; (setq atomic-chrome-url-major-mode-alist
-  ;;       '(("flotiya\\.local" . js2-mode)
-  ;;         ("phabricator" . text-mode)))
-  (atomic-chrome-start-server)
-  :diminish AtomicChrome)
+  (use-package atomic-chrome
+    :pin melpa
+    :config
+    (setq atomic-chrome-default-major-mode  'text-mode)
+    (setq atomic-chrome-buffer-open-style   'split
+          ;atomic-chrome-buffer-frame-width  100
+          ;atomic-chrome-buffer-frame-height 25
+          )
+    ;; (setq atomic-chrome-url-major-mode-alist
+    ;;       '(("flotiya\\.local" . js2-mode)
+    ;;         ("phabricator" . text-mode)))
+    (atomic-chrome-start-server)
+    :diminish AtomicChrome)
 #+end_src
 *** Crux
     Crux is an acronym for a Collection of Ridiculously Useful
