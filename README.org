@@ -2313,6 +2313,16 @@ keyboard with no easy access to a compose key.
     (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
     (add-hook 'mu4e-compose-mode-hook #'(lambda () (auto-save-mode -1)))
 
+    (defun bms/mu4e-sometimes-silent-update-force ()
+      "Only show minibuffer information when explicitly called."
+      (interactive)
+      (setq mu4e-hide-index-messages nil)
+      (mu4e-maildirs-extension-force-update)
+      (sleep-for 5)
+      (setq mu4e-hide-index-messages t))
+
+    (define-key mu4e-view-mode-map (kbd "C-c C-u") 'bms/mu4e-sometimes-silent-update-force)
+
     ;; for capture templates. In future versions of mu4e the name of this
     ;; package is changed to mu4e-org
     (require 'mu4e-org)
@@ -2321,6 +2331,7 @@ keyboard with no easy access to a compose key.
           mu4e-headers-skip-duplicates t
           mu4e-update-interval (* 10 60)
           mu4e-index-update-in-background t
+          mu4e-hide-index-messages t
 
           ;; change to mbsync -a to sync all mail accounts
           mu4e-get-mail-command "mbsync -a"
