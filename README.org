@@ -1443,11 +1443,8 @@ Useful packages for text editing.
   (use-package atomic-chrome
     :pin melpa
     :config
-    (setq atomic-chrome-default-major-mode  'text-mode)
-    (setq atomic-chrome-buffer-open-style   'split
-          ;atomic-chrome-buffer-frame-width  100
-          ;atomic-chrome-buffer-frame-height 25
-          )
+    (setq atomic-chrome-default-major-mode  'text-mode
+          atomic-chrome-buffer-open-style   'split)
     ;; (setq atomic-chrome-url-major-mode-alist
     ;;       '(("flotiya\\.local" . js2-mode)
     ;;         ("phabricator" . text-mode)))
