@@ -1664,35 +1664,35 @@ programming languages.
     moment.
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode :pin melpa
-    :commands lsp
-    :diminish lsp-mode
-    :hook ((rust-mode . lsp)
-           (lsp-mode  . lsp-enable-which-key-integration)
-           (c-mode    . lsp)
-           (c++-mode  . lsp))
-    :init
-    (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
-    :config
-    (setq lsp-enable-snippet nil
-          lsp-enable-links   nil
-          lsp-keymap-prefix "C-c l"
-          lsp-auto-configure t
-          lsp-completion-provider :capf
-          lsp-idle-delay 0.500))
+(use-package lsp-mode :pin melpa
+  :commands lsp
+  :diminish lsp-mode
+  :hook ((rust-mode . lsp-deferred)
+         (lsp-mode  . lsp-enable-which-key-integration)
+         (c-mode    . lsp-deferred)
+         (c++-mode  . lsp-deferred))
+  :init
+  (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
+  :config
+  (setq lsp-enable-snippet nil
+        lsp-enable-links   nil
+        lsp-keymap-prefix "C-c l"
+        lsp-auto-configure t
+        lsp-completion-provider :capf
+        lsp-idle-delay 0.500))
 
-  (use-package lsp-ui :pin melpa
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-position 'at-point))
+(use-package lsp-ui :pin melpa
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-doc-position 'at-point))
 
-  (use-package helm-lsp :pin melpa
-    :config
-    (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+(use-package helm-lsp :pin melpa
+  :config
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
-  (use-package dap-mode :pin melpa
-    :config
-    (dap-mode 1))
+(use-package dap-mode :pin melpa
+  :config
+  (dap-mode 1))
 #+end_src
 
 *** JavaScript
