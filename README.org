@@ -2317,253 +2317,253 @@ keyboard with no easy access to a compose key.
   MELPA.
 
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :if (not (memq window-system '(mac ns)))
-    :ensure nil
-    :load-path "/home/cesaro/workspace/mu/mu4e/"
-    :config
-    (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-    (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
-    (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
-    (add-hook 'mu4e-compose-mode-hook #'(lambda () (auto-save-mode -1)))
+(use-package mu4e
+  :if (not (memq window-system '(mac ns)))
+  :ensure nil
+  :load-path "/home/cesaro/workspace/mu/mu4e/"
+  :config
+  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+  (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook #'(lambda () (auto-save-mode -1)))
 
-    (defun bms/mu4e-sometimes-silent-update-force ()
-      "Only show minibuffer information when explicitly called."
-      (interactive)
-      (setq mu4e-hide-index-messages nil)
-      (mu4e-maildirs-extension-force-update)
-      (sleep-for 5)
-      (setq mu4e-hide-index-messages t))
+  (defun bms/mu4e-sometimes-silent-update-force ()
+    "Only show minibuffer information when explicitly called."
+    (interactive)
+    (setq mu4e-hide-index-messages nil)
+    (mu4e-maildirs-extension-force-update)
+    (sleep-for 5)
+    (setq mu4e-hide-index-messages t))
 
-    (define-key mu4e-view-mode-map (kbd "C-c C-u") 'bms/mu4e-sometimes-silent-update-force)
+  (define-key mu4e-view-mode-map (kbd "C-c C-u") 'bms/mu4e-sometimes-silent-update-force)
 
-    ;; for capture templates. In future versions of mu4e the name of this
-    ;; package is changed to mu4e-org
-    (require 'mu4e-org)
+  ;; for capture templates. In future versions of mu4e the name of this
+  ;; package is changed to mu4e-org
+  (require 'mu4e-org)
 
-    (setq mu4e-change-filenames-when-moving t
-          mu4e-headers-skip-duplicates t
-          mu4e-update-interval (* 10 60)
-          mu4e-index-update-in-background t
-          mu4e-hide-index-messages t
+  (setq mu4e-change-filenames-when-moving t
+        mu4e-headers-skip-duplicates t
+        mu4e-update-interval (* 10 60)
+        mu4e-index-update-in-background t
+        mu4e-hide-index-messages t
 
-          ;; change to mbsync -a to sync all mail accounts
-          mu4e-get-mail-command "mbsync -a"
-          mu4e-maildir "~/Mail"
-          mu4e-view-show-addresses t
-          mu4e-compose-complete-only-personal t
-          mu4e-compose-complete-only-after (format-time-string
-                                            "%Y-%m-%d"
-                                            (time-subtract (current-time) (days-to-time 150)))
-          mu4e-view-use-gnus nil
-          gnus-blocked-images "http"
-          mu4e-show-images t
-          mu4e-compose-dont-reply-to-self t
-          mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption)
-          mu4e-confirm-quit nil
-          mu4e-headers-date-format "%+4Y-%m-%d"
-          mu4e-compose-format-flowed t
-          mu4e-use-fancy-chars nil
-          fill-flowed-encode-column 998
-          message-send-mail-function 'smtpmail-send-it)
-    ;; templates for email processing workflow
+        ;; change to mbsync -a to sync all mail accounts
+        mu4e-get-mail-command "mbsync -a"
+        mu4e-maildir "~/Mail"
+        mu4e-view-show-addresses t
+        mu4e-compose-complete-only-personal t
+        mu4e-compose-complete-only-after (format-time-string
+                                          "%Y-%m-%d"
+                                          (time-subtract (current-time) (days-to-time 150)))
+        mu4e-view-use-gnus nil
+        gnus-blocked-images "http"
+        mu4e-show-images t
+        mu4e-compose-dont-reply-to-self t
+        mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption)
+        mu4e-confirm-quit nil
+        mu4e-headers-date-format "%+4Y-%m-%d"
+        mu4e-compose-format-flowed t
+        mu4e-use-fancy-chars nil
+        fill-flowed-encode-column 998
+        message-send-mail-function 'smtpmail-send-it)
+  ;; templates for email processing workflow
 
-    ;; store the current query as a link
-    (defun efs/store-link-to-mu4e-query ()
-      (interactive)
-      (let ((org-mu4e-link-query-in-headers-mode t))
-        (call-interactively 'org-store-link)))
+  ;; store the current query as a link
+  (defun efs/store-link-to-mu4e-query ()
+    (interactive)
+    (let ((org-mu4e-link-query-in-headers-mode t))
+      (call-interactively 'org-store-link)))
 
-    (defun efs/capture-mail-follow-up (msg)
-      (interactive)
-      (call-interactively 'org-store-link)
-      (org-capture nil "mf"))
+  (defun efs/capture-mail-follow-up (msg)
+    (interactive)
+    (call-interactively 'org-store-link)
+    (org-capture nil "mf"))
 
-    (defun efs/capture-mail-read-later (msg)
-      (interactive)
-      (call-interactively 'org-store-link)
-      (org-capture nil "mr"))
+  (defun efs/capture-mail-read-later (msg)
+    (interactive)
+    (call-interactively 'org-store-link)
+    (org-capture nil "mr"))
 
-    (defun efs/capture-mail-schedule (msg)
-      (interactive)
-      (call-interactively 'org-store-link)
-      (org-capture nil "ms"))
+  (defun efs/capture-mail-schedule (msg)
+    (interactive)
+    (call-interactively 'org-store-link)
+    (org-capture nil "ms"))
 
-    ;; Add custom actions for our capture templates
-    (add-to-list 'mu4e-headers-actions
-                 '("follow up" . efs/capture-mail-follow-up) t)
-    (add-to-list 'mu4e-view-actions
-                 '("follow up" . efs/capture-mail-follow-up) t)
-    (add-to-list 'mu4e-headers-actions
-                 '("read later" . efs/capture-mail-read-later) t)
-    (add-to-list 'mu4e-view-actions
-                 '("read later" . efs/capture-mail-read-later) t)
-    (add-to-list 'mu4e-headers-actions
-                 '("Schedule" . efs/capture-mail-schedule) t)
-    (add-to-list 'mu4e-view-actions
-                 '("Schedule" . efs/capture-mail-schedule) t)
+  ;; Add custom actions for our capture templates
+  (add-to-list 'mu4e-headers-actions
+               '("follow up" . efs/capture-mail-follow-up) t)
+  (add-to-list 'mu4e-view-actions
+               '("follow up" . efs/capture-mail-follow-up) t)
+  (add-to-list 'mu4e-headers-actions
+               '("read later" . efs/capture-mail-read-later) t)
+  (add-to-list 'mu4e-view-actions
+               '("read later" . efs/capture-mail-read-later) t)
+  (add-to-list 'mu4e-headers-actions
+               '("Schedule" . efs/capture-mail-schedule) t)
+  (add-to-list 'mu4e-view-actions
+               '("Schedule" . efs/capture-mail-schedule) t)
 
-    ;; HTML mails
-    (require 'mu4e-contrib)
-    (setq mu4e-html2text-command 'mu4e-shr2text
-          shr-color-visible-luminance-min 80
-          mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
-    (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+  ;; HTML mails
+  (require 'mu4e-contrib)
+  (setq mu4e-html2text-command 'mu4e-shr2text
+        shr-color-visible-luminance-min 80
+        mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
+  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-    ;; Run in the background to sync mail periodically
-    ;; Uncomment this to have Emacs download mail even when mu4e
-    ;; is not explicitely started.
-    (mu4e t)
+  ;; Run in the background to sync mail periodically
+  ;; Uncomment this to have Emacs download mail even when mu4e
+  ;; is not explicitely started.
+  (mu4e t)
 
-    (require 'smtpmail)
+  (require 'smtpmail)
 
-    (defun mu4e-message-maildir-matches (msg rx)
-      (when rx
-        (if (listp rx)
-            ;; if rx is a list, try each one for a match
-            (or (mu4e-message-maildir-matches msg (car rx))
-                (mu4e-message-maildir-matches msg (cdr rx)))
-          ;; not a list, check rx
-          (string-match rx (mu4e-message-field msg :maildir)))))
+  (defun mu4e-message-maildir-matches (msg rx)
+    (when rx
+      (if (listp rx)
+          ;; if rx is a list, try each one for a match
+          (or (mu4e-message-maildir-matches msg (car rx))
+              (mu4e-message-maildir-matches msg (cdr rx)))
+        ;; not a list, check rx
+        (string-match rx (mu4e-message-field msg :maildir)))))
 
-    (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            :name "Loanpro"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (mu4e-message-maildir-matches msg "^/loanpro")))
-            ;; (lambda (msg)
-            ;;   (when msg
-            ;;     (or
-            ;;      (mu4e-message-contact-field-matches
-            ;;       msg '(:from :to :cc :bcc) "cesar.olea@loanpro.io")
-            ;;      (mu4e-message-contact-field-matches
-            ;;       msg '(:from :to :cc :bcc) "cesaro@simnang.com"))))
-            ;; (lambda (msg)
-            ;;   (when msg
-            ;;     (mu4e-message (mu4e-message-field msg :maildir))
-            ;;     (string-prefix-p "^/loanpro" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "cesar.olea@loanpro.io")
-                    (user-full-name . "César Olea")
-                    (mu4e-drafs-folder . "/loanpro/[Gmail]/Drafts")
-                    (mu4e-sent-folder . "/loanpro/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
-                    (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
-                    (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
-                    (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\" data-smartmail=\"gmail_signature\"><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-size:medium;font-family:&quot;Times New Roman&quot;;padding-bottom:3px\"><div style=\"line-height:1.2em;color:#27313f;font-family:roboto,sans-serif;font-size:0.9em\">
-      <div style=\"padding-bottom:3px\">
-          <a href=\"https://www.linkedin.com/in/cesarolea/\" style=\"color:rgb(39,49,63);font-weight:bold\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.linkedin.com/in/cesarolea/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNHtgXEnWWT34lkAbGLyjqAmXQWjgA\">CESAR OLEA</a>&nbsp;|
-          <span style=\"color:#4e627e\">Chief Technology Officer </span>
-      </div>
-      <div>
-          +52 (662) 172-5478&nbsp;|
-          <a href=\"mailto:cesar.olea@loanpro.io\" style=\"color:#27313f\" target=\"_blank\">cesar.olea@loanpro.io</a>
-      </div>
-      <div style=\"padding-top:5px\">
-          LEND | SERVICE | COLLECT
-      </div>
-      <a href=\"https://loanpro.io/\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNELplFoIvqyNTqsxkX-aX8yqAoYCQ\">
-          <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
-      </a></div><br></div></div></div><#/part>")
-                    (smtpmail-smtp-server . "smtp.gmail.com")
-                    (smtpmail-smtp-service . 465)
-                    (smtpmail-stream-type . ssl)
-                    (smtpmail-smtp-user . "cesar.olea@loanpro.io")
-                    (mu4e-sent-messages-behavior . delete)))
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "Loanpro"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (mu4e-message-maildir-matches msg "^/loanpro")))
+          ;; (lambda (msg)
+          ;;   (when msg
+          ;;     (or
+          ;;      (mu4e-message-contact-field-matches
+          ;;       msg '(:from :to :cc :bcc) "cesar.olea@loanpro.io")
+          ;;      (mu4e-message-contact-field-matches
+          ;;       msg '(:from :to :cc :bcc) "cesaro@simnang.com"))))
+          ;; (lambda (msg)
+          ;;   (when msg
+          ;;     (mu4e-message (mu4e-message-field msg :maildir))
+          ;;     (string-prefix-p "^/loanpro" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "cesar.olea@loanpro.io")
+                  (user-full-name . "César Olea")
+                  (mu4e-drafs-folder . "/loanpro/[Gmail]/Drafts")
+                  (mu4e-sent-folder . "/loanpro/[Gmail]/Sent Mail")
+                  (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
+                  (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
+                  (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
+                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\" data-smartmail=\"gmail_signature\"><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-size:medium;font-family:&quot;Times New Roman&quot;;padding-bottom:3px\"><div style=\"line-height:1.2em;color:#27313f;font-family:roboto,sans-serif;font-size:0.9em\">
+    <div style=\"padding-bottom:3px\">
+        <a href=\"https://www.linkedin.com/in/cesarolea/\" style=\"color:rgb(39,49,63);font-weight:bold\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.linkedin.com/in/cesarolea/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNHtgXEnWWT34lkAbGLyjqAmXQWjgA\">CESAR OLEA</a>&nbsp;|
+        <span style=\"color:#4e627e\">Chief Technology Officer </span>
+    </div>
+    <div>
+        +52 (662) 172-5478&nbsp;|
+        <a href=\"mailto:cesar.olea@loanpro.io\" style=\"color:#27313f\" target=\"_blank\">cesar.olea@loanpro.io</a>
+    </div>
+    <div style=\"padding-top:5px\">
+        LEND | SERVICE | COLLECT
+    </div>
+    <a href=\"https://loanpro.io/\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNELplFoIvqyNTqsxkX-aX8yqAoYCQ\">
+        <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
+    </a></div><br></div></div></div><#/part>")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-service . 465)
+                  (smtpmail-stream-type . ssl)
+                  (smtpmail-smtp-user . "cesar.olea@loanpro.io")
+                  (mu4e-sent-messages-behavior . delete)))
 
-           (make-mu4e-context
-            :name "Fastmail"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (mu4e-message-maildir-matches msg "^/fastmail")))
-            ;; (lambda (msg)
-            ;;   (when msg
-            ;;     (or
-            ;;      (mu4e-message-contact-field-matches
-            ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@cesarolea.com*$")
-            ;;      (mu4e-message-contact-field-matches
-            ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail.com*$"))))
-            ;; (lambda (msg)
-            ;;   (when msg
-            ;;     (mu4e-message (mu4e-message-field msg :maildir))
-            ;;     (string-prefix-p "^/fastmail" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "mail@cesarolea.com")
-                    (user-full-name . "César Olea")
-                    (mu4e-drafs-folder . "/fastmail/Drafts")
-                    (mu4e-sent-folder . "/fastmail/Sent")
-                    (mu4e-refile-folder . "/fastmail/Archive")
-                    (mu4e-trash-folder . "/fastmail/Trash")
-                    (mu4e-attachment-dir . "~/Downloads/mail-attachments/fastmail")
-                    (mu4e-compose-signature . "César Olea")
-                    (smtpmail-smtp-server . "smtp.fastmail.com")
-                    (smtpmail-smtp-service . 465)
-                    (smtpmail-stream-type  . ssl)
-                    (smtpmail-smtp-user . "mail@cesarolea.com")
-                    (mu4e-sent-messages-behavior . sent)))))
+         (make-mu4e-context
+          :name "Fastmail"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (mu4e-message-maildir-matches msg "^/fastmail")))
+          ;; (lambda (msg)
+          ;;   (when msg
+          ;;     (or
+          ;;      (mu4e-message-contact-field-matches
+          ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@cesarolea.com*$")
+          ;;      (mu4e-message-contact-field-matches
+          ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail.com*$"))))
+          ;; (lambda (msg)
+          ;;   (when msg
+          ;;     (mu4e-message (mu4e-message-field msg :maildir))
+          ;;     (string-prefix-p "^/fastmail" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "mail@cesarolea.com")
+                  (user-full-name . "César Olea")
+                  (mu4e-drafs-folder . "/fastmail/Drafts")
+                  (mu4e-sent-folder . "/fastmail/Sent")
+                  (mu4e-refile-folder . "/fastmail/Archive")
+                  (mu4e-trash-folder . "/fastmail/Trash")
+                  (mu4e-attachment-dir . "~/Downloads/mail-attachments/fastmail")
+                  (mu4e-compose-signature . "César Olea")
+                  (smtpmail-smtp-server . "smtp.fastmail.com")
+                  (smtpmail-smtp-service . 465)
+                  (smtpmail-stream-type  . ssl)
+                  (smtpmail-smtp-user . "mail@cesarolea.com")
+                  (mu4e-sent-messages-behavior . sent)))))
 
-    (setq mu4e-maildir-shortcuts
-          '(("/loanpro/Inbox"             . ?i)
-            ("/loanpro/[Gmail]/Sent Mail" . ?s)
-            ("/loanpro/[Gmail]/Trash"     . ?t)
-            ("/loanpro/[Gmail]/Drafts"    . ?d)
-            ("/loanpro/[Gmail]/Important" . ?I)
-            ("/loanpro/[Gmail]/All Mail"  . ?a)))
+  (setq mu4e-maildir-shortcuts
+        '(("/loanpro/Inbox"             . ?i)
+          ("/loanpro/[Gmail]/Sent Mail" . ?s)
+          ("/loanpro/[Gmail]/Trash"     . ?t)
+          ("/loanpro/[Gmail]/Drafts"    . ?d)
+          ("/loanpro/[Gmail]/Important" . ?I)
+          ("/loanpro/[Gmail]/All Mail"  . ?a)))
 
-    (setq mu4e-bookmarks
-          '(("maildir:\"/loanpro/Inbox\" AND NOT flag:trashed"                                            "LoanPro Inbox"           ?p)
-            ("maildir:\"/loanpro/[Gmail]/Important\" AND NOT flag:trashed"                                "Important messages"      ?!)
-            ("maildir:\"/fastmail/*\" AND flag:flagged"                                                   "Fastmail Pinned"         ?n)
-            ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                           "Fastmail Inbox"          ?P)
-            ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
-            ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
-            ("date:today..now AND NOT flag:trashed"                                                       "Today's messages"        ?t)
-            ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s)))
+  (setq mu4e-bookmarks
+        '(("maildir:\"/loanpro/Inbox\" AND NOT flag:trashed"                                            "LoanPro Inbox"           ?p)
+          ("maildir:\"/loanpro/[Gmail]/Important\" AND NOT flag:trashed"                                "Important messages"      ?!)
+          ("maildir:\"/fastmail/*\" AND flag:flagged"                                                   "Fastmail Pinned"         ?n)
+          ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                           "Fastmail Inbox"          ?P)
+          ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
+          ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
+          ("date:today..now AND NOT flag:trashed"                                                       "Today's messages"        ?t)
+          ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s)))
 
-    ;; set own mail address from the context addresses
-    (setq mu4e-user-mail-address-list
-          (delq nil
-                (mapcar (lambda (context)
-                          (when (mu4e-context-vars context)
-                            (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-                        mu4e-contexts))))
+  ;; set own mail address from the context addresses
+  (setq mu4e-user-mail-address-list
+        (delq nil
+              (mapcar (lambda (context)
+                        (when (mu4e-context-vars context)
+                          (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                      mu4e-contexts))))
 
-  (use-package org-mime
-    :config
-    (setq org-mime-export-options '(:section-numbers nil
-                                    :with-author nil
-                                    :with-toc nil))
-    (add-hook 'org-mime-html-hook
-              (lambda ()
-                (org-mime-change-element-style
-                 "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
-                               "#E6E1DC" "#232323"))))
+(use-package org-mime :pin melpa
+  :config
+  (setq org-mime-export-options '(:section-numbers nil
+                                  :with-author nil
+                                  :with-toc nil))
+  (add-hook 'org-mime-html-hook
+            (lambda ()
+              (org-mime-change-element-style
+               "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
+                             "#E6E1DC" "#232323"))))
 
-    ;; make it so it always htmlize the buffer
-    ;; that's the sad reality of things
-    (add-hook 'message-send-hook 'org-mime-htmlize)
+  ;; make it so it always htmlize the buffer
+  ;; that's the sad reality of things
+  ;; (add-hook 'message-send-hook 'org-mime-htmlize)
 
-    ;; alternatively, if you only want to be reminded when no htmlize was
-    ;; used:
-    ;; (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+  ;; alternatively, if you only want to be reminded when no htmlize was
+  ;; used:
+  (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
 
-    (define-key mu4e-compose-mode-map (kbd "C-c C-e") 'org-mime-edit-mail-in-org-mode)
-    (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
-    (define-key mu4e-compose-mode-map (kbd "C-c C-t") 'org-mime-revert-to-plain-text-mail)
-    )
+  (define-key mu4e-compose-mode-map (kbd "C-c C-e") 'org-mime-edit-mail-in-org-mode)
+  (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
+  (define-key mu4e-compose-mode-map (kbd "C-c C-t") 'org-mime-revert-to-plain-text-mail)
+  )
 
-  (use-package mu4e-alert
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :after (mu4e)
-    :config
-    (mu4e-alert-set-default-style 'libnotify)
-    skip alerting for mails in All Mail
-    (setq mu4e-alert-interesting-mail-query
-        (concat
-         "flag:unread"
-         " AND NOT flag:trashed"
-         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
+(use-package mu4e-alert
+  :hook (after-init . mu4e-alert-enable-notifications)
+  :after (mu4e)
+  :config
+  (mu4e-alert-set-default-style 'libnotify)
+  skip alerting for mails in All Mail
+  (setq mu4e-alert-interesting-mail-query
+      (concat
+       "flag:unread"
+       " AND NOT flag:trashed"
+       " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
 #+end_src
 
