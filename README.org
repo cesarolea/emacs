@@ -1670,19 +1670,24 @@ programming languages.
 (use-package lsp-mode :pin melpa
   :commands lsp
   :diminish lsp-mode
-  :hook ((rust-mode . lsp-deferred)
-         (lsp-mode  . lsp-enable-which-key-integration)
-         (c-mode    . lsp-deferred)
-         (c++-mode  . lsp-deferred))
+  :hook ((rust-mode     . lsp-deferred)
+         (lsp-mode      . lsp-enable-which-key-integration)
+         (c-mode        . lsp-deferred)
+         (c++-mode      . lsp-deferred)
+         (clojure-mode  . lsp-deferred)
+         (clojurec-mode . lsp-deferred))
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
   :config
-  (setq lsp-enable-snippet nil
-        lsp-enable-links   nil
-        lsp-keymap-prefix "C-c l"
-        lsp-auto-configure t
-        lsp-completion-provider :capf
-        lsp-idle-delay 0.500))
+  (setq lsp-enable-snippet          nil
+        lsp-enable-links            nil
+        lsp-keymap-prefix           "C-c l"
+        lsp-auto-configure          t
+        lsp-lens-enable             t
+        lsp-signature-auto-activate nil
+        lsp-completion-provider     :capf
+        lsp-idle-delay              0.500
+        lsp-eldoc-enable-hover      nil))
 
 (use-package lsp-ui :pin melpa
   :commands lsp-ui-mode
@@ -1697,6 +1702,9 @@ programming languages.
   :config
   (dap-mode 1))
 #+end_src
+
+#+RESULTS:
+: t
 
 *** JavaScript
     ~js2-mode~ is a JavaScript mode that keeps an AST for syntax
@@ -1756,47 +1764,48 @@ programming languages.
     information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
 
 #+begin_src emacs-lisp
-  (use-package clojure-mode :pin melpa
-    :mode (("\\.clj\\'" . clojure-mode)
-           ("\\.edn\\'" . clojure-mode))
-    :config
-    (require 'flycheck-clj-kondo)
-    (setq clojure-indent-style 'always-align
-          clojure-align-forms-automatically t)
-    :init
-    (add-hook 'clojure-mode-hook (lambda () (progn
-                                              (subword-mode t)
-                                              (diminish 'subword-mode))))
-    (add-hook 'clojure-mode-hook #'eldoc-mode)
-    (diminish 'eldoc-mode))
+(use-package clojure-mode :pin melpa
+  :mode (("\\.clj\\'" . clojure-mode)
+         ("\\.edn\\'" . clojure-mode))
+  :config
+  (require 'flycheck-clj-kondo)
+  (setq clojure-indent-style 'always-align
+        clojure-align-forms-automatically t)
+  :init
+  (add-hook 'clojure-mode-hook (lambda () (progn
+                                            (subword-mode t)
+                                            (diminish 'subword-mode))))
+  (add-hook 'clojure-mode-hook #'eldoc-mode)
+  (diminish 'eldoc-mode))
 
-  (use-package cider
-    :config
-    (defun company-remove-ispell ()
-      (when (boundp 'company-backends)
-        (make-local-variable 'company-backends)
-        ;; remove ispell
-        (setq company-backends (delete 'company-dabbrev company-backends))))
-    (add-hook 'prog-mode-hook 'company-remove-ispell)
+(use-package cider
+  :config
+  (defun company-remove-ispell ()
+    (when (boundp 'company-backends)
+      (make-local-variable 'company-backends)
+      ;; remove ispell
+      (setq company-backends (delete 'company-dabbrev company-backends))))
+  (add-hook 'prog-mode-hook 'company-remove-ispell)
 
-    (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-    (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-    (add-hook 'cider-mode-hook 'eldoc-mode)
-    (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
-    (setq nrepl-hide-special-buffers t
-          cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-          cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-          cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
-          cider-repl-display-help-banner nil ; don't display start banner
-          nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
-          cider-repl-wrap-history t ; wrap around history when end is reached
-          cider-save-file-on-load t ; don't prompt when eval, just save
-          cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
-          org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
-          cider-repl-display-help-banner nil)
+  (setq nrepl-hide-special-buffers t
+        cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
+        cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
+        cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
+        cider-repl-display-help-banner nil ; don't display start banner
+        nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
+        cider-repl-wrap-history t ; wrap around history when end is reached
+        cider-save-file-on-load t ; don't prompt when eval, just save
+        cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
+        org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
+        cider-repl-display-help-banner nil
+        cider-eldoc-display-for-symbol-at-point t)
 
-    (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
+  (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 #+end_src
 
 *** Docker
