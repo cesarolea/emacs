@@ -130,7 +130,7 @@ an idea...
   ; doesn't work for emacs daemon instances
   (defun fontify-frame (frame)
     (interactive)
-    (set-frame-parameter frame 'font "IBM Plex Mono 14"))
+    (set-frame-parameter frame 'font "IBM Plex Mono 12"))
 
   ; Fontify any future frames
   (push 'fontify-frame after-make-frame-functions)
@@ -211,12 +211,12 @@ In order to use ~use-package~, we must first install it.
 Which key makes it easier to discover the major mode you are in.
 
 #+begin_src emacs-lisp
-  (use-package which-key
-    :init (which-key-mode)
-    :bind ("H-s-w" . which-key-show-major-mode)
-    :diminish which-key-mode
-    :config (which-key-setup-side-window-right-bottom)
-            (setq which-key-idle-delay 0.3))
+(use-package which-key
+  :init (which-key-mode)
+  :bind ("s-w" . which-key-show-major-mode)
+  :diminish which-key-mode
+  :config (which-key-setup-side-window-right-bottom)
+          (setq which-key-idle-delay 0.3))
 #+end_src
 
 *** Ensure system package
@@ -389,17 +389,17 @@ I have it bound to ~<f10>~. Also:
   are part of a git repository.
 
 #+begin_src emacs-lisp
-  (use-package magit :pin melpa
-    :bind (("<f10>" . magit-status)
-           ("H-s-m" . magit-status))
-    :config
-    (setq magit-last-seen-setup-instructions "1.4"
-          magit-push-always-verify nil
-          magit-branch-read-upstream-first nil
-          global-magit-file-mode 1)
-    (if (bound-and-true-p magit-auto-revert-mode)
-        (diminish 'magit-auto-revert-mode))
-    :diminish magit-mode)
+(use-package magit :pin melpa
+  :bind (("<f10>" . magit-status)
+         ("s-m" . magit-status))
+  :config
+  (setq magit-last-seen-setup-instructions "1.4"
+        magit-push-always-verify nil
+        magit-branch-read-upstream-first nil
+        global-magit-file-mode 1)
+  (if (bound-and-true-p magit-auto-revert-mode)
+      (diminish 'magit-auto-revert-mode))
+  :diminish magit-mode)
 #+end_src
 
 ** savehist
@@ -536,93 +536,93 @@ things.
 *** TODO Documentation
 
  #+begin_src emacs-lisp
-   (use-package helm-flx :pin melpa
-     :config (helm-flx-mode +1))
+ (use-package helm-flx :pin melpa
+   :config (helm-flx-mode +1))
 
-   (use-package helm-ls-git :pin melpa)
+ (use-package helm-ls-git :pin melpa)
 
-   (use-package helm :pin melpa
-     :config
-     ;; so helm adapts to your usage
-     ; (helm-adaptive-mode 1)
+ (use-package helm :pin melpa
+   :config
+   ;; so helm adapts to your usage
+   ; (helm-adaptive-mode 1)
 
-     (when (executable-find "curl")
-       (setq helm-net-prefer-curl t))
+   (when (executable-find "curl")
+     (setq helm-net-prefer-curl t))
 
-     (defun helm-project-kill-buffers ()
-       (interactive)
-       (mapcar 'kill-buffer
-               (helm-browse-project-get-buffers (helm-ls-git-root-dir))))
+   (defun helm-project-kill-buffers ()
+     (interactive)
+     (mapcar 'kill-buffer
+             (helm-browse-project-get-buffers (helm-ls-git-root-dir))))
 
-     (require 'helm-config)
-     (require 'helm-ls-git)
+   (require 'helm-config)
+   (require 'helm-ls-git)
 
-     ;; window management
-     (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
-     (add-hook 'helm-after-initialize-hook (lambda ()
-                                             (popwin:display-buffer helm-buffer t)
-                                             (popwin-mode -1)))
+   ;; window management
+   (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
+   (add-hook 'helm-after-initialize-hook (lambda ()
+                                           (popwin:display-buffer helm-buffer t)
+                                           (popwin-mode -1)))
 
-     ;;  Restore popwin-mode after a Helm session finishes.
-     (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
+   ;;  Restore popwin-mode after a Helm session finishes.
+   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
 
-     (setq helm-idle-delay 0.1
-           helm-input-idle-delay 0.1
-           helm-mode-fuzzy-match t
-           helm-completion-in-region-fuzzy-match t
-           helm-candidate-number-limit 50
-           history-lengt 50)
-                                           ;             (setq helm-follow-mode-persistent t)
-     (setq helm-for-files-preferred-list
-           '(helm-source-buffers-list
-             helm-source-recentf
-             helm-source-bookmarks
-             helm-source-file-cache
-             helm-source-files-in-current-dir
-             helm-source-locate))
+   (setq helm-idle-delay 0.1
+         helm-input-idle-delay 0.1
+         helm-mode-fuzzy-match t
+         helm-completion-in-region-fuzzy-match t
+         helm-candidate-number-limit 50
+         history-lengt 50)
+                                         ;             (setq helm-follow-mode-persistent t)
+   (setq helm-for-files-preferred-list
+         '(helm-source-buffers-list
+           helm-source-recentf
+           helm-source-bookmarks
+           helm-source-file-cache
+           helm-source-files-in-current-dir
+           helm-source-locate))
 
-     (global-set-key "\C-x\ a" 'helm-for-files)
-     (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
-     ;; replace M-x with helm's version
-     (global-set-key (kbd "M-x") 'helm-M-x)
-     ;; replace C-x b with helm's version
-     (global-set-key "\C-x\ b" 'helm-mini)
-     (global-set-key "\C-x\ \C-r" 'helm-recentf)
-     (global-set-key "\C-h\ a" 'helm-apropos)
-     (global-set-key (kbd "C-x C-f") 'helm-find-files)
-     (global-set-key (kbd "<f9>") 'helm-bookmarks)
-     (global-set-key (kbd "H-s-b") 'helm-bookmarks)
-     (global-set-key (kbd "C-h C-l") 'helm-locate-library)
-     (global-set-key (kbd "C-c p f") 'helm-browse-project)
-     (global-set-key (kbd "C-c p k") 'helm-project-kill-buffers)
+   (global-set-key "\C-x\ a" 'helm-for-files)
+   (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
+   ;; replace M-x with helm's version
+   (global-set-key (kbd "M-x") 'helm-M-x)
+   ;; replace C-x b with helm's version
+   (global-set-key "\C-x\ b" 'helm-mini)
+   (global-set-key "\C-x\ \C-r" 'helm-recentf)
+   (global-set-key "\C-h\ a" 'helm-apropos)
+   (global-set-key (kbd "C-x C-f") 'helm-find-files)
+   (global-set-key (kbd "<f9>") 'helm-bookmarks)
+   (global-set-key (kbd "s-b") 'helm-bookmarks)
+   (global-set-key (kbd "C-h C-l") 'helm-locate-library)
+   (global-set-key (kbd "C-c p f") 'helm-browse-project)
+   (global-set-key (kbd "C-c p k") 'helm-project-kill-buffers)
 
-     (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring))
+   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring))
 
-   (use-package helm-ag :pin melpa
-     :config
-     (setq helm-ag-fuzzy-match t)
-     (global-set-key (kbd "C-c p f") 'helm-do-ag-project-root))
+ (use-package helm-ag :pin melpa
+   :config
+   (setq helm-ag-fuzzy-match t)
+   (global-set-key (kbd "C-c p f") 'helm-do-ag-project-root))
 
-   (use-package projectile :pin melpa
-     :init
-     (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
-     :config
-     (projectile-mode t)
-     (setq projectile-project-search-path '("~/workspace/")
-           projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
-           projectile-indexing-method 'alien
-           projectile-completion-system 'helm))
+ (use-package projectile :pin melpa
+   :init
+   (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+   :config
+   (projectile-mode t)
+   (setq projectile-project-search-path '("~/workspace/")
+         projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+         projectile-indexing-method 'alien
+         projectile-completion-system 'helm))
 
-    (use-package helm-projectile :pin melpa
-      :config
-      (defun my-find-file ()
-        (interactive)
-        (if (and (buffer-file-name)
-                 (projectile-project-p))
-            (helm-projectile-find-file)
-          (helm-for-files)))
-      (global-set-key (kbd "C-x a") 'my-find-file)
-      (helm-projectile-on))
+  (use-package helm-projectile :pin melpa
+    :config
+    (defun my-find-file ()
+      (interactive)
+      (if (and (buffer-file-name)
+               (projectile-project-p))
+          (helm-projectile-find-file)
+        (helm-for-files)))
+    (global-set-key (kbd "C-x a") 'my-find-file)
+    (helm-projectile-on))
  #+end_src
 
 ** Spellchecker
@@ -673,6 +673,7 @@ require additional packages.
 
 #+begin_src emacs-lisp
 (use-package ox-hugo)
+(use-package ox-plus-contrib :pin melpa)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -683,9 +684,10 @@ require additional packages.
   (global-set-key "\C-ca" 'org-agenda)
 
   (define-key org-mode-map (kbd "C-c r") #'org-list-repair)
-  (define-key org-mode-map (kbd "H-s-U") #'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "H-s-l") #'org-toggle-link-display)
-  (define-key org-mode-map (kbd "H-s-i") #'org-toggle-inline-images)
+  (define-key org-mode-map (kbd "s-U") #'org-mark-ring-goto)
+  (define-key org-mode-map (kbd "s-l") #'org-toggle-link-display)
+  (define-key org-mode-map (kbd "s-i") #'org-toggle-inline-images)
+  (define-key org-mode-map (kbd "C-c C-,") #'org-insert-structure-template)
 
   (require 'org-protocol)
   (require 'org-capture)
@@ -751,7 +753,7 @@ require additional packages.
                            "~/Sync/Org/Mail.org"
                            "~/Sync/Org/work.org")
         org-directory "~/Sync/Org"
-        org-ellipsis " ▼"
+        org-ellipsis " ↷" ;; other option is ↴
 
         ;; capture timestamps and notes when TODO state
         ;; changes to DONE
@@ -812,9 +814,10 @@ require additional packages.
   (org-clock-persistence-insinuate)
 
   ;; exporters
-  (require 'ox-md)     ; markdown
-  (require 'ox-reveal) ; nice presentations
-  (require 'ox-hugo)   ; blogging
+  (require 'ox-md)          ; markdown
+  (require 'ox-reveal)      ; nice presentations
+  (require 'ox-hugo)        ; blogging
+  (require 'ox-koma-letter) ; letters
 
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
@@ -931,13 +934,13 @@ require additional packages.
      Provides full text search capabilities for finding roam notes.
 
 #+begin_src emacs-lisp
-  (use-package deft
-    :bind ("H-s-F" . deft)
-    :commands (deft)
-    :config
-    (setq deft-extensions '("org")
-          deft-directory "~/Sync/Org/roam"
-          deft-recursive t))
+(use-package deft
+  :bind ("s-f" . deft)
+  :commands (deft)
+  :config
+  (setq deft-extensions '("org")
+        deft-directory "~/Sync/roam/"
+        deft-recursive t))
 #+end_src
 
 *** Literate programming
@@ -1827,6 +1830,14 @@ programming languages.
 (use-package yaml-mode)
 #+end_src
 
+** Other packages
+
+   ipcalc is an IP calculator in Emacs.
+
+   #+begin_src emacs-lisp
+   (use-package ipcalc :pin melpa)
+   #+end_src
+
 * Customization
 Customization and custom utility functions. Over the years I've
 accumulated many functions I don't actually use. My hope is that by
@@ -1987,36 +1998,36 @@ The ~xah-~ functions are to kill or copy lines. If no mark is set,
 then they work on the line where the cursor is located.
 
 #+begin_src emacs-lisp
-(require 'dash)
+;; (require 'dash)
 
-(defvar yank-indent-modes '(prog-mode)
-  "Modes in which to indent regions that are yanked (or yank-popped)")
+;; (defvar yank-indent-modes '(prog-mode)
+;;   "Modes in which to indent regions that are yanked (or yank-popped)")
 
-(defvar yank-advised-indent-threshold 1000
-  "Threshold (# chars) over which indentation does not automatically occur.")
+;; (defvar yank-advised-indent-threshold 1000
+;;   "Threshold (# chars) over which indentation does not automatically occur.")
 
-(defun yank-advised-indent-function (beg end)
-  "Do indentation, as long as the region isn't too large."
-  (if (<= (- end beg) yank-advised-indent-threshold)
-      (indent-region beg end nil)))
+;; (defun yank-advised-indent-function (beg end)
+;;   "Do indentation, as long as the region isn't too large."
+;;   (if (<= (- end beg) yank-advised-indent-threshold)
+;;       (indent-region beg end nil)))
 
-(defadvice yank (after yank-indent activate)
-  "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-  (if (and (not (ad-get-arg 0))
-           (member major-mode yank-indent-modes))
-      (let ((transient-mark-mode nil))
-        (yank-advised-indent-function (region-beginning) (region-end)))))
+;; (defadvice yank (after yank-indent activate)
+;;   "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
+;;   (if (and (not (ad-get-arg 0))
+;;            (member major-mode yank-indent-modes))
+;;       (let ((transient-mark-mode nil))
+;;         (yank-advised-indent-function (region-beginning) (region-end)))))
 
-(defadvice yank-pop (after yank-pop-indent activate)
-  "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-  (if (and (not (ad-get-arg 0))
-           (member major-mode yank-indent-modes))
-      (let ((transient-mark-mode nil))
-        (yank-advised-indent-function (region-beginning) (region-end)))))
+;; (defadvice yank-pop (after yank-pop-indent activate)
+;;   "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
+;;   (if (and (not (ad-get-arg 0))
+;;            (member major-mode yank-indent-modes))
+;;       (let ((transient-mark-mode nil))
+;;         (yank-advised-indent-function (region-beginning) (region-end)))))
 
-(defun yank-unindented ()
-  (interactive)
-  (yank 1))
+;; (defun yank-unindented ()
+;;   (interactive)
+;;   (yank 1))
 
 (defun xah-cut-line-or-region ()
   "Cut current line, or text selection.
