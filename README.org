@@ -902,9 +902,11 @@ require additional packages.
     (use-package org-contacts
       :ensure nil
       :after org
-      :custom (org-contacts-files '(~/Sync/Org/contacts.org)))
+      :config
+      (let ((default-directory org-directory))
+        (setq org-contacts-files (list (expand-file-name "contacts.org")))))
     #+end_src
-    
+
 *** Roam
 
 #+begin_src emacs-lisp
