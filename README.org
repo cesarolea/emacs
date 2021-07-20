@@ -730,13 +730,14 @@ require additional packages.
 :EMAIL: %(org-contacts-template-email)
 :GROUP: Work
 :COMPANY: %^{COMPANY}
-:UNREAD: %\\2
+:MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]], [[mu4e:query:from:%\\2 AND NOT flag:trashed][All emails]]
 :END:" :empty-lines 1 :immediate-finish t)
           ("cp" "Personal" entry (file+olp "~/Sync/Org/contacts.org" "Personal")
            "* %(org-contacts-template-name)
 :PROPERTIES:
 :EMAIL: %(org-contacts-template-email)
 :GROUP: %^{GROUP}
+:MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]]
 :END:" :empty-lines 1 :immediate-finish t)
           ))
 
