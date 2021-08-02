@@ -447,7 +447,7 @@ files that get visited automatically and fill up your recent file history.
     (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/Sync/Org/roam/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/Sync/roam/.*" (getenv "HOME")))
     (add-to-list 'recentf-exclude "/tmp/mu4e-*")
     (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
     (setq recentf-max-menu-items 25
@@ -461,24 +461,25 @@ backends. Useful in programming modes. I'm installing the lsp backend
 for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
-  (use-package company :pin melpa
-    :hook ((cider-repl-mode . company-mode)
-           (cider-mode      . company-mode)
-           (clojure-mode    . company-mode))
-    :bind (:map company-active-map
-                ("C-n" .   company-select-next)
-                ("C-p" .   company-select-previous)
-                ("RET" .   company-complete-selection)
-                ("<ret>" . company-complete-selection))
-    :config
-    (setq company-tooltip-align-annotations t
-          company-minimum-prefix-length 1
-          company-idle-delay 0.0)
-    (global-set-key (kbd "C-'") 'company-complete)
-    ;(global-company-mode)
-    :diminish company-mode)
+(use-package company :pin melpa
+  :hook ((cider-repl-mode . company-mode)
+         (cider-mode      . company-mode)
+         (clojure-mode    . company-mode))
+  :bind (:map company-active-map
+              ("C-n" .   company-select-next)
+              ("C-p" .   company-select-previous)
+              ("RET" .   company-complete-selection)
+              ("<ret>" . company-complete-selection))
+  :config
+  (setq company-tooltip-align-annotations t
+        company-minimum-prefix-length 1
+        company-idle-delay 0.0)
+  (add-to-list 'company-backends 'company-restclient)
+  (global-set-key (kbd "C-'") 'company-complete)
+  ;(global-company-mode)
+  :diminish company-mode)
 
-  ;(use-package company-lsp :pin melpa)
+;(use-package company-lsp :pin melpa)
 #+end_src
 
 ** Ido mode
@@ -673,12 +674,12 @@ require additional packages.
 
 #+begin_src emacs-lisp
 (use-package ox-hugo)
-(use-package ox-plus-contrib :pin melpa)
+;(use-package org-plus-contrib :pin melpa)
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package org
-  :ensure org-plus-contrib
+  ; :ensure org-plus-contrib
   :config
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-cc" 'org-capture)
@@ -692,6 +693,7 @@ require additional packages.
 
   (require 'org-protocol)
   (require 'org-capture)
+  ; (require 'org-contacts)
 
   (defadvice org-capture
       (after make-full-window-frame activate)
@@ -725,17 +727,17 @@ require additional packages.
           ;; these are for contacts
           ("c" "Contacts")
           ("cw" "Work" entry (file+olp "~/Sync/Org/contacts.org" "LoanPro")
-           "* %(org-contacts-template-name)
+           "* %^{Name}
 :PROPERTIES:
-:EMAIL: %(org-contacts-template-email)
+:EMAIL: %^{EMAIL}
 :GROUP: Work
 :COMPANY: %^{COMPANY}
 :MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]], [[mu4e:query:from:%\\2 AND NOT flag:trashed][All emails]]
 :END:" :empty-lines 1 :immediate-finish t)
           ("cp" "Personal" entry (file+olp "~/Sync/Org/contacts.org" "Personal")
-           "* %(org-contacts-template-name)
+           "* %^{Name}
 :PROPERTIES:
-:EMAIL: %(org-contacts-template-email)
+:EMAIL: %^{EMAIL}
 :GROUP: %^{GROUP}
 :MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]]
 :END:" :empty-lines 1 :immediate-finish t)
@@ -899,12 +901,13 @@ require additional packages.
 *** Contacts
 
     #+begin_src emacs-lisp
-    (use-package org-contacts
-      :ensure nil
-      :after org
-      :config
-      (let ((default-directory org-directory))
-        (setq org-contacts-files (list (expand-file-name "contacts.org")))))
+    ;; (use-package org-contacts
+    ;;   :ensure nil
+    ;;   :after org
+    ;;   :config
+    ;;   (setq org-contacts-enable-completion nil)
+    ;;   (let ((default-directory org-directory))
+    ;;     (setq org-contacts-files (list (expand-file-name "contacts.org")))))
     #+end_src
 
 *** Roam
@@ -912,8 +915,18 @@ require additional packages.
 #+begin_src emacs-lisp
 (use-package org-roam
   :pin melpa
-  :hook ((after-init . org-roam-mode)
-         (org-roam-backlinks-mode . visual-line-mode))
+  :after org
+  :init (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Sync/roam/")
+  (setq org-roam-completion-everywhere t)
+  :bind
+  ("C-c n l" . org-roam-buffer-toggle)
+  ("C-c n f" . org-roam-node-find)
+  (:map org-mode-map
+        (("C-c n i" . org-roam-node-insert)
+         ("C-c n g" . org-roam-graph)
+         ("C-M-i" . completion-at-point)))
   :config
   (setq org-roam-completion-system 'ivy
         org-roam-db-location "~/Sync/roam/org-roam.db"
@@ -921,21 +934,19 @@ require additional packages.
         org-roam-dailies-directory "~/Sync/roam/dailies/"
         org-roam-dailies-capture-templates
         '(("d" "default" entry
-           #'org-roam-capture--get-point
            "* %?"
-           :file-name "~/Sync/roam/dailies/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n"))
+           :if-new (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")))
         org-roam-graph-exclude-matcher '("dailies"))
+  ;; customize placement of roam window
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
   (require 'org-roam-protocol)
-  :custom (org-roam-directory "~/Sync/roam/")
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph)
-               ("C-c n c" . org-roam-capture))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
+  (org-roam-setup))
 #+end_src
 
 **** Roam Server
@@ -946,20 +957,20 @@ require additional packages.
      clicking a node to open the corresponding note in Emacs.
 
 #+begin_src emacs-lisp
-  (use-package org-roam-server
-    :pin melpa
-    :config
-    (setq org-roam-server-host "127.0.0.1"
-	  org-roam-server-port 8080
-	  org-roam-server-authenticate nil
-	  org-roam-server-export-inline-images t
-	  org-roam-server-serve-files nil
-	  org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-	  org-roam-server-network-poll t
-	  org-roam-server-network-arrows nil
-	  org-roam-server-network-label-truncate t
-	  org-roam-server-network-label-truncate-length 60
-	  org-roam-server-network-label-wrap-length 20))
+;; (use-package org-roam-server
+;;   :pin melpa
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;; 	 org-roam-server-port 8080
+;; 	 org-roam-server-authenticate nil
+;; 	 org-roam-server-export-inline-images t
+;; 	 org-roam-server-serve-files nil
+;; 	 org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+;; 	 org-roam-server-network-poll t
+;; 	 org-roam-server-network-arrows nil
+;; 	 org-roam-server-network-label-truncate t
+;; 	 org-roam-server-network-label-truncate-length 60
+;; 	 org-roam-server-network-label-wrap-length 20))
 #+end_src
 
 **** Deft
@@ -973,7 +984,9 @@ require additional packages.
   :config
   (setq deft-extensions '("org")
         deft-directory "~/Sync/roam/"
-        deft-recursive t))
+        deft-recursive t
+        deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
+        deft-use-filename-as-title t))
 #+end_src
 
 *** Literate programming
@@ -1514,7 +1527,7 @@ Useful packages for text editing.
   (global-set-key [(shift return)] #'crux-smart-open-line)
   (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
   (global-set-key [remap kill-whole-line] #'crux-kill-whole-line)
-  (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+  ;; (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
   )
 #+end_src
 
@@ -1714,6 +1727,7 @@ programming languages.
   :config
   (setq lsp-enable-snippet          nil
         lsp-enable-links            nil
+
         lsp-keymap-prefix           "C-c l"
         lsp-auto-configure          t
         lsp-lens-enable             t
@@ -1725,7 +1739,8 @@ programming languages.
 (use-package lsp-ui :pin melpa
   :commands lsp-ui-mode
   :config
-  (setq lsp-ui-doc-position 'at-point))
+  (setq lsp-ui-doc-position 'at-point
+        lsp-ui-sideline-show-code-actions nil))
 
 (use-package helm-lsp :pin melpa
   :config
@@ -2381,6 +2396,7 @@ keyboard with no easy access to a compose key.
 (use-package mu4e
   :if (not (memq window-system '(mac ns)))
   :ensure nil
+  :bind (("C-x m" . 'mu4e-compose-new))
   :load-path "/home/cesaro/workspace/mu/mu4e/"
   :config
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
