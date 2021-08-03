@@ -866,12 +866,7 @@ require additional packages.
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package org-ql :pin melpa)
-
-(use-package helm-org-ql :pin melpa
-  :after (org-ql)
-  :bind (:map org-mode-map
-              (("s-q" . helm-org-ql)))
+(use-package org-ql :pin melpa
   :config
   (setq org-agenda-custom-commands
         '(("os" "Custom: Staled scheduled items from the past"
@@ -894,8 +889,11 @@ require additional packages.
            ((org-ql-block '(and (done)                        ;; all DONE tasks
                                 (closed :on today)            ;; that were closed
                                 ))))
-          ))
-  )
+          )))
+
+(use-package helm-org-ql :pin melpa
+  :after (org-ql)
+  :bind (:map org-mode-map (("s-q" . helm-org-ql))))
 #+end_src
 
 *** Contacts
