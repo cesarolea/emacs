@@ -915,9 +915,6 @@ require additional packages.
   :pin melpa
   :after org
   :init (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/Sync/roam/")
-  (setq org-roam-completion-everywhere t)
   :bind
   ("C-c n l" . org-roam-buffer-toggle)
   ("C-c n f" . org-roam-node-find)
@@ -927,15 +924,17 @@ require additional packages.
          ("C-M-i" . completion-at-point)))
   :config
   (setq org-roam-completion-system 'ivy
-        org-roam-db-location "~/Sync/roam/org-roam.db"
+        org-roam-completion-everywhere t
+        org-roam-directory (expand-file-name "~/Sync/roam/")
+        org-roam-db-location (expand-file-name "~/Sync/roam/org-roam.db")
         org-roam-index-file "20201109112056-index.org"
-        org-roam-dailies-directory "~/Sync/roam/dailies/"
+        org-roam-dailies-directory "dailies/"
         org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
-           :if-new (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n")))
-        org-roam-graph-exclude-matcher '("dailies"))
+           :if-new (file+head "private_%<%Y-%m-%d>.org"
+                              "#+title: Private daily note %<%Y-%m-%d>\n")))
+        org-roam-graph-exclude-matcher "private_")
   ;; customize placement of roam window
   (add-to-list 'display-buffer-alist
                '("\\*org-roam\\*"
