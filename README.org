@@ -543,6 +543,8 @@ things.
  (use-package helm-ls-git :pin melpa)
 
  (use-package helm :pin melpa
+   :init
+   (helm-mode 1)
    :config
    ;; so helm adapts to your usage
    ; (helm-adaptive-mode 1)
@@ -933,7 +935,8 @@ require additional packages.
            :if-new (file+head "private_%<%Y-%m-%d>.org"
                               "#+title: Private daily note %<%Y-%m-%d>\n"
                               "#+filetags: :daily:")))
-        org-roam-graph-exclude-matcher "private_")
+        org-roam-graph-exclude-matcher "private_"
+        org-roam-completion-system 'default)
   ;; customize placement of roam window
   (add-to-list 'display-buffer-alist
                '("\\*org-roam\\*"
@@ -942,8 +945,7 @@ require additional packages.
                  (window-width . 0.33)
                  (window-height . fit-window-to-buffer)))
   (require 'org-roam-protocol)
-  (org-roam-setup)
-  )
+  (org-roam-setup))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1886,7 +1888,7 @@ programming languages.
    (use-package ledger-mode
      :mode ("\\.dat\\'" "\\.ledger\\'"))
    #+end_src
-   
+
 * Customization
 Customization and custom utility functions. Over the years I've
 accumulated many functions I don't actually use. My hope is that by
@@ -2625,4 +2627,3 @@ keyboard with no easy access to a compose key.
          " AND NOT flag:trashed"
          " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
 #+end_src
-
