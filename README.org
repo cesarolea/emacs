@@ -915,17 +915,15 @@ require additional packages.
   :pin melpa
   :after org
   :init (setq org-roam-v2-ack t)
-  :bind
-  ("C-c n l" . org-roam-buffer-toggle)
-  ("C-c n f" . org-roam-node-find)
-  (:map org-mode-map
-        (("C-c n i" . org-roam-node-insert)
+  :bind (("C-c n f" . org-roam-node-find)
+         :map org-mode-map
+         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n i" . org-roam-node-insert)
          ("C-c n g" . org-roam-graph)
-         ("C-M-i" . completion-at-point)))
+         ("C-M-i" . completion-at-point))
   :config
-  (setq org-roam-completion-system 'ivy
+  (setq org-roam-directory (expand-file-name "~/Sync/roam/")
         org-roam-completion-everywhere t
-        org-roam-directory (expand-file-name "~/Sync/roam/")
         org-roam-db-location (expand-file-name "~/Sync/roam/org-roam.db")
         org-roam-index-file "20201109112056-index.org"
         org-roam-dailies-directory "dailies/"
@@ -933,7 +931,8 @@ require additional packages.
         '(("d" "default" entry
            "* %?"
            :if-new (file+head "private_%<%Y-%m-%d>.org"
-                              "#+title: Private daily note %<%Y-%m-%d>\n")))
+                              "#+title: Private daily note %<%Y-%m-%d>\n"
+                              "#+filetags: :daily:")))
         org-roam-graph-exclude-matcher "private_")
   ;; customize placement of roam window
   (add-to-list 'display-buffer-alist
@@ -943,31 +942,19 @@ require additional packages.
                  (window-width . 0.33)
                  (window-height . fit-window-to-buffer)))
   (require 'org-roam-protocol)
-  (org-roam-setup))
+  (org-roam-setup)
+  )
 #+end_src
 
-**** Roam Server
-
-     Org Roam already comes with graphing built in, but Roam Server
-     displays your note graph in a Web page that you can navigate, see
-     previews of your notes by hovering in each node, as well as
-     clicking a node to open the corresponding note in Emacs.
-
 #+begin_src emacs-lisp
-;; (use-package org-roam-server
-;;   :pin melpa
-;;   :config
-;;   (setq org-roam-server-host "127.0.0.1"
-;; 	 org-roam-server-port 8080
-;; 	 org-roam-server-authenticate nil
-;; 	 org-roam-server-export-inline-images t
-;; 	 org-roam-server-serve-files nil
-;; 	 org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-;; 	 org-roam-server-network-poll t
-;; 	 org-roam-server-network-arrows nil
-;; 	 org-roam-server-network-label-truncate t
-;; 	 org-roam-server-network-label-truncate-length 60
-;; 	 org-roam-server-network-label-wrap-length 20))
+(use-package org-roam-ui
+  :ensure nil
+  :load-path "~/workspace/org-roam-ui"
+  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-open-on-start nil
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t))
 #+end_src
 
 **** Deft
@@ -1208,23 +1195,23 @@ succession (for example for movement commands)
      for the dailies functionality.
 
 #+begin_src emacs-lisp
-  (defhydra hydra-roam-dailies (:color blue :hint nil)
-    "
-  Capture^         ^Find^        ^Navigation^
-  --------------------------------------------------------
-  _t_oday           t_o_day
-  _y_esterday       y_e_sterday   _p_revious note
-  _d_ate            d_a_te        _n_ext note"
-    ("t" org-roam-dailies-capture-today)
-    ("y" org-roam-dailies-capture-yesterday)
-    ("d" org-roam-dailies-capture-date)
-    ("o" org-roam-dailies-find-today)
-    ("e" org-roam-dailies-find-yesterday)
-    ("a" org-roam-dailies-find-date)
-    ("p" org-roam-dailies-find-previous-note :color red)
-    ("n" org-roam-dailies-find-next-note :color red))
+(defhydra hydra-roam-dailies (:color blue :hint nil)
+  "
+Capture^         ^Find^        ^Navigation^
+--------------------------------------------------------
+_t_oday           t_o_day
+_y_esterday       y_e_sterday   _p_revious note
+_d_ate            d_a_te        _n_ext note"
+  ("t" org-roam-dailies-capture-today)
+  ("y" org-roam-dailies-capture-yesterday)
+  ("d" org-roam-dailies-capture-date)
+  ("o" org-roam-dailies-goto-today)
+  ("e" org-roam-dailies-find-yesterday)
+  ("a" org-roam-dailies-find-date)
+  ("p" org-roam-dailies-find-previous-note :color red)
+  ("n" org-roam-dailies-find-next-note :color red))
 
-  (global-set-key (kbd "C-c i") 'hydra-roam-dailies/body)
+(global-set-key (kbd "C-c i") 'hydra-roam-dailies/body)
 #+end_src
 
 **** Flycheck
@@ -2410,6 +2397,8 @@ keyboard with no easy access to a compose key.
     (setq mu4e-hide-index-messages t))
 
   (define-key mu4e-view-mode-map (kbd "C-c C-u") 'bms/mu4e-sometimes-silent-update-force)
+  (define-key gnus-mime-button-map "e" nil)
+  (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
 
   ;; for capture templates. In future versions of mu4e the name of this
   ;; package is changed to mu4e-org
@@ -2429,7 +2418,7 @@ keyboard with no easy access to a compose key.
         mu4e-compose-complete-only-after (format-time-string
                                           "%Y-%m-%d"
                                           (time-subtract (current-time) (days-to-time 150)))
-        mu4e-view-use-gnus nil
+        mu4e-view-use-gnus t
         gnus-blocked-images "http"
         mu4e-show-images t
         mu4e-compose-dont-reply-to-self t
@@ -2440,6 +2429,13 @@ keyboard with no easy access to a compose key.
         mu4e-use-fancy-chars nil
         fill-flowed-encode-column 998
         message-send-mail-function 'smtpmail-send-it)
+
+  ;; prefer text mail
+  (with-eval-after-load "mm-decode"
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+
   ;; templates for email processing workflow
 
   ;; store the current query as a link
@@ -2508,17 +2504,6 @@ keyboard with no easy access to a compose key.
           (lambda (msg)
             (when msg
               (mu4e-message-maildir-matches msg "^/loanpro")))
-          ;; (lambda (msg)
-          ;;   (when msg
-          ;;     (or
-          ;;      (mu4e-message-contact-field-matches
-          ;;       msg '(:from :to :cc :bcc) "cesar.olea@loanpro.io")
-          ;;      (mu4e-message-contact-field-matches
-          ;;       msg '(:from :to :cc :bcc) "cesaro@simnang.com"))))
-          ;; (lambda (msg)
-          ;;   (when msg
-          ;;     (mu4e-message (mu4e-message-field msg :maildir))
-          ;;     (string-prefix-p "^/loanpro" (mu4e-message-field msg :maildir))))
           :vars '((user-mail-address . "cesar.olea@loanpro.io")
                   (user-full-name . "César Olea")
                   (mu4e-drafs-folder . "/loanpro/[Gmail]/Drafts")
@@ -2526,21 +2511,31 @@ keyboard with no easy access to a compose key.
                   (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
                   (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
                   (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
-                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\" data-smartmail=\"gmail_signature\"><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-size:medium;font-family:&quot;Times New Roman&quot;;padding-bottom:3px\"><div style=\"line-height:1.2em;color:#27313f;font-family:roboto,sans-serif;font-size:0.9em\">
-    <div style=\"padding-bottom:3px\">
-        <a href=\"https://www.linkedin.com/in/cesarolea/\" style=\"color:rgb(39,49,63);font-weight:bold\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.linkedin.com/in/cesarolea/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNHtgXEnWWT34lkAbGLyjqAmXQWjgA\">CESAR OLEA</a>&nbsp;|
-        <span style=\"color:#4e627e\">Chief Technology Officer </span>
-    </div>
-    <div>
-        +52 (662) 172-5478&nbsp;|
-        <a href=\"mailto:cesar.olea@loanpro.io\" style=\"color:#27313f\" target=\"_blank\">cesar.olea@loanpro.io</a>
-    </div>
-    <div style=\"padding-top:5px\">
-        LEND | SERVICE | COLLECT
-    </div>
-    <a href=\"https://loanpro.io/\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1612647386977000&amp;usg=AFQjCNELplFoIvqyNTqsxkX-aX8yqAoYCQ\">
-        <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
-    </a></div><br></div></div></div><#/part>")
+                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\">
+  <p style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:13px;line-height:10px\">
+    <span style=\"color:rgb(39,49,63)\">César Olea</span>&nbsp;<span style=\"color:rgb(78,98,126)\">| Chief Technology Officer</span>
+  </p>
+  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">(644) 123 6320&nbsp;|&nbsp;<a>cesar.olea@loanpro.io</a>
+  </p>
+  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">LEND | SERVICE | COLLECT</p>
+  <a href=\"https://loanpro.io/\" style=\"font-family:roboto,sans-serif;font-size:14.4px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNEdtWH4hsGPWH6siwgvaAi2PBcTag\">
+    <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
+    </a>
+    <br>
+      <span style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-size:medium\">
+      </span>
+      <div style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-size:medium;display:flex;margin-top:10px\">
+        <a href=\"https://loanpro.io/blog/loanpro-lands-prime-spot-on-inc-5000\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpro-lands-prime-spot-on-inc-5000&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNFDHpk57MZmPPyQ0avnyYReYdgKTQ\">
+          <img src=\"https://ci4.googleusercontent.com/proxy/J4sizS9Vb8-xPkPpXKm69VhNbSySH5P0whIJ102aDUpVFWYk10oyMPHTElp_6j4vbTRaFU0Ca20sxx6Nf5ezsZNcxsvCXs7ODEtwUyAkFOQgfg8=s0-d-e1-ft#https://drive.google.com/uc?id=1nw62KDjAohkz2RTjcb3TtOrdNo3jcFEx\" style=\"width:40px;height:auto\" class=\"CToWUd\">
+          </a>
+          <a href=\"https://loanpro.io/blog/loanpro-secures-100-million-series-a-investment-from-ftv-capital\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpro-secures-100-million-series-a-investment-from-ftv-capital&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNE0YJDStDzn7gw6RMCvEZxi7PM2Sw\">
+            <img src=\"https://ci5.googleusercontent.com/proxy/AJ6ka5l70Ik-VNZ17rszGovsBiMdu1cBv2YYVoLsXexmjt8Ml8FeKR2F-gCV--PI7XBKVwXiymXxgW5l_8BkqVyIqM5xKGJNB1qGdtEaHvtD3VU=s0-d-e1-ft#https://drive.google.com/uc?id=1jFi-1y8tY_7vuIHHLiwaDG_4gxNmaLzZ\" style=\"width:40px;height:auto;margin-left:8px\" class=\"CToWUd\">
+            </a>
+            <a href=\"https://loanpro.io/blog/loanpros-grand-opening-day\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpros-grand-opening-day&amp;source=gmail&amp;ust=1629558123295000&amp;usg=AFQjCNHcZG_Rfc5rBpCOBnAokx0lsjEdZw\">
+              <img src=\"https://ci5.googleusercontent.com/proxy/bFx0YTxDPJFcIouTOhajpugdelBSWWEZPY7W7PVFC4vGT5iRfx9LOwuE7og_FeSJvSF9ljIlCadBjlQV2r3CFbg3aQsBmt4jOorCE3xDxM1lkwI=s0-d-e1-ft#https://drive.google.com/uc?id=1S59SpQrBTK6-KH8mSrdlbm8n_Oe4szo4\" style=\"width:40px;height:auto;margin-left:8px\" class=\"CToWUd\">
+</a>
+</div>
+</div><#/part>")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-smtp-service . 465)
                   (smtpmail-stream-type . ssl)
@@ -2553,17 +2548,6 @@ keyboard with no easy access to a compose key.
           (lambda (msg)
             (when msg
               (mu4e-message-maildir-matches msg "^/fastmail")))
-          ;; (lambda (msg)
-          ;;   (when msg
-          ;;     (or
-          ;;      (mu4e-message-contact-field-matches
-          ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@cesarolea.com*$")
-          ;;      (mu4e-message-contact-field-matches
-          ;;       msg '(:from :to :cc :bcc) "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail.com*$"))))
-          ;; (lambda (msg)
-          ;;   (when msg
-          ;;     (mu4e-message (mu4e-message-field msg :maildir))
-          ;;     (string-prefix-p "^/fastmail" (mu4e-message-field msg :maildir))))
           :vars '((user-mail-address . "mail@cesarolea.com")
                   (user-full-name . "César Olea")
                   (mu4e-drafs-folder . "/fastmail/Drafts")
@@ -2607,8 +2591,8 @@ keyboard with no easy access to a compose key.
 (use-package org-mime :pin melpa
   :config
   (setq org-mime-export-options '(:section-numbers nil
-                                  :with-author nil
-                                  :with-toc nil))
+                                                   :with-author nil
+                                                   :with-toc nil))
   (add-hook 'org-mime-html-hook
             (lambda ()
               (org-mime-change-element-style
@@ -2629,15 +2613,16 @@ keyboard with no easy access to a compose key.
   )
 
 (use-package mu4e-alert
+  :pin melpa
   :hook (after-init . mu4e-alert-enable-notifications)
   :after (mu4e)
   :config
   (mu4e-alert-set-default-style 'libnotify)
-  skip alerting for mails in All Mail
+  ;; skip alerting for mails in All Mail
   (setq mu4e-alert-interesting-mail-query
-      (concat
-       "flag:unread"
-       " AND NOT flag:trashed"
-       " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
+        (concat
+         "flag:unread"
+         " AND NOT flag:trashed"
+         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
 #+end_src
 
