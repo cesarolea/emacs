@@ -2388,15 +2388,6 @@ keyboard with no easy access to a compose key.
   (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
   (add-hook 'mu4e-compose-mode-hook #'(lambda () (auto-save-mode -1)))
 
-  (defun bms/mu4e-sometimes-silent-update-force ()
-    "Only show minibuffer information when explicitly called."
-    (interactive)
-    (setq mu4e-hide-index-messages nil)
-    (mu4e-maildirs-extension-force-update)
-    (sleep-for 5)
-    (setq mu4e-hide-index-messages t))
-
-  (define-key mu4e-view-mode-map (kbd "C-c C-u") 'bms/mu4e-sometimes-silent-update-force)
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
 
