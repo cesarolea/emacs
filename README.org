@@ -1029,16 +1029,6 @@ require additional packages.
   :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
 #+end_src
 
-** Calendar view
-
-   #+begin_src emacs-lisp
-     (use-package calfw
-       :ensure nil
-       :load-path "/home/cesaro/workspace/emacs-calfw")
-
-     (use-package calfw-org :pin melpa)
-   #+end_src
-
 ** Hydra
 Hydras are useful bindings grouped together. Once a hydra is invoked,
 you are presented with a set of options related to the hydra. It's
