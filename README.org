@@ -1914,20 +1914,20 @@ The following modes are enabled:
   cursor is located, in the modeline. It also works with Org headers.
 
 #+begin_src emacs-lisp
-  (setq save-place-file (concat user-emacs-directory "places"))
-  (save-place-mode 1)
+(setq save-place-file (concat user-emacs-directory "places"))
+(save-place-mode 1)
 
-  (blink-cursor-mode -1)
+(blink-cursor-mode -1)
 
-  (delete-selection-mode t)
+(delete-selection-mode t)
 
-  (column-number-mode t)
+(column-number-mode t)
 
-  (global-visual-line-mode t)
+(global-visual-line-mode t)
 
-  (global-auto-revert-mode t)
+(global-auto-revert-mode t)
 
-  (which-function-mode t)
+(which-function-mode t)
 #+end_src
 
 ** Global bindings
@@ -2399,7 +2399,7 @@ keyboard with no easy access to a compose key.
         mu4e-headers-skip-duplicates t
         mu4e-update-interval (* 10 60)
         mu4e-index-update-in-background t
-        mu4e-hide-index-messages t
+        mu4e-hide-index-messages nil
 
         ;; change to mbsync -a to sync all mail accounts
         mu4e-get-mail-command "mbsync -a"
