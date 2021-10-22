@@ -1738,9 +1738,6 @@ programming languages.
   (dap-mode 1))
 #+end_src
 
-#+RESULTS:
-: t
-
 *** JavaScript
     ~js2-mode~ is a JavaScript mode that keeps an AST for syntax
  checking and coloring.
