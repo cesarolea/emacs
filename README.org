@@ -74,7 +74,7 @@ an idea...
       suggest-key-bindings nil                ; stop telling me the menu command key
       display-line-numbers-grow-only t        ; avoid growing the line number fringe (ie. when going from 99 to 100) causing buffer content shift to the right
       display-line-numbers-type "relative"    ; don't count continuation lines in line numbering
-      whitespace-line-column 100              ; limit line length
+      whitespace-line-column 110              ; limit line length
       whitespace-style '(face tabs empty trailing tab-mark)
       whitespace-display-mappings '((trailing-mark 32 [183] [46])
                                     (newline-mark 10 [182 10])
@@ -130,7 +130,7 @@ an idea...
 ; doesn't work for emacs daemon instances
 (defun fontify-frame (frame)
   (interactive)
-  (set-frame-parameter frame 'font "IBM Plex Mono 12"))
+  (set-frame-parameter frame 'font "IBM Plex Mono 10"))
 
 ; Fontify any future frames
 (push 'fontify-frame after-make-frame-functions)
@@ -745,12 +745,6 @@ require additional packages.
 :END:" :empty-lines 1 :immediate-finish t)
           ))
 
-  ;; Save underlying org files when changing status of agenda items
-  (defmacro η (fnc)
-  "Return function that ignores its arguments and invokes FNC."
-  `(lambda (&rest _rest)
-     (funcall ,fnc)))
-
   ;; Agenda list
   ;; Ignores TODO items with a scheduled and/or deadline date that
   ;; occur in the future. The idea is that those items have already
@@ -760,10 +754,20 @@ require additional packages.
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-deadline-if-done  t)
 
+  ;; Save underlying org files when changing status of agenda items
+  (defmacro η (fnc)
+  "Return function that ignores its arguments and invokes FNC."
+  `(lambda (&rest _rest)
+     (funcall ,fnc)))
+
   (advice-add 'org-deadline       :after (η #'org-save-all-org-buffers))
   (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
   (advice-add 'org-store-log-note :after (η #'org-save-all-org-buffers))
   (advice-add 'org-todo           :after (η #'org-save-all-org-buffers))
+
+  ;; for habits, when marking as done the buffer still changes
+  ;; this fixes it
+  (add-hook 'org-trigger-hook 'save-buffer)
 
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   ;; modules
@@ -1978,28 +1982,28 @@ Finally a ~before-save-hook~ is set to cleanup whitespace when the
 file is saved.
 
 #+begin_src emacs-lisp
-  ;; prog mode setup
-  (add-hook 'prog-mode-hook (lambda ()
-                              (electric-pair-mode 1)
-                              (hl-line-mode t)
-                              (rainbow-mode 1)
-                              (visual-line-mode 0)
-                              (toggle-truncate-lines 1)
-                              (show-paren-mode t)
-                              (whitespace-mode t)
-                              (setq display-fill-column-indicator-column 110)
-                              (display-fill-column-indicator-mode 1)
-                              (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
-                              (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
+;; prog mode setup
+(add-hook 'prog-mode-hook (lambda ()
+                            (electric-pair-mode 1)
+                            (hl-line-mode t)
+                            (rainbow-mode 1)
+                            (visual-line-mode 0)
+                            (toggle-truncate-lines 1)
+                            (show-paren-mode t)
+                            (whitespace-mode t)
+                            (setq display-fill-column-indicator-column 104)
+                            (display-fill-column-indicator-mode 1)
+                            (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
+                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
 
-  ;; but only lisps should have rainbow delimiters
-  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+;; but only lisps should have rainbow delimiters
+(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
-  (add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
+(add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
 
-  ;; If all you use is magit anyway, this is not really a loss
-  (remove-hook 'find-file-hooks 'vc-find-file-hook)
+;; If all you use is magit anyway, this is not really a loss
+(remove-hook 'find-file-hooks 'vc-find-file-hook)
 #+end_src
 
 ** Defaults
