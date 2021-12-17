@@ -438,24 +438,24 @@ actual color.
 ** Recentf
 Keeps track of your most recent opened files so you can get back to
 them easily. You can specify files to ignore, which is useful for
-files that get visited automatically and fill up your recent file history.
+files that get visited automatically and fill up your recent file
+history. No binding is set; Helm is used for browsing recent files.
 
 #+begin_src emacs-lisp
-  (use-package recentf
-    :hook (after-init . recentf-mode)
-    :bind ("\C-x\ \C-r" . recentf-open-files)
-    :config
-    (recentf-mode 1)
-    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/Sync/roam/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude "/tmp/mu4e-*")
-    (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
-    (setq recentf-max-menu-items 25
-          recentf-max-saved-items 20000000
-          recentf-auto-cleanup 10))
+(use-package recentf
+  :hook (after-init . recentf-mode)
+  :config
+  (recentf-mode 1)
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/Sync/roam/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude "/tmp/mu4e-*")
+  (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
+  (setq recentf-max-menu-items 25
+        recentf-max-saved-items 20000000
+        recentf-auto-cleanup 10))
 #+end_src
 
 ** Completion engine
@@ -500,7 +500,7 @@ things.
 (use-package ido
   :config
   (ido-mode 1)
-  (setq ido-everywhere t)
+  ;(setq ido-everywhere t)
   (setq ido-use-faces t)
   (setq ido-use-filename-at-point 'guess)
   (setq ido-use-url-at-point nil)
@@ -515,7 +515,8 @@ things.
       (when file
         (find-file file))))
 
-  (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file))
+  ; (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
+  )
 
 (use-package ido-vertical-mode
   :config
@@ -781,7 +782,11 @@ require additional packages.
   (setq org-default-notes-file "~/Sync/Org/refile.org"
         org-agenda-files '("~/Sync/Org/life.org"
                            "~/Sync/Org/Mail.org"
-                           "~/Sync/Org/work.org")
+                           "~/Sync/Org/work.org"
+                           "~/Simnang/org/weekly-check-in.org")
+        ;; so that you can refile to any file tracked by agenda
+        ;; plus a nesting level of 3
+        org-refile-targets '((org-agenda-files :maxlevel . 3))
         org-directory "~/Sync/Org"
         org-ellipsis " ↷" ;; other option is ↴
 
@@ -820,6 +825,9 @@ require additional packages.
         org-habit-show-all-today nil
 
         org-hide-emphasis-markers nil
+
+        ;; so when hitting enter after a heading, it keeps proper indentation
+        org-adapt-indentation t
         )
 
   (add-hook 'org-mode-hook (lambda ()
@@ -1714,8 +1722,9 @@ programming languages.
          (lsp-mode      . lsp-enable-which-key-integration)
          (c-mode        . lsp-deferred)
          (c++-mode      . lsp-deferred)
-         (clojure-mode  . lsp-deferred)
-         (clojurec-mode . lsp-deferred))
+         ;(clojure-mode  . lsp-deferred)
+         ;(clojurec-mode . lsp-deferred)
+         )
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
   :config
@@ -1734,7 +1743,9 @@ programming languages.
   :commands lsp-ui-mode
   :config
   (setq lsp-ui-doc-position 'at-point
-        lsp-ui-sideline-show-code-actions nil))
+        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-sideline-show-code-actions nil
+        lsp-modeline-code-actions-enable nil))
 
 (use-package helm-lsp :pin melpa
   :config
@@ -1808,8 +1819,8 @@ programming languages.
          ("\\.edn\\'" . clojure-mode))
   :config
   (require 'flycheck-clj-kondo)
-  (setq clojure-indent-style 'always-align
-        clojure-align-forms-automatically t)
+  (setq clojure-indent-style 'align-arguments
+        clojure-align-forms-automatically nil)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
@@ -1842,9 +1853,19 @@ programming languages.
         cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
         org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
         cider-repl-display-help-banner nil
-        cider-eldoc-display-for-symbol-at-point t)
+        cider-eldoc-display-for-symbol-at-point t
+        cider-repl-buffer-size-limit 100000)
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
+
+(use-package clj-refactor
+  :config
+  (defun clj-refactor-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+  (add-hook 'clojure-mode-hook #'clj-refactor-mode-hook))
 #+end_src
 
 *** Docker
@@ -2397,6 +2418,7 @@ keyboard with no easy access to a compose key.
 
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
+  (define-key mu4e-headers-mode-map (kbd "|") 'mu4e-headers-query-prev)
 
   ;; for capture templates. In future versions of mu4e the name of this
   ;; package is changed to mu4e-org
@@ -2513,7 +2535,7 @@ keyboard with no easy access to a compose key.
   <p style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:13px;line-height:10px\">
     <span style=\"color:rgb(39,49,63)\">César Olea</span>&nbsp;<span style=\"color:rgb(78,98,126)\">| Chief Technology Officer</span>
   </p>
-  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">(644) 123 6320&nbsp;|&nbsp;<a>cesar.olea@loanpro.io</a>
+  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">(662) 172 5478&nbsp;|&nbsp;<a>cesar.olea@loanpro.io</a>
   </p>
   <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">LEND | SERVICE | COLLECT</p>
   <a href=\"https://loanpro.io/\" style=\"font-family:roboto,sans-serif;font-size:14.4px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNEdtWH4hsGPWH6siwgvaAi2PBcTag\">
@@ -2576,7 +2598,8 @@ keyboard with no easy access to a compose key.
           ("mime:application/pdf AND NOT flag:trashed"                                                  "Messages with PDF files" ?f)
           ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/fastmail/Sent\""                        "Unread messages"         ?i)
           ("date:today..now AND NOT flag:trashed"                                                       "Today's messages"        ?t)
-          ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s)))
+          ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")" "Sent messages"           ?s)
+          ("from:cesar to:technology AND Newsletter AND maildir:\"/loanpro/[Gmail]/Sent Mail\""         "Sent newsletters"        ?N)))
 
   ;; set own mail address from the context addresses
   (setq mu4e-user-mail-address-list
