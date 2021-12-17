@@ -361,7 +361,10 @@ programming modes.
 Add Flycheck support for both Rust and Clojure.
 
 #+begin_src emacs-lisp
-(use-package flycheck-clj-kondo)
+(use-package flycheck-clj-kondo
+  :config
+  (setenv "PATH" (concat (getenv "PATH") ":~/bin"))
+  (setq exec-path (append exec-path '("~/bin"))))
 
 (use-package flycheck-rust
   :config
