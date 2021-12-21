@@ -976,13 +976,13 @@ require additional packages.
 
 #+begin_src emacs-lisp
 (use-package org-roam-ui
-  :ensure nil
-  :load-path "~/workspace/org-roam-ui"
+  :pin melpa
   :hook (after-init . org-roam-ui-mode)
   :config
   (setq org-roam-ui-open-on-start nil
         org-roam-ui-follow t
-        org-roam-ui-update-on-save t))
+        org-roam-ui-update-on-save t
+        org-roam-ui-sync-theme t))
 #+end_src
 
 **** Deft
@@ -1820,7 +1820,8 @@ programming languages.
   :config
   (require 'flycheck-clj-kondo)
   (setq clojure-indent-style 'align-arguments
-        clojure-align-forms-automatically nil)
+        clojure-align-forms-automatically nil
+        clojure-toplevel-inside-comment-form t)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
@@ -2644,5 +2645,27 @@ keyboard with no easy access to a compose key.
         (concat
          "flag:unread"
          " AND NOT flag:trashed"
-         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")")))
+         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")"))
+
+  ;; fix issue alert only displays when emacs opens for the first time
+  ;; https://github.com/iqbalansari/mu4e-alert/issues/40
+  (defun mu4e-alert--get-mu4e-frame ()
+    "Try getting a frame containing a mu4e buffer."
+    (car (delq nil (mapcar (lambda (buffer)
+                             (when (and buffer
+                                        (get-buffer-window buffer t))
+                               (window-frame (get-buffer-window buffer t))))
+                           (list mu4e-main-buffer-name)))))
+
+  (defun mu4e-alert-filter-repeated-mails (mails)
+    "Filters the MAILS that have been seen already."
+    (cl-remove-if (lambda (mail)
+                    (prog1 (and (not mu4e-alert-notify-repeated-mails)
+                                (ht-get mu4e-alert-repeated-mails
+                                        (plist-get mail :message-id)))
+                      (ht-set! mu4e-alert-repeated-mails
+                               (plist-get mail :message-id)
+                               t)
+                      ))
+                  mails)))
 #+end_src
