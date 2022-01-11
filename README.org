@@ -51,10 +51,6 @@ an idea...
       inhibit-startup-message t               ; don't display startup message
       ns-use-srgb-colorspace t                ; use srgb
       gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3" ; elpa.gnu.org uses TLS1.2, not TLS1.3
-      package-archives '(("org"          . "https://orgmode.org/elpa/")
-                         ("gnu"          . "https://elpa.gnu.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("melpa"        . "https://melpa.org/packages/"))
       exec-path (append exec-path '("/usr/local/bin"))
       confirm-kill-processes nil              ; don't prompt for killing processes
       ns-use-proxy-icon nil                   ; don't display icons in the titlebar
@@ -116,6 +112,10 @@ an idea...
       ;; regex test setting
       reb-re-syntax 'string
       )
+
+(add-to-list 'package-archives '("org"          . "https://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa"        . "https://melpa.org/packages/"))
 
 ; load the custom file that was defined earlier
 (load custom-file)
@@ -464,7 +464,7 @@ backends. Useful in programming modes. I'm installing the lsp backend
 for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
-(use-package company :pin melpa
+(use-package company
   :hook ((cider-repl-mode . company-mode)
          (cider-mode      . company-mode)
          (clojure-mode    . company-mode))
@@ -1855,7 +1855,9 @@ programming languages.
         org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
         cider-repl-display-help-banner nil
         cider-eldoc-display-for-symbol-at-point t
-        cider-repl-buffer-size-limit 100000)
+        cider-repl-buffer-size-limit 100000
+        cider-use-xref nil ; keep using cider's own xref backend instead of emacs built in
+        )
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
