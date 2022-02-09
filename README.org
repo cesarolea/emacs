@@ -886,14 +886,10 @@ require additional packages.
 (use-package org-ql :pin melpa
   :config
   (setq org-agenda-custom-commands
-        '(("os" "Custom: Staled scheduled items from the past"
-           ((org-ql-block '(and (todo)                        ;; all TODOs
-                                (not (or (deadline)           ;; that are not a habit or don't have a deadline
-                                         (habit)))
-                                (scheduled :from -90 :to -1)  ;; and were scheduled in the past 90 days
-                                ))
-                                        ; (agenda)                                        ;; show agenda view
-            ))
+        '(("oc" "Custom: Completed today"
+           ((org-ql-block '(and (done)                        ;; all DONE tasks
+                                (closed :on today)            ;; that were closed
+                                ))))
           ("oo" "Custom: Orphaned tasks"
            ((org-ql-block '(and (todo)                        ;; all TODOs
                                 (not (or (deadline)           ;; that are regular tasks. No habit, scheduled or deadline
@@ -902,10 +898,18 @@ require additional packages.
                                 (or (ts :from -360 :to -7)
                                     (not (ts)))
                                 ))))
-          ("oc" "Custom: Completed today"
-           ((org-ql-block '(and (done)                        ;; all DONE tasks
-                                (closed :on today)            ;; that were closed
-                                ))))
+          ("os" "Custom: Staled scheduled items from the past"
+           ((org-ql-block '(and (todo)                        ;; all TODOs
+                                (not (or (deadline)           ;; that are not a habit or don't have a deadline
+                                         (habit)))
+                                (scheduled :from -90 :to -1)  ;; and were scheduled in the past 90 days
+                                ))
+                                        ; (agenda)                                        ;; show agenda view
+            ))
+          ("ot" "Custom: Updated today"
+           ((org-ql-block '(and
+                            (not (habit))
+                            (ts :from -1 :to -1))))
           )))
 
 (use-package helm-org-ql :pin melpa
@@ -1139,8 +1143,7 @@ succession (for example for movement commands)
 
  (global-set-key (kbd "C-x w") 'avy-goto-word-1)
  (global-set-key (kbd "C-x g") 'avy-goto-line)
- (global-set-key (kbd "M-.") 'avy-goto-char-2)
- #+end_src
+  #+end_src
 
 **** Github gists
      Collection of functions to work with gists.
@@ -1843,6 +1846,29 @@ programming languages.
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
+  ;; Similar to C-x C-e, but sends to REBL
+  (defun rebl-eval-last-sexp ()
+    (interactive)
+    (let* ((bounds (cider-last-sexp 'bounds))
+           (s (cider-last-sexp))
+           (reblized (concat "(cognitect.rebl/inspect " s ")")))
+      (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
+
+  ;; Similar to C-M-x, but sends to REBL
+  (defun rebl-eval-defun-at-point ()
+    (interactive)
+    (let* ((bounds (cider-defun-at-point 'bounds))
+           (s (cider-defun-at-point))
+           (reblized (concat "(cognitect.rebl/inspect " s ")")))
+      (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
+
+  ;; C-S-x send defun to rebl
+  ;; C-x C-r send last sexp to rebl (Normally bound to "find-file-read-only"... Who actually uses that though?)
+  (add-hook 'cider-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-S-x") #'rebl-eval-defun-at-point)
+              (local-set-key (kbd "C-x C-r") #'rebl-eval-last-sexp)))
+
   (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
         cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
@@ -2534,31 +2560,6 @@ keyboard with no easy access to a compose key.
                   (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
                   (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
                   (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
-                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\">
-  <p style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:13px;line-height:10px\">
-    <span style=\"color:rgb(39,49,63)\">César Olea</span>&nbsp;<span style=\"color:rgb(78,98,126)\">| Chief Technology Officer</span>
-  </p>
-  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">(662) 172 5478&nbsp;|&nbsp;<a>cesar.olea@loanpro.io</a>
-  </p>
-  <p style=\"font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:10px;color:rgb(39,49,63)\">LEND | SERVICE | COLLECT</p>
-  <a href=\"https://loanpro.io/\" style=\"font-family:roboto,sans-serif;font-size:14.4px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNEdtWH4hsGPWH6siwgvaAi2PBcTag\">
-    <img alt=\"LoanPro\" src=\"https://ci5.googleusercontent.com/proxy/bl9k6Zg3juNxy-Cz5ETAa185cjwwciBBhzjk9ltCtHvEuF7mpsnQ7DTHpPL-pSfwofvuQyzoSxeiyCSEp3qQH6GKlnanrbiWrMvhackSiwdsmA_h2ywYVXw=s0-d-e1-ft#https://loanpro.io/wp-content/uploads/2020/07/cropped-new-logo-2-1.png\" style=\"max-width:120px;margin-top:8px\" class=\"CToWUd\">
-    </a>
-    <br>
-      <span style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-size:medium\">
-      </span>
-      <div style=\"color:rgb(0,0,0);font-family:Helvetica,Arial,sans-serif;font-size:medium;display:flex;margin-top:10px\">
-        <a href=\"https://loanpro.io/blog/loanpro-lands-prime-spot-on-inc-5000\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpro-lands-prime-spot-on-inc-5000&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNFDHpk57MZmPPyQ0avnyYReYdgKTQ\">
-          <img src=\"https://ci4.googleusercontent.com/proxy/J4sizS9Vb8-xPkPpXKm69VhNbSySH5P0whIJ102aDUpVFWYk10oyMPHTElp_6j4vbTRaFU0Ca20sxx6Nf5ezsZNcxsvCXs7ODEtwUyAkFOQgfg8=s0-d-e1-ft#https://drive.google.com/uc?id=1nw62KDjAohkz2RTjcb3TtOrdNo3jcFEx\" style=\"width:40px;height:auto\" class=\"CToWUd\">
-          </a>
-          <a href=\"https://loanpro.io/blog/loanpro-secures-100-million-series-a-investment-from-ftv-capital\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpro-secures-100-million-series-a-investment-from-ftv-capital&amp;source=gmail&amp;ust=1629558123294000&amp;usg=AFQjCNE0YJDStDzn7gw6RMCvEZxi7PM2Sw\">
-            <img src=\"https://ci5.googleusercontent.com/proxy/AJ6ka5l70Ik-VNZ17rszGovsBiMdu1cBv2YYVoLsXexmjt8Ml8FeKR2F-gCV--PI7XBKVwXiymXxgW5l_8BkqVyIqM5xKGJNB1qGdtEaHvtD3VU=s0-d-e1-ft#https://drive.google.com/uc?id=1jFi-1y8tY_7vuIHHLiwaDG_4gxNmaLzZ\" style=\"width:40px;height:auto;margin-left:8px\" class=\"CToWUd\">
-            </a>
-            <a href=\"https://loanpro.io/blog/loanpros-grand-opening-day\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/blog/loanpros-grand-opening-day&amp;source=gmail&amp;ust=1629558123295000&amp;usg=AFQjCNHcZG_Rfc5rBpCOBnAokx0lsjEdZw\">
-              <img src=\"https://ci5.googleusercontent.com/proxy/bFx0YTxDPJFcIouTOhajpugdelBSWWEZPY7W7PVFC4vGT5iRfx9LOwuE7og_FeSJvSF9ljIlCadBjlQV2r3CFbg3aQsBmt4jOorCE3xDxM1lkwI=s0-d-e1-ft#https://drive.google.com/uc?id=1S59SpQrBTK6-KH8mSrdlbm8n_Oe4szo4\" style=\"width:40px;height:auto;margin-left:8px\" class=\"CToWUd\">
-</a>
-</div>
-</div><#/part>")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-smtp-service . 465)
                   (smtpmail-stream-type . ssl)
