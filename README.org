@@ -546,7 +546,7 @@ things.
 
  (use-package helm-ls-git :pin melpa)
 
- (use-package helm :pin melpa
+ (use-package helm
    :init
    (helm-mode 1)
    :config
@@ -910,7 +910,7 @@ require additional packages.
            ((org-ql-block '(and
                             (not (habit))
                             (ts :from -1 :to -1))))
-          )))
+          ))))
 
 (use-package helm-org-ql :pin melpa
   :after (org-ql)
