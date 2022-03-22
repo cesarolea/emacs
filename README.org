@@ -527,7 +527,7 @@ things.
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
 
-(use-package flx-ido
+(use-package flx-ido :pin melpa
   :config
   (flx-ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -718,24 +718,24 @@ require additional packages.
 
   (setq org-capture-templates
         '(("w" "Work Workflow")
-          ("wt" "Task" entry (file+olp "~/Sync/Org/work.org.gpg" "To Do")
+          ("wt" "Task" entry (file+olp "~/Dropbox/org/work.org.gpg" "To Do")
            "* TODO %?\n  ADDED: %t\n\n%i" :empty-lines 1)
-          ("wr" "Refile" entry (file+olp "~/Sync/Org/work.org.gpg" "Refile")
+          ("wr" "Refile" entry (file+olp "~/Dropbox/org/work.org.gpg" "Refile")
            "* TODO %?\n  ADDED: %t\n\n%i" :empty-lines 1)
           ;; these are for mu4e configured below
           ("m" "Email Workflow")
-          ("mf" "Follow Up" entry (file+olp "~/Sync/Org/Mail.org" "Follow Up")
+          ("mf" "Follow Up" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Follow Up")
                   "* TODO Follow up with %:fromname on %a\nADDED:%t\n\n%i"
                   :immediate-finish t)
-          ("mr" "Read Later" entry (file+olp "~/Sync/Org/Mail.org" "Read Later")
+          ("mr" "Read Later" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Read Later")
                   "* TODO Read %:subject\nADDED:%t\n%a\n\n%i"
                   :immediate-finish t)
-          ("ms" "Schedule" entry (file+olp "~/Sync/Org/Mail.org" "Schedule")
+          ("ms" "Schedule" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Schedule")
                   "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
                   :immediate-finish t)
           ;; these are for contacts
           ("c" "Contacts")
-          ("cw" "Work" entry (file+olp "~/Sync/Org/contacts.org" "LoanPro")
+          ("cw" "Work" entry (file+olp "~/Dropbox/org/contacts.org.gpg" "LoanPro")
            "* %^{Name}
 :PROPERTIES:
 :EMAIL: %^{EMAIL}
@@ -743,7 +743,7 @@ require additional packages.
 :COMPANY: %^{COMPANY}
 :MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]], [[mu4e:query:from:%\\2 AND NOT flag:trashed][All emails]]
 :END:" :empty-lines 1 :immediate-finish t)
-          ("cp" "Personal" entry (file+olp "~/Sync/Org/contacts.org" "Personal")
+          ("cp" "Personal" entry (file+olp "~/Dropbox/org/contacts.org.gpg" "Personal")
            "* %^{Name}
 :PROPERTIES:
 :EMAIL: %^{EMAIL}
@@ -782,11 +782,11 @@ require additional packages.
   (add-to-list 'org-modules 'org-habit t)
 
   ;; where to put captured notes
-  (setq org-default-notes-file "~/Sync/Org/refile.org"
-        org-agenda-files '("~/Sync/Org/life.org.gpg"
-                           "~/Sync/Org/Mail.org"
-                           "~/Sync/Org/work.org.gpg"
-                           "~/Simnang/org/weekly-check-in.org.gpg")
+  (setq org-default-notes-file "~/Dropbox/org/refile.org"
+        org-agenda-files '("~/Dropbox/org/life.org.gpg"
+                           "~/Dropbox/org/Mail.org.gpg"
+                           "~/Dropbox/org/work.org.gpg"
+                           "~/Dropbox/org/weekly-check-in.org.gpg")
         ;; so that you can refile to any file tracked by agenda
         ;; plus a nesting level of 3
         org-refile-targets '((org-agenda-files :maxlevel . 3))
@@ -1286,30 +1286,6 @@ _d_ate            d_a_te        _n_ext note"
  (global-set-key (kbd "C-c b") 'hydra-bm/body)
  #+end_src
 
-**** Origami
-     Working with the Origami code folding package.
-
- #+begin_src emacs-lisp
- (defhydra hydra-origami (:color red :hint nil :timeout 1.0)
-     "
- Code Folds^       ^Navigation^
- ---------------------------------
- _t_ Toggle       _j_ Move to next
- _T_ Toggle All   _k_ Move to previous
- _u_ undo
- _r_ redo
- _R_ Reset
- "
-   ("t" origami-recursively-toggle-node)
-   ("T" origami-toggle-all-nodes)
-   ("u" origami-undo)
-   ("r" origami-redo)
-   ("j" origami-next-fold)
-   ("k" origami-previous-fold)
-   ("R" origami-reset))
- (global-set-key (kbd "C-c f") 'hydra-origami/body)
- #+end_src
-
 **** Timestamp
      Insert various timestamps.
 #+begin_src emacs-lisp
@@ -1454,6 +1430,7 @@ Useful packages for text editing.
                                  (make-directory dir :parents)
                                  dir))
    (setq undo-tree-history-directory-alist `(("." . ,undo-tree-history-dir)))
+   (setq undo-tree-auto-save-history nil)
    (defalias 'redo 'undo-tree-redo)
    :diminish undo-tree-mode)
  #+end_src
@@ -1660,15 +1637,6 @@ a file to a previous version.
 
 #+begin_src emacs-lisp
 (use-package git-timemachine)
-#+end_src
-
-*** Code folding
-    Collapse code regions
-
-#+begin_src emacs-lisp
-  (use-package origami :pin melpa
-    :bind (("<f5>" . 'origami-recursively-toggle-mode))
-    :config (add-hook 'prog-mode-hook 'origami-mode))
 #+end_src
 
 *** S3 editing
