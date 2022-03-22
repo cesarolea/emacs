@@ -2432,7 +2432,7 @@ keyboard with no easy access to a compose key.
 
   (setq mu4e-change-filenames-when-moving t
         mu4e-headers-skip-duplicates t
-        mu4e-update-interval (* 10 60)
+        mu4e-update-interval (* 5 60)
         mu4e-index-update-in-background t
         mu4e-hide-index-messages nil
 
@@ -2441,7 +2441,7 @@ keyboard with no easy access to a compose key.
         mu4e-maildir "~/Mail"
         mu4e-view-show-addresses t
         mu4e-compose-complete-only-personal t
-        mu4e-compose-complete-only-after (format-time-string
+        mu4e-compose-complete-only-after (format-time()-string
                                           "%Y-%m-%d"
                                           (time-subtract (current-time) (days-to-time 150)))
         mu4e-view-use-gnus t
