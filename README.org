@@ -725,13 +725,13 @@ require additional packages.
           ;; these are for mu4e configured below
           ("m" "Email Workflow")
           ("mf" "Follow Up" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Follow Up")
-                  "* TODO Follow up with %:fromname on %a\nADDED:%t\n\n%i"
+                  "* TODO Follow up with %:fromname on %a :mail:\nADDED:%t\n\n%i"
                   :immediate-finish t)
           ("mr" "Read Later" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Read Later")
-                  "* TODO Read %:subject\nADDED:%t\n%a\n\n%i"
+                  "* TODO Read %:subject :mail:\nADDED:%t\n%a\n\n%i"
                   :immediate-finish t)
           ("ms" "Schedule" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Schedule")
-                  "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
+                  "* TODO Follow up with %:fromname on %a :mail:\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
                   :immediate-finish t)
           ;; these are for contacts
           ("c" "Contacts")
@@ -2441,7 +2441,7 @@ keyboard with no easy access to a compose key.
         mu4e-maildir "~/Mail"
         mu4e-view-show-addresses t
         mu4e-compose-complete-only-personal t
-        mu4e-compose-complete-only-after (format-time()-string
+        mu4e-compose-complete-only-after (format-time-string
                                           "%Y-%m-%d"
                                           (time-subtract (current-time) (days-to-time 150)))
         mu4e-view-use-gnus t
