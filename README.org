@@ -687,6 +687,10 @@ require additional packages.
 #+end_src
 
 #+begin_src emacs-lisp
+(use-package htmlize)
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package org
   ; :ensure org-plus-contrib
   :config
