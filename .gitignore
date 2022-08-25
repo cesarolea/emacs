@@ -50,3 +50,5 @@ helm-adaptive-history
 games/
 projectile.cache
 savefile/savehist
+.trello/*
+request/*
