@@ -2687,3 +2687,12 @@ keyboard with no easy access to a compose key.
                       ))
                   mails)))
 #+end_src
+
+#+begin_src emacs-lisp
+;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg")))
+(use-package org-trello
+  :pin melpa
+  :straight (org-trello :build (:not compile))
+  :config
+  (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))))
+#+end_src
