@@ -53,7 +53,7 @@ an idea...
 	    custom-file (concat user-emacs-directory "lisp/custom.el") ; avoid adding to init.el
 	    inhibit-startup-message t               ; don't display startup message
 	    ns-use-srgb-colorspace t                ; use srgb
-	    gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3" ; elpa.gnu.org uses TLS1.2, not TLS1.3
+	    ; gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2" ; elpa.gnu.org uses TLS1.2, not TLS1.3
 	    exec-path (append exec-path '("/usr/local/bin"))
 	    confirm-kill-processes nil              ; don't prompt for killing processes
 	    ns-use-proxy-icon nil                   ; don't display icons in the titlebar
@@ -685,7 +685,7 @@ Org mode is able to export to several other formats, and some of them
 require additional packages.
 
 #+begin_src emacs-lisp
-(use-package ox-hugo)
+;(use-package ox-hugo)
 ;(use-package org-plus-contrib :pin melpa)
 #+end_src
 
