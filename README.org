@@ -984,7 +984,10 @@ require additional packages.
                               "#+title: Private daily note %<%Y-%m-%d>\n"
                               "#+filetags: :daily:")))
         org-roam-graph-exclude-matcher "private_"
-        org-roam-completion-system 'default)
+        org-roam-completion-system 'default
+        org-roam-mode-sections (list #'org-roam-backlinks-section
+                                     #'org-roam-reflinks-section
+                                     #'org-roam-unlinked-references-section))
   ;; customize placement of roam window
   (add-to-list 'display-buffer-alist
                '("\\*org-roam\\*"
