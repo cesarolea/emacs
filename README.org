@@ -1186,26 +1186,27 @@ succession (for example for movement commands)
      Moving around an Org mode file.
 
  #+begin_src emacs-lisp
-   (defhydra hydra-org (:color red :hint nil)
-     "
-   Capture^       ^Navigation^
-   -----------------------------------------------------------
-   capture         _j_ next heading
-   last capture    _k_ prev heading
-                   _h_ next heading (same level)
-                   _l_ prev heading (same level)
-                   _u_p higher heading
-                   _t_oggle
-                   _g_o to
+ (defhydra hydra-org (:color red :hint nil)
    "
-     ("j" outline-next-visible-heading)
-     ("k" outline-previous-visible-heading)
-     ("h" org-forward-heading-same-level)
-     ("l" org-backward-heading-same-level)
-     ("u" outline-up-heading)
-     ("t" org-cycle)
-     ("g" org-goto :exit t))
-   (global-set-key (kbd "C-c o") 'hydra-org/body)
+ Capture^       ^Navigation^
+ -----------------------------------------------------------
+ capture         _j_ next heading
+ last capture    _k_ prev heading
+                 _h_ next heading (same level)
+                 _l_ prev heading (same level)
+                 _u_p higher heading
+                 _t_oggle
+                 _g_o to
+ "
+   ("j" outline-next-visible-heading)
+   ("k" outline-previous-visible-heading)
+   ("h" org-forward-heading-same-level)
+   ("l" org-backward-heading-same-level)
+   ("u" outline-up-heading)
+   ("t" org-cycle)
+   ("g" org-goto :exit t))
+ ;(global-set-key (kbd "C-c o") 'hydra-org/body)
+
  #+end_src
 
 **** Utility
