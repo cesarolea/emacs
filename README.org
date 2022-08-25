@@ -1923,6 +1923,25 @@ programming languages.
 (use-package yaml-mode)
 #+end_src
 
+*** Go
+    Support for working with Go projects.
+
+    #+begin_src emacs-lisp
+    (use-package go-mode)
+    #+end_src
+    
+*** Python
+
+    #+begin_src emacs-lisp
+    (use-package python-mode)
+    #+end_src
+
+*** Elixir
+
+    #+begin_src emacs-lisp
+    (use-package elixir-mode)
+    #+end_src
+
 ** Other packages
 
    ipcalc is an IP calculator in Emacs.
