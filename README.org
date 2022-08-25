@@ -2589,7 +2589,7 @@ keyboard with no easy access to a compose key.
               (mu4e-message-maildir-matches msg "^/fastmail")))
           :vars '((user-mail-address . "mail@cesarolea.com")
                   (user-full-name . "César Olea")
-                  (mu4e-drafs-folder . "/fastmail/Drafts")
+                  (mu4e-drafts-folder . "/fastmail/Drafts")
                   (mu4e-sent-folder . "/fastmail/Sent")
                   (mu4e-refile-folder . "/fastmail/Archive")
                   (mu4e-trash-folder . "/fastmail/Trash")
