@@ -1819,6 +1819,7 @@ programming languages.
   (setq clojure-indent-style 'align-arguments
         clojure-align-forms-automatically nil
         clojure-toplevel-inside-comment-form t)
+  (put-clojure-indent 'for-all :defn)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
