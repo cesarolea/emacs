@@ -2569,7 +2569,7 @@ keyboard with no easy access to a compose key.
               (mu4e-message-maildir-matches msg "^/loanpro")))
           :vars '((user-mail-address . "cesar.olea@loanpro.io")
                   (user-full-name . "César Olea")
-                  (mu4e-drafs-folder . "/loanpro/[Gmail]/Drafts")
+                  (mu4e-drafts-folder . "/loanpro/[Gmail]/Drafts")
                   (mu4e-sent-folder . "/loanpro/[Gmail]/Sent Mail")
                   (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
                   (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
