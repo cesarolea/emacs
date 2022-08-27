@@ -138,7 +138,10 @@ an idea...
   ; doesn't work for emacs daemon instances
   (defun fontify-frame (frame)
     (interactive)
-    (set-frame-parameter frame 'font "IBM Plex Mono 12"))
+    (set-frame-parameter frame 'font
+			 (if (equal system-type 'darwin)
+			     "IBM Plex Mono 16"
+			   "IBM Plex Mono 12")))
 
   ; Fontify any future frames
   (push 'fontify-frame after-make-frame-functions)
