@@ -91,7 +91,7 @@
  ("org-mime" . "5c19b458f8dbd61f8a40c8b94ba843833ba90a77")
  ("org-ql" . "e41cdb45912f1731b5b060f9e05d011096663655")
  ("org-reveal" . "8567d2b1118bde343980b878af9a38f14d85ffcd")
- ("org-roam" . "69116a4da49448e79ac03aedceeecd9f5ae9b2d4")
+ ("org-roam" . "7f453f3fffb924ca4ae3f8d34cabc03fbcae0127")
  ("org-roam-ui" . "16a8da9e5107833032893bc4c0680b368ac423ac")
  ("org-super-agenda" . "f4f528985397c833c870967884b013cf91a1da4a")
  ("org-superstar-mode" . "03be6c0a3081c46a59b108deb8479ee24a6d86c0")
