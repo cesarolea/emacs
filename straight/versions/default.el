@@ -49,7 +49,7 @@
  ("flycheck-clj-kondo" . "ff7bed2315755cfe02ef471edf522e27b78cd5ca")
  ("flycheck-rust" . "a139cd53c5062697e9ed94ad80b803c37d999600")
  ("font-utils" . "abc572eb0dc30a26584c0058c3fe6c7273a10003")
- ("git-timemachine" . "6df7f435de78440f8fa84cde99c7853bf0c57661")
+ ("git-timemachine" . "ca09684e94767cc0b2339b77b778b4de4f9d104f")
  ("gntp.el" . "767571135e2c0985944017dc59b0be79af222ef5")
  ("gnu-elpa-mirror" . "bd86dae3c5745aeae117ad7966e5a6433a785c58")
  ("go-mode.el" . "08aa90d52f0e7d2ad02f961b554e13329672d7cb")

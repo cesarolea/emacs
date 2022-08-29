@@ -1652,7 +1652,11 @@ Navigate your git repository history. Allows you to temporarily revert
 a file to a previous version.
 
 #+begin_src emacs-lisp
-(use-package git-timemachine)
+(use-package git-timemachine
+  :straight `(git-timemachine
+              :fork (:host
+                     nil
+                     :repo "https://codeberg.org/pidu/git-timemachine.git")))
 #+end_src
 
 *** S3 editing
