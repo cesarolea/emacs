@@ -1,5 +1,4 @@
-(("/opt/homebrew/share/emacs/site-lisp/mu/mu4e" . "c5731faf8be1ddc1eeae4b162b88bd76318fc279")
- ("ace-window" . "0577c426a9833ab107bab46c60d1885c611b2fb9")
+(("ace-window" . "0577c426a9833ab107bab46c60d1885c611b2fb9")
  ("alert" . "c39ce68ed8d80fb996fb78eafc06481a54bf27ce")
  ("all-the-icons.el" . "4a4d6269b8b85b0b15954f063e6ce378630d80c0")
  ("anzu" . "5abb37455ea44fa401d5f4c1bdc58adb2448db67")
