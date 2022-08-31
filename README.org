@@ -2457,12 +2457,11 @@ keyboard with no easy access to a compose key.
 #+begin_src emacs-lisp
 (use-package mu4e
   :ensure nil
+  :straight (:local-repo
+             "/opt/homebrew/share/emacs/site-lisp/mu/mu4e"
+             :pre-build
+             ())
   :bind (("C-x m" . 'mu4e-compose-new))
-  :straight `(mu4e
-              :local-repo
-              "/home/cesaro/workspace/mu/mu4e/"
-              :pre-build
-              ())
   :config
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
   (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
