@@ -58,7 +58,7 @@
                   "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
                   :immediate-finish t)
           ("mr" "Read Later" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Read Later")
-                  "* TODO Read %:subject %(org-set-tags \"mail\")\nADDED:%t\n%a\n\n%i"
+                  "* TODO Read %:subject on %a %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
                   :immediate-finish t)
           ("ms" "Schedule" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Schedule")
                   "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
