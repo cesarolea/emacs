@@ -1652,7 +1652,11 @@ Navigate your git repository history. Allows you to temporarily revert
 a file to a previous version.
 
 #+begin_src emacs-lisp
-(use-package git-timemachine)
+(use-package git-timemachine
+  :straight `(git-timemachine
+              :fork (:host
+                     nil
+                     :repo "https://codeberg.org/pidu/git-timemachine.git")))
 #+end_src
 
 *** S3 editing
@@ -2452,10 +2456,13 @@ keyboard with no easy access to a compose key.
 
 #+begin_src emacs-lisp
 (use-package mu4e
-  :if (not (memq window-system '(mac ns)))
   :ensure nil
   :bind (("C-x m" . 'mu4e-compose-new))
-  :load-path "/home/cesaro/workspace/mu/mu4e/"
+  :straight `(mu4e
+              :local-repo
+              "/home/cesaro/workspace/mu/mu4e/"
+              :pre-build
+              ())
   :config
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
   (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
