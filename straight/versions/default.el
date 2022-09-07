@@ -12,7 +12,7 @@
  ("cider" . "700ded1d6c245e01fca7f364db1561ad1e1bb595")
  ("clj-refactor.el" . "cd97626fd952f824564808a2f21b40bfcb59ff0f")
  ("clojure-mode" . "d47298212ffc486ade3f2428f103feba3a467af0")
- ("company-mode" . "35408c0ac3a730908fbce0810f8d159eb353c1d5")
+ ("company-mode" . "16ffeba5ef96c4c8e0cd39860b5402e25e304601")
  ("company-restclient" . "e5a3ec54edb44776738c13e13e34c85b3085277b")
  ("compat" . "056e3ccffc716990dcb7b33273453d5fce0402de")
  ("crux" . "6bfd212a7f7ae32e455802fde1f9e3f4fba932a0")
