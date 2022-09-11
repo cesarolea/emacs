@@ -30,7 +30,7 @@
 
   (require 'org-protocol)
   (require 'org-capture)
-  ; (require 'org-contacts)
+  ;; (require 'org-contacts)
 
   (defadvice org-capture
       (after make-full-window-frame activate)
@@ -162,6 +162,21 @@
 
         ;; so when hitting enter after a heading, it keeps proper indentation
         org-adapt-indentation t
+
+        org-tag-alist-for-agenda '(("work"     . ?w)
+                                   ("personal" . ?p)
+                                   ("home"     . ?h)
+                                   ("sp"       . ?s)
+                                   ("mail"     . ?m)
+                                   ("loanpro"  . ?l)
+                                   ("cto"      . ?c))
+        org-tag-alist '(("work"     . ?w)
+                        ("personal" . ?p)
+                        ("home"     . ?h)
+                        ("sp"       . ?s)
+                        ("mail"     . ?m)
+                        ("loanpro"  . ?l)
+                        ("cto"      . ?c))
         )
 
   (add-hook 'org-mode-hook (lambda ()
