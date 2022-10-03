@@ -55,14 +55,14 @@
           ;; these are for mu4e configured below
           ("m" "Email Workflow")
           ("mf" "Follow Up" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Follow Up")
-                  "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
-                  :immediate-finish t)
+           "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
+           :immediate-finish t)
           ("mr" "Read Later" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Read Later")
-                  "* TODO Read %a %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
-                  :immediate-finish t)
+           "* TODO Read %a from %:fromname %(org-set-tags \"mail\")\nADDED:%t\n\n%i"
+           :immediate-finish t)
           ("ms" "Schedule" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Schedule")
-                  "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
-                  :immediate-finish t)
+           "* TODO Follow up with %:fromname on %a %(org-set-tags \"mail\")\nSCHEDULED:%t DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i"
+           :immediate-finish t)
           ;; these are for contacts
           ("c" "Contacts")
           ("cw" "Work" entry (file+olp "~/Dropbox/org/contacts.org.gpg" "LoanPro")
@@ -93,9 +93,9 @@
 
   ;; Save underlying org files when changing status of agenda items
   (defmacro η (fnc)
-  "Return function that ignores its arguments and invokes FNC."
-  `(lambda (&rest _rest)
-     (funcall ,fnc)))
+    "Return function that ignores its arguments and invokes FNC."
+    `(lambda (&rest _rest)
+       (funcall ,fnc)))
 
   (advice-add 'org-deadline       :after (η #'org-save-all-org-buffers))
   (advice-add 'org-schedule       :after (η #'org-save-all-org-buffers))
