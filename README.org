@@ -1723,11 +1723,14 @@ programming languages.
          (lsp-mode      . lsp-enable-which-key-integration)
          (c-mode        . lsp-deferred)
          (c++-mode      . lsp-deferred)
+         (elixir-mode   . lsp-deferred)
          ;(clojure-mode  . lsp-deferred)
          ;(clojurec-mode . lsp-deferred)
          )
   :init
-  (setq lsp-clients-clangd-executable "/usr/bin/clangd-12")
+  (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
+        lsp-elixir-mix-target "~/.asdf/shims/mix")
+  (add-to-list 'exec-path "~/bin/elixir-ls")
   :config
   (setq lsp-enable-snippet          nil
         lsp-enable-links            nil
@@ -2470,6 +2473,7 @@ keyboard with no easy access to a compose key.
 
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
+  (define-key mu4e-view-mode-map (kbd ";") 'mu4e-context-switch)
   (define-key mu4e-headers-mode-map (kbd "|") 'mu4e-headers-query-prev)
 
   ;; for capture templates. In future versions of mu4e the name of this
@@ -2704,4 +2708,12 @@ keyboard with no easy access to a compose key.
   :straight (org-trello :build (:not compile))
   :config
   (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package aggressive-indent
+  :pin melpa
+  :config
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
 #+end_src
