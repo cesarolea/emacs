@@ -938,6 +938,12 @@ require additional packages.
   (require 'ob-async))
 #+end_src
 
+*** Transclusion
+    
+ #+begin_src emacs-lisp
+ (use-package org-transclusion)
+ #+end_src
+
 *** Contacts
 
     #+begin_src emacs-lisp
