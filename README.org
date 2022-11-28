@@ -20,7 +20,8 @@ Emacs as a daemon.
                                                "/org-mime.*\\.el$"
                                                "/org-trello.*\\.el$"
                                                "/org-trello-.*\\.el$"
-                                               "/cesarolea7.el$")))
+                                               "/cesarolea7.el$"))
+  (setq native-comp-async-report-warnings-errors 'silent))
 #+end_src
 
 ** In the beginning
@@ -2721,7 +2722,9 @@ keyboard with no easy access to a compose key.
   :pin melpa
   :config
   (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'java-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'cider-repl-mode))
 #+end_src
 
 #+begin_src emacs-lisp
