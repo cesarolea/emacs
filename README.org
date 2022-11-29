@@ -1731,13 +1731,14 @@ programming languages.
          (c-mode        . lsp-deferred)
          (c++-mode      . lsp-deferred)
          (elixir-mode   . lsp-deferred)
-         ;(clojure-mode  . lsp-deferred)
-         ;(clojurec-mode . lsp-deferred)
+         (clojure-mode  . lsp-deferred)
+         (clojurec-mode . lsp-deferred)
          )
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
         lsp-elixir-mix-target "~/.asdf/shims/mix")
   (add-to-list 'exec-path "~/bin/elixir-ls")
+  (setq lsp-clojure-custom-server-command '("bash" "-c" "/opt/homebrew/bin/clojure-lsp"))
   :config
   (setq lsp-enable-snippet          nil
         lsp-enable-links            nil
@@ -1754,9 +1755,11 @@ programming languages.
   :commands lsp-ui-mode
   :config
   (setq lsp-ui-doc-position 'at-point
-        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-doc-show-with-cursor t
         lsp-ui-sideline-show-code-actions nil
-        lsp-modeline-code-actions-enable nil))
+        lsp-modeline-code-actions-enable nil
+        lsp-headerline-breadcrumb-enable nil
+        lsp-completion-provider :none))
 
 (use-package helm-lsp :pin melpa
   :config
@@ -1895,6 +1898,7 @@ programming languages.
         cider-eldoc-display-for-symbol-at-point t
         cider-repl-buffer-size-limit 100000
         cider-use-xref nil ; keep using cider's own xref backend instead of emacs built in
+        cider-eldoc-display-for-symbol-at-point nil
         )
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
