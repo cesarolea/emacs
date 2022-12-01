@@ -249,10 +249,10 @@ Which key makes it easier to discover the major mode you are in.
    ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 130 :weight 'regular)
 
    ;; Set the fixed pitch face
-   (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height 120)
+   (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 160 120))
 
    ;; Set the variable pitch face
-   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height 130 :weight 'regular)
+   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular)
 
    (custom-theme-set-faces
     'user
