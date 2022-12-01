@@ -16,7 +16,7 @@
 (setq straight-use-package-by-default t)
 
 (use-package org
-  ; :ensure org-plus-contrib
+                                        ; :ensure org-plus-contrib
   :config
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-cc" 'org-capture)
@@ -80,7 +80,28 @@
 :GROUP: %^{GROUP}
 :MESSAGES: [[mu4e:query:from:%\\2 AND flag:unread AND NOT flag:trashed][Unread emails]]
 :END:" :empty-lines 1 :immediate-finish t)
-          ))
+          ;; these are for org-drill
+          ("d" "Drill")
+          ("dv" "Vocabolario" entry (file+olp "~/Dropbox/org/italiano.org.gpg" "Vocabolario")
+           "** Parole   :drill:
+   :PROPERTIES:
+   :DRILL_CARD_TYPE: twosided
+   :ADDED: %U
+   :END:
+
+   Tradurre la parola.
+
+*** Italiano
+
+    %^{Parole}
+
+*** Español
+
+    %^{Palabra}
+
+*** Frasi di esempli
+
+    %?" :empty-lines 1 :immediate-finish t)))
 
   ;; Agenda list
   ;; Ignores TODO items with a scheduled and/or deadline date that
@@ -176,7 +197,8 @@
                         ("sp"       . ?s)
                         ("mail"     . ?m)
                         ("loanpro"  . ?l)
-                        ("cto"      . ?c))
+                        ("cto"      . ?c)
+                        ("drill"    . ?d))
         )
 
   (add-hook 'org-mode-hook (lambda ()
