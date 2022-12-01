@@ -1540,9 +1540,11 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends, 
          )
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
-        lsp-elixir-mix-target "~/.asdf/shims/mix")
+        lsp-elixir-mix-target "~/.asdf/shims/mix"
+        lsp-clojure-custom-server-commant (if (equal system-type 'darwin)
+                                              '("bash" "-c" "/opt/homebrew/bin/clojure-lsp")
+                                            '("bash" "-c" "/usr/local/bin/clojure-lsp")))
   (add-to-list 'exec-path "~/bin/elixir-ls")
-  (setq lsp-clojure-custom-server-command '("bash" "-c" "/opt/homebrew/bin/clojure-lsp"))
   :config
   (setq lsp-enable-snippet          nil
         lsp-enable-links            nil
