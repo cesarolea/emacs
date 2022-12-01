@@ -259,9 +259,16 @@ Which key makes it easier to discover the major mode you are in.
     '(org-block                 ((t (:inherit fixed-pitch))))
     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
     '(org-property-value        ((t (:inherit fixed-pitch))) t)
+    '(org-table                 ((t (:inherit fixed-pitch))) t)
+    '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+    '(org-formula               ((t (:inherit fixed-pitch))) t)
     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
-    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))))
+    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+    '(org-document-title        ((t (:height 2.0 :underline nil))))
+    '(org-level-1               ((t (:inherit outline-1 :height 1.5))))
+    '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
+    '(org-level-3               ((t (:inherit outline-3 :height 1.1))))))
 
  (use-package doom-modeline :pin melpa
    :init (doom-modeline-mode 1)
@@ -673,9 +680,15 @@ Org mode is able to export to several other formats, and some of them require ad
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package org-bullets :pin melpa
+(use-package org-superstar :pin melpa
   :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (setq org-superstar-special-todo-items t)
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
 #+end_src
 
 #+begin_src emacs-lisp
