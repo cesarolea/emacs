@@ -307,17 +307,6 @@ Which key makes it easier to discover the major mode you are in.
            (define-key global-map (kbd "C-x o") nil)))
  #+end_src
 
-*** Smooth scrolling
- What says in the label.
-
- #+begin_src emacs-lisp
- (use-package smooth-scroll
-   :config (progn
-             (smooth-scroll-mode 1)
-             (setq smooth-scroll-margin 5))
-   :diminish smooth-scroll-mode)
- #+end_src
-
 *** Fonts
 
 #+begin_src emacs-lisp
