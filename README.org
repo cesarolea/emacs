@@ -648,24 +648,26 @@ Structured editing for Lisp and Lisp-like languages.
 
 #+begin_src emacs-lisp
 (use-package paredit
-  :config (progn
-            (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-            (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-            (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-            (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-            (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-            (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-            (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-            (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
-            (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
+  :config
+  ;; binding RET breaks cider repl eval
+  (define-key paredit-mode-map (kbd "RET") nil)
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+  (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
+  (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
 
-            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+  (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 
-            (defun override-slime-repl-bindings-with-paredit ()
-              (define-key slime-repl-mode-map
+  (defun override-slime-repl-bindings-with-paredit ()
+    (define-key slime-repl-mode-map
                 (read-kbd-macro paredit-backward-delete-key) nil))
-            (add-hook 'slime-repl-mode-hook
-                      'override-slime-repl-bindings-with-paredit t))
+  (add-hook 'slime-repl-mode-hook
+            'override-slime-repl-bindings-with-paredit t)
   :diminish paredit-mode)
 #+end_src
 
@@ -1555,7 +1557,8 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends, 
         lsp-signature-auto-activate nil
         lsp-completion-provider     :capf
         lsp-idle-delay              0.500
-        lsp-eldoc-enable-hover      nil))
+        lsp-eldoc-enable-hover      nil
+        lsp-enable-completion-at-point nil))
 
 (use-package lsp-ui :pin melpa
   :commands lsp-ui-mode
@@ -1564,8 +1567,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends, 
         lsp-ui-doc-show-with-cursor t
         lsp-ui-sideline-show-code-actions nil
         lsp-modeline-code-actions-enable nil
-        lsp-headerline-breadcrumb-enable nil
-        lsp-completion-provider :none))
+        lsp-headerline-breadcrumb-enable nil))
 
 (use-package helm-lsp :pin melpa
   :config
