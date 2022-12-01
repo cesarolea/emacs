@@ -16,7 +16,6 @@
 (setq straight-use-package-by-default t)
 
 (use-package org
-                                        ; :ensure org-plus-contrib
   :config
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-cc" 'org-capture)
@@ -174,12 +173,19 @@
         ;; preserve native color scheme for target source code
         org-src-fontify-natively t
 
+        org-src-tab-acts-natively t
+
+        org-startup-indented t
+
+        org-hide-leading-stars t
+
         ;; smart quotes on export
         org-export-with-smart-quotes t
 
         org-habit-show-all-today nil
 
-        org-hide-emphasis-markers nil
+        ;; hides * for bold, / for italics, etc
+        org-hide-emphasis-markers t
 
         ;; so when hitting enter after a heading, it keeps proper indentation
         org-adapt-indentation t
@@ -206,8 +212,9 @@
                              (hl-line-mode 1)
                              (auto-fill-mode 1)
                              (electric-pair-mode 1)
-                             (visual-line-mode 0)
+                             visual-line-mode
                              (toggle-truncate-lines 1)
+                             (variable-pitch-mode 1)
                              (delete '("\\.pdf\\'" . default) org-file-apps)
                              (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
