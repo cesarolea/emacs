@@ -2,13 +2,10 @@
 #+AUTHOR: César Olea
 
 * Preface
-This is my Emacs configuration file. It's my first attempt at using
-literate programming for configuration, after several (unsuccessful)
-attempts at better organization, and going through many Emacs
-[[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][configuration bankruptcies]].
 
-Initial load time is not a priority in this configuration, as I use
-Emacs as a daemon.
+This is my Emacs configuration file. It's my first attempt at using literate programming for configuration, after several (unsuccessful) attempts at better organization, and going through many Emacs [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][configuration bankruptcies]].
+
+Initial load time is not a priority in this configuration, as I use Emacs as a daemon.
 
 ** Native compilation
 
@@ -25,8 +22,8 @@ Emacs as a daemon.
 #+end_src
 
 ** In the beginning
-First and foremost we need to turn off the mouse interface to avoid
-momentary display.
+
+First and foremost we need to turn off the mouse interface to avoid momentary display.
 
 #+begin_src emacs-lisp
 (dolist (mode
@@ -37,9 +34,7 @@ momentary display.
   (funcall mode 0))
 #+end_src
 
-Then a ton of configuration variables I've accumulated over the
-years. Some I know what they do and are documented. Some I don't have
-an idea...
+Then a ton of configuration variables I've accumulated over the years. Some I know what they do and are documented. Some I don't have an idea...
 
 #+begin_src emacs-lisp
 (setq create-lockfiles nil                    ; disable the creation of lockfiles
@@ -125,50 +120,49 @@ an idea...
 (pixel-scroll-precision-mode t)
 
 (require 'package)
-  (add-to-list 'package-archives '("org"          . "https://orgmode.org/elpa/"))
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-  (add-to-list 'package-archives '("melpa"        . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org"          . "https://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa"        . "https://melpa.org/packages/"))
 
-  ; load the custom file that was defined earlier
-  (load custom-file)
+                                        ; load the custom file that was defined earlier
+(load custom-file)
 
-  ; themes
-  (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
+                                        ; themes
+(add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
-  ; default spell
-  (setq-default ispell-program-name "aspell")
+                                        ; default spell
+(setq-default ispell-program-name "aspell")
 
-  ; custom font size depending on resolution
-  ; doesn't work for emacs daemon instances
-  (defun fontify-frame (frame)
-    (interactive)
-    (set-frame-parameter frame 'font
-			 (if (equal system-type 'darwin)
-			     "IBM Plex Mono 16"
-			   "IBM Plex Mono 12")))
+                                        ; custom font size depending on resolution
+                                        ; doesn't work for emacs daemon instances
+(defun fontify-frame (frame)
+  (interactive)
+  (set-frame-parameter frame 'font
+                       (if (equal system-type 'darwin)
+                           "IBM Plex Mono 16"
+                         "IBM Plex Mono 12"))
+  (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height 120)
+  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height 130 :weight 'regular))
 
-  ; Fontify any future frames
-  (push 'fontify-frame after-make-frame-functions)
+                                        ; Fontify any future frames
+(push 'fontify-frame after-make-frame-functions)
 
-  ; execution path so homebrew binaries work
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+                                        ; execution path so homebrew binaries work
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
-  ; fontify current frame
-  (fontify-frame nil)
+                                        ; fontify current frame
+(fontify-frame nil)
 
-  (put 'list-threads 'disabled nil)
+(put 'list-threads 'disabled nil)
 
-  ;; Remove topbar in mac
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+;; Remove topbar in mac
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
 #+end_src
 
-
 ** Backups
-   By default, Emacs will create backup files (files ending in ~~~) in
-   the same directory as your regular files. This can be a lifesaver,
-   but annoying. We can take them out of the way to their own
-   directory:
+
+By default, Emacs will create backup files (files ending in ~~~) in the same directory as your regular files. This can be a lifesaver, but annoying. We can take them out of the way to their own directory:
 
 #+begin_src emacs-lisp
 (setq version-control t     ;; Use version numbers for backups.
@@ -182,16 +176,12 @@ an idea...
 #+end_src
 
 * Packages
-I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default all
-packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages may
-be pinned to regular MELPA if they are not found in the stable repo,
-or if a newer version is desired.
+
+I use [[https://github.com/jwiegley/use-package][use-package]] for isolating package configuration. By default all packages are installed from [[https://stable.melpa.org/#/][MELPA Stable]], and individual packages may be pinned to regular MELPA if they are not found in the stable repo, or if a newer version is desired.
 
 ** Basic Configuration
-~use-package~ can also install selected packages by using the
-~:ensure~ key. By having this setting set to ~true~ for all packages,
-we can clone this configuration from the repository and, at first
-load, it will fetch all packages and install them.
+
+~use-package~ can also install selected packages by using the ~:ensure~ key. By having this setting set to ~true~ for all packages, we can clone this configuration from the repository and, at first load, it will fetch all packages and install them.
 
 In order to use ~use-package~, we must first install it.
 
@@ -208,8 +198,8 @@ In order to use ~use-package~, we must first install it.
 #+end_src
 
 *** Diminish
- This is an add-on to ~use-package~ to be able to specify directly in
- the package declaration, that we want to diminish that mode.
+
+ This is an add-on to ~use-package~ to be able to specify directly in the package declaration, that we want to diminish that mode.
 
  #+begin_src emacs-lisp
  (use-package diminish)
@@ -221,6 +211,7 @@ In order to use ~use-package~, we must first install it.
  #+end_src
 
 *** Which key
+
 Which key makes it easier to discover the major mode you are in.
 
 #+begin_src emacs-lisp
@@ -233,49 +224,64 @@ Which key makes it easier to discover the major mode you are in.
 #+end_src
 
 *** Ensure system package
- This package allows you to install related binary (or system) programs
- are installed when certain packages are installed.
+
+ This package allows you to install related binary (or system) programs are installed when certain packages are installed.
 
  #+begin_src emacs-lisp
  (use-package use-package-ensure-system-package)
  #+end_src
 
 *** Theme
- I use the Doom theme with the Doom modeline. This requires icon
- configuration. The modeline configuration has a fix so that icons are
- shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
+
+ I use the Doom theme with the Doom modeline. This requires icon configuration. The modeline configuration has a fix so that icons are shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
 
  #+begin_src emacs-lisp
-   (use-package all-the-icons :pin melpa)
+ (use-package all-the-icons :pin melpa)
 
-   (use-package doom-themes :pin melpa
-    :config
-    (setq doom-themes-enable-bold t
-          doom-themes-enable-italic t)
-    (load-theme 'doom-nord t)
-    (doom-themes-neotree-config)
-    (doom-themes-org-config))
+ (use-package doom-themes :pin melpa
+   :config
+   (setq doom-themes-enable-bold t
+         doom-themes-enable-italic t)
+   (load-theme 'doom-nord t)
+   (doom-themes-org-config)
 
-   (use-package doom-modeline :pin melpa
-     :init (doom-modeline-mode 1)
-     :config
-     ;; so that modeline icons work in emacsclient
-     (defun enable-doom-modeline-icons (_frame)
-       (setq doom-modeline-icon t))
+   ;; Font configuration
+   ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 130 :weight 'regular)
 
-     (add-hook 'after-make-frame-functions
-               #'enable-doom-modeline-icons)
+   ;; Set the fixed pitch face
+   (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height 120)
 
-     (setq doom-modeline-buffer-encoding t
-           doom-modeline-modal-icon t
-           doom-modeline-env-version t
-           inhibit-compacting-font-caches t))
+   ;; Set the variable pitch face
+   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height 130 :weight 'regular)
+
+   (custom-theme-set-faces
+    'user
+    '(org-block                 ((t (:inherit fixed-pitch))))
+    '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+    '(org-property-value        ((t (:inherit fixed-pitch))) t)
+    '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+    '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
+    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))))
+
+ (use-package doom-modeline :pin melpa
+   :init (doom-modeline-mode 1)
+   :config
+   ;; so that modeline icons work in emacsclient
+   (defun enable-doom-modeline-icons (_frame)
+     (setq doom-modeline-icon t))
+
+   (add-hook 'after-make-frame-functions
+             #'enable-doom-modeline-icons)
+
+   (setq doom-modeline-buffer-encoding t
+         doom-modeline-modal-icon t
+         doom-modeline-env-version t
+         inhibit-compacting-font-caches t))
  #+end_src
 
 *** Exec path
- This package ensures that your Emacs instance is able to use the same
- environment variables as your shell. Especially useful if you use
- non-standard shells such as the fish shell.
+
+ This package ensures that your Emacs instance is able to use the same environment variables as your shell. Especially useful if you use non-standard shells such as the fish shell.
 
  #+begin_src emacs-lisp
  (use-package exec-path-from-shell
@@ -285,16 +291,16 @@ Which key makes it easier to discover the major mode you are in.
  #+end_src
 
 *** Popwin mode
- Popwin is a popup window manager for Emacs which makes you free from
- the hell of annoying buffers that popup all over the place.
+
+ Popwin is a popup window manager for Emacs which makes you free from the hell of annoying buffers that popup all over the place.
 
  #+begin_src emacs-lisp
  (use-package popwin :config (popwin-mode 1))
  #+end_src
 
 *** Window movement
- Use shift + arrow keys to switch between visible buffers. Also
- ~ace-window~ for quickly jumping back and forth between windows.
+
+ Use shift + arrow keys to switch between visible buffers. Also ~ace-window~ for quickly jumping back and forth between windows.
 
  #+begin_src emacs-lisp
  (use-package windmove
@@ -339,8 +345,8 @@ Which key makes it easier to discover the major mode you are in.
 #+end_src
 
 *** Diredfl
-    Dired comes included in Emacs. Direfl adds pretty colors to its
-    output.
+
+ Dired comes included in Emacs. Direfl adds pretty colors to its output.
 
 #+begin_src emacs-lisp
   (use-package diredfl
@@ -349,8 +355,8 @@ Which key makes it easier to discover the major mode you are in.
 #+end_src
 
 ** Flycheck
-On the fly linter and syntax checker. I want this enabled in all
-programming modes.
+
+On the fly linter and syntax checker. I want this enabled in all programming modes.
 
 #+begin_src emacs-lisp
 (use-package flycheck :pin melpa
@@ -360,6 +366,7 @@ programming modes.
 #+end_src
 
 *** Additional checkers
+
 Add Flycheck support for both Rust and Clojure.
 
 #+begin_src emacs-lisp
@@ -376,22 +383,15 @@ Add Flycheck support for both Rust and Clojure.
 #+end_src
 
 ** Magit
-The mighty Magit. Some consider this to be the killer application for
-Emacs. Don't use git without it.
+
+The mighty Magit. Some consider this to be the killer application for Emacs. Don't use git without it.
 
 I have it bound to ~<f10>~. Also:
 
-- ~magit-last-seen-setup-instructions~ is so that magit doesn't prompt
-  you to see setup instructions on first load.
-- ~magit-push-always-verify~ is related to an option added at some
-  point that allows you to make magit confirm certain push
-  operations. Setting it to ~nil~ makes push commands behave as
-  expected.
-- ~magit-branch-read-upstream-first~ When creating a branch, whether
-  to read the upstream branch before the name of the branch that is to
-  be created.
-- ~global-magit-file-mode~ Enable certain magit actions in files that
-  are part of a git repository.
+- ~magit-last-seen-setup-instructions~ is so that magit doesn't prompt you to see setup instructions on first load.
+- ~magit-push-always-verify~ is related to an option added at some point that allows you to make magit confirm certain push operations. Setting it to ~nil~ makes push commands behave as expected.
+- ~magit-branch-read-upstream-first~ When creating a branch, whether to read the upstream branch before the name of the branch that is to be created.
+- ~global-magit-file-mode~ Enable certain magit actions in files that are part of a git repository.
 
 #+begin_src emacs-lisp
 (use-package magit :pin melpa
@@ -408,12 +408,10 @@ I have it bound to ~<f10>~. Also:
 #+end_src
 
 ** savehist
-Savehist mode saves some of your session history in between
-restart. Since I use Emacs as a daemon this is not as needed now, but
-still nice when using standalone Emacs sessions.
 
-It is configured to save search ring entries, and to keep the saved
-history in a ~savehist~ file inside the configuration directory.
+Savehist mode saves some of your session history in between restart. Since I use Emacs as a daemon this is not as needed now, but still nice when using standalone Emacs sessions.
+
+It is configured to save search ring entries, and to keep the saved history in a ~savehist~ file inside the configuration directory.
 
 #+begin_src emacs-lisp
 (use-package savehist
@@ -430,18 +428,16 @@ history in a ~savehist~ file inside the configuration directory.
 #+end_src
 
 ** Rainbow mode
-So that typing the name of a color or its hex value, displays the
-actual color.
+
+So that typing the name of a color or its hex value, displays the actual color.
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode :diminish rainbow-mode :pin gnu)
 #+end_src
 
 ** Recentf
-Keeps track of your most recent opened files so you can get back to
-them easily. You can specify files to ignore, which is useful for
-files that get visited automatically and fill up your recent file
-history. No binding is set; Helm is used for browsing recent files.
+
+Keeps track of your most recent opened files so you can get back to them easily. You can specify files to ignore, which is useful for files that get visited automatically and fill up your recent file history. No binding is set; Helm is used for browsing recent files.
 
 #+begin_src emacs-lisp
 (use-package recentf
@@ -461,9 +457,8 @@ history. No binding is set; Helm is used for browsing recent files.
 #+end_src
 
 ** Completion engine
-Company is a completion engine for Emacs. You can install several
-backends. Useful in programming modes. I'm installing the lsp backend
-for using company completion in languages that use LSP (such as rust).
+
+Company is a completion engine for Emacs. You can install several backends. Useful in programming modes. I'm installing the lsp backend for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
 (use-package company
@@ -488,15 +483,10 @@ for using company completion in languages that use LSP (such as rust).
 #+end_src
 
 ** Ido mode
-One of those things you wonder why it's not default in Emacs. It's
-basically a completion and search engine, and much more. Several other
-packages either support or depend on Ido. I like to pair it with
-vertical mode so that candidates appear in a vertical instead of
-horizontal list, and flex ido for fuzzy matching.
 
-Finally, ~ido-completing-read+~ replaces stock emacs completion with
-ido completion wherever it is possible to do so without breaking
-things.
+One of those things you wonder why it's not default in Emacs. It's basically a completion and search engine, and much more. Several other packages either support or depend on Ido. I like to pair it with vertical mode so that candidates appear in a vertical instead of horizontal list, and flex ido for fuzzy matching.
+
+Finally, ~ido-completing-read+~ replaces stock emacs completion with ido completion wherever it is possible to do so without breaking things.
 
 #+begin_src emacs-lisp
 (use-package ido
@@ -635,6 +625,7 @@ things.
  #+end_src
 
 ** Spellchecker
+
 #+begin_src emacs-lisp
   (use-package flyspell
     :bind ("C-c C-SPC" . ispell-word)
@@ -645,6 +636,7 @@ things.
 #+end_src
 
 ** Paredit
+
 Structured editing for Lisp and Lisp-like languages.
 
 #+begin_src emacs-lisp
@@ -671,17 +663,19 @@ Structured editing for Lisp and Lisp-like languages.
 #+end_src
 
 ** Org mode
-The gateway drug to Emacs. Org mode is difficult to put in a single
-word; it's a note taking application, agenda, markup language,
-organizer, documentation engine and more. Org mode organizes your life
-in text mode. Most of the options used in this package are documented
-as source code comments.
 
-Org mode is able to export to several other formats, and some of them
-require additional packages.
+The gateway drug to Emacs. Org mode is difficult to put in a single word; it's a note taking application, agenda, markup language, organizer, documentation engine and more. Org mode organizes your life in text mode. Most of the options used in this package are documented as source code comments.
+
+Org mode is able to export to several other formats, and some of them require additional packages.
 
 #+begin_src emacs-lisp
 (use-package htmlize)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org-bullets :pin melpa
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -817,7 +811,7 @@ require additional packages.
 
 **** Deft
 
-     Provides full text search capabilities for finding roam notes.
+ Provides full text search capabilities for finding roam notes.
 
 #+begin_src emacs-lisp
 (use-package deft
@@ -832,10 +826,8 @@ require additional packages.
 #+end_src
 
 *** Literate programming
-    A very powerful feature of Org is literate programming. Out of the
-    box it is able to execute code blocks from many different
-    programming languages. Here I am adding a rest client as well, so
-    that you can document an API.
+
+A very powerful feature of Org is literate programming. Out of the box it is able to execute code blocks from many different programming languages. Here I am adding a rest client as well, so that you can document an API.
 
 #+begin_src emacs-lisp
   (use-package ob-restclient :pin melpa)
@@ -855,9 +847,7 @@ require additional packages.
        ))
 #+end_src
 
-    Executing code locally can be dangerous of course. However there
-    might be times when you want to override the confirmation
-    dialog. The following snippet does just that
+ Executing code locally can be dangerous of course. However there might be times when you want to override the confirmation dialog. The following snippet does just that
 
 #+begin_src emacs-lisp
 (defun my-org-confirm-babel-evaluate (lang body)
@@ -867,7 +857,8 @@ require additional packages.
 #+end_src
 
 *** Reveal
-    So that you can export Org files to Reveal.js presentations
+
+So that you can export Org files to Reveal.js presentations
 
 #+begin_src emacs-lisp
 (use-package ox-reveal :pin melpa
@@ -875,29 +866,21 @@ require additional packages.
 #+end_src
 
 ** Hydra
-Hydras are useful bindings grouped together. Once a hydra is invoked,
-you are presented with a set of options related to the hydra. It's
-useful to group related functionality that is not frequently used, so
-you can remember the bindings.
 
-Hydras have various modes, called "colors". The most common are red
-and blue. The different colors represent what the hydra does once
-invoked. Blue hydras terminate after invocation, making repeated
-invocation cumbersome (you have to invoke the hydra again). Red hydras
-stick around, so you can invoke multiple commands in the same hydra in
-succession (for example for movement commands)
+Hydras are useful bindings grouped together. Once a hydra is invoked, you are presented with a set of options related to the hydra. It's useful to group related functionality that is not frequently used, so you can remember the bindings.
+
+Hydras have various modes, called "colors". The most common are red and blue. The different colors represent what the hydra does once invoked. Blue hydras terminate after invocation, making repeated invocation cumbersome (you have to invoke the hydra again). Red hydras stick around, so you can invoke multiple commands in the same hydra in succession (for example for movement commands)
 
 #+begin_src emacs-lisp
 (use-package hydra)
 #+end_src
 
 *** Various hydras
-    This is a collection of various hydras I've accumulated over the
-    years. Most of them are rarely used, but some (like [[Window
-    operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out
-    for them and I don't remember the "native" keybinding.
+
+ This is a collection of various hydras I've accumulated over the years. Most of them are rarely used, but some (like [[Window operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out for them and I don't remember the "native" keybinding.
 
 **** Dumb jump
+
 #+begin_src emacs-lisp
   (defhydra dumb-jump-hydra (:color blue :columns 3)
       "Dumb Jump"
@@ -913,8 +896,8 @@ succession (for example for movement commands)
 #+end_src
 
 **** Window operations
-     Common window operations. Splitting, resizing, swapping and
-     deleting.
+
+Common window operations. Splitting, resizing, swapping and deleting.
 
  #+begin_src emacs-lisp
  (defhydra hydra-window (:color red :hint nil)
@@ -955,8 +938,8 @@ succession (for example for movement commands)
  #+end_src
 
 **** Moving around
-     Collection of move commands. Useful for jumping around large
-     files.
+
+Collection of move commands. Useful for jumping around large files.
 
  #+begin_src emacs-lisp
  (defhydra hydra-movement (:color blue)
@@ -972,7 +955,8 @@ succession (for example for movement commands)
   #+end_src
 
 **** Github gists
-     Collection of functions to work with gists.
+
+Collection of functions to work with gists.
 
  #+begin_src emacs-lisp
  (defhydra hydra-gist (:color blue)
@@ -988,7 +972,8 @@ succession (for example for movement commands)
  #+end_src
 
 **** Org mode
-     Moving around an Org mode file.
+
+Moving around an Org mode file.
 
  #+begin_src emacs-lisp
  (defhydra hydra-org (:color red :hint nil)
@@ -1015,8 +1000,8 @@ succession (for example for movement commands)
  #+end_src
 
 **** Utility
-     Some miscelaneous functions that don't have a home some place
-     else.
+
+Some miscelaneous functions that don't have a home some place else.
 
  #+begin_src emacs-lisp
  (defhydra hydra-utility (:color blue :hint nil)
@@ -1039,8 +1024,8 @@ succession (for example for movement commands)
  #+end_src
 
 **** Org roam dailies
-     Org roam has its own dedicated keybindings. This is a hydra only
-     for the dailies functionality.
+
+Org roam has its own dedicated keybindings. This is a hydra only for the dailies functionality.
 
 #+begin_src emacs-lisp
 (defhydra hydra-roam-dailies (:color blue :hint nil)
@@ -1063,7 +1048,8 @@ _d_ate            d_a_te        _n_ext note"
 #+end_src
 
 **** Flycheck
-     Using flycheck. Mainly moving around errors in the current buffer.
+
+Using flycheck. Mainly moving around errors in the current buffer.
 
  #+begin_src emacs-lisp
  (defhydra hydra-flycheck (:color red :hint nil)
@@ -1087,8 +1073,8 @@ _d_ate            d_a_te        _n_ext note"
  #+end_src
 
 **** Visual bookmarks
-     Working with visual bookmarks. Bindings to moving around existing
-     bookmarks, creating and toggling.
+
+Working with visual bookmarks. Bindings to moving around existing bookmarks, creating and toggling.
 
  #+begin_src emacs-lisp
  (defhydra hydra-bm (:color red :hint nil :timeout 1.0)
@@ -1105,7 +1091,9 @@ _d_ate            d_a_te        _n_ext note"
  #+end_src
 
 **** Timestamp
-     Insert various timestamps.
+
+Insert various timestamps.
+
 #+begin_src emacs-lisp
 (defun unix-timestamp-to-date ()
   "Prompts for a unix epoch time stamp and converts it to a human-readable date"
@@ -1198,6 +1186,7 @@ _d_ate            d_a_te        _n_ext note"
  #+end_src
 
 ** Swiper
+
 Swiper is a completion and narrowing package, similar to Ido.
 
 #+begin_src emacs-lisp
@@ -1210,6 +1199,7 @@ Swiper is a completion and narrowing package, similar to Ido.
 #+end_src
 
 ** Fireplace
+
 Add a fireplace to your Emacs session.
 
 #+begin_src emacs-lisp
@@ -1217,12 +1207,12 @@ Add a fireplace to your Emacs session.
 #+end_src
 
 ** Editing
+
 Useful packages for text editing.
 
 *** Expand region
- A very useful package to select regions delimited by various
- means. You can progressively expand and contract the selected region
- using the keyboard.
+
+A very useful package to select regions delimited by various means. You can progressively expand and contract the selected region using the keyboard.
 
  #+begin_src emacs-lisp
  (use-package expand-region
@@ -1232,12 +1222,10 @@ Useful packages for text editing.
  #+end_src
 
 *** Undo tree
- One of the coolest features of Emacs, one you wonder why not more
- editors have included it as a standard feature. It organizes your
- undo/redo operations as a tree structure, and gives you a visual
- representation of it so you can navigate the tree.
 
- Never again fear a undo/redo operation makes you lose important edits!
+One of the coolest features of Emacs, one you wonder why not more editors have included it as a standard feature. It organizes your undo/redo operations as a tree structure, and gives you a visual representation of it so you can navigate the tree.
+
+Never again fear a undo/redo operation makes you lose important edits!
 
  #+begin_src emacs-lisp
  (use-package undo-tree :pin gnu
@@ -1254,7 +1242,8 @@ Useful packages for text editing.
  #+end_src
 
 *** Move text
- Allows you to move lines of text or selected regions up and down.
+
+Allows you to move lines of text or selected regions up and down.
 
  #+begin_src emacs-lisp
 (use-package move-text
@@ -1264,7 +1253,8 @@ Useful packages for text editing.
  #+end_src
 
 *** Anzu
- Search and replace.
+
+Search and replace.
 
  #+begin_src emacs-lisp
  (use-package anzu
@@ -1276,15 +1266,17 @@ Useful packages for text editing.
  #+end_src
 
 *** Shrink whitepace
- Another of those useful editing packages. This one allows you to
- remove whitespace in front of the cursor.
+
+Another of those useful editing packages. This one allows you to remove whitespace in front of the cursor.
 
  #+begin_src emacs-lisp
  (use-package shrink-whitespace
    :bind ("M-SPC" . shrink-whitespace))
  #+end_src
+
 *** Tramp
-    Edit files remotely.
+
+Edit files remotely.
 
 #+begin_src emacs-lisp
 (use-package tramp
@@ -1308,8 +1300,10 @@ Useful packages for text editing.
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
 #+end_src
+
 *** Atomic Chrome
-    Edit browser text areas in Emacs.
+
+Edit browser text areas in Emacs.
 
 #+begin_src emacs-lisp
   (use-package atomic-chrome
@@ -1323,11 +1317,10 @@ Useful packages for text editing.
     (atomic-chrome-start-server)
     :diminish AtomicChrome)
 #+end_src
+
 *** Crux
-    Crux is an acronym for a Collection of Ridiculously Useful
-    eXtensions for Emacs. It's basically a collection of functions
-    accumulated over the years, from Bozhidar Batsov, creator of CIDER
-    and Emacs Prelude.
+
+Crux is an acronym for a Collection of Ridiculously Useful eXtensions for Emacs. It's basically a collection of functions accumulated over the years, from Bozhidar Batsov, creator of CIDER and Emacs Prelude.
 
 #+begin_src emacs-lisp
 (use-package crux
@@ -1340,10 +1333,10 @@ Useful packages for text editing.
   )
 #+end_src
 
+
 *** Buffer flip
-    One of the most common operations is switching between open files
-    in a buffer. This package allows you to flip between open buffers
-    or cancel the flip operation, returning to the original buffer.
+
+One of the most common operations is switching between open files in a buffer. This package allows you to flip between open buffers or cancel the flip operation, returning to the original buffer.
 
 #+begin_src emacs-lisp
 (use-package buffer-flip
@@ -1358,8 +1351,10 @@ Useful packages for text editing.
           "^\\*swiper\\*$")))
 #+end_src
 
+
 *** Super Save
- Save when Emacs loses focus or when idle. Forget about manual saving.
+
+Save when Emacs loses focus or when idle. Forget about manual saving.
 
  #+begin_src emacs-lisp
  (use-package super-save
@@ -1371,9 +1366,11 @@ Useful packages for text editing.
  #+end_src
 
 ** Code tools
+
 Packages related to code editing, navigation and related tools.
 
 *** Dumb jump
+
 Jump to definition without generating etags or external tools.
 
 #+begin_src emacs-lisp
@@ -1387,7 +1384,8 @@ Jump to definition without generating etags or external tools.
 #+end_src
 
 *** Diffing
- Display diff marks.
+
+Display diff marks.
 
  #+begin_src emacs-lisp
  (use-package diff-hl
@@ -1397,17 +1395,16 @@ Jump to definition without generating etags or external tools.
  #+end_src
 
 *** Rainbow delimiters
- Colorful parens...
+
+Colorful parens...
 
  #+begin_src emacs-lisp
  (use-package rainbow-delimiters)
  #+end_src
 
 *** Highlight symbols
- This package implements symbol highlighting, so for example when the
- cursor is in a certain variable name, all instances of that variable
- are highlighted. You can also navigate between all highlights. Very
- useful for programming.
+
+This package implements symbol highlighting, so for example when the cursor is in a certain variable name, all instances of that variable are highlighted. You can also navigate between all highlights. Very useful for programming.
 
  #+begin_src emacs-lisp
  (use-package highlight-symbol
@@ -1425,8 +1422,8 @@ Jump to definition without generating etags or external tools.
  #+end_src
 
 *** Visual bookmarks
- Visible, buffer local bookmarks. Bookmarks are displayed in the fringe
- area, and you can jump between them.
+
+Visible, buffer local bookmarks. Bookmarks are displayed in the fringe area, and you can jump between them.
 
  #+begin_src emacs-lisp
    (use-package bm
@@ -1450,8 +1447,8 @@ Jump to definition without generating etags or external tools.
  #+end_src
 
 *** Git history
-Navigate your git repository history. Allows you to temporarily revert
-a file to a previous version.
+
+Navigate your git repository history. Allows you to temporarily revert a file to a previous version.
 
 #+begin_src emacs-lisp
 (use-package git-timemachine
@@ -1462,7 +1459,8 @@ a file to a previous version.
 #+end_src
 
 *** S3 editing
-    Edit files from S3.
+
+Edit files from S3.
 
 #+begin_src emacs-lisp
 (use-package s3ed :pin melpa
@@ -1472,7 +1470,8 @@ a file to a previous version.
 #+end_src
 
 *** REST client
-    Add a rest client to your Emacs.
+
+Add a rest client to your Emacs.
 
 #+begin_src emacs-lisp
 (use-package restclient :pin melpa)
@@ -1486,14 +1485,12 @@ a file to a previous version.
 #+end_src
 
 ** Programming modes
-These are packages related to adding Emacs support for multiple
-programming languages.
+
+These are packages related to adding Emacs support for multiple programming languages.
 
 *** Web
-    Web programming is especially tricky, as you typically need to use
-    several other modes in the same file. I don't do a lot of Web
-    programming these days, but when I need to, Web mode is good
-    enough.
+
+Web programming is especially tricky, as you typically need to use several other modes in the same file. I don't do a lot of Web programming these days, but when I need to, Web mode is good enough.
 
 #+begin_src emacs-lisp
 (use-package web-mode
@@ -1513,9 +1510,8 @@ programming languages.
 #+end_src
 
 *** LSP
-    A Language Server Protocol client for Emacs. ~lsp-mode~ supports
-    many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the
-    moment.
+
+A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the moment.
 
 #+begin_src emacs-lisp
 (use-package lsp-mode :pin melpa
@@ -1566,8 +1562,8 @@ programming languages.
 #+end_src
 
 *** JavaScript
-    ~js2-mode~ is a JavaScript mode that keeps an AST for syntax
- checking and coloring.
+
+~js2-mode~ is a JavaScript mode that keeps an AST for syntax checking and coloring.
 
 #+begin_src emacs-lisp
 (use-package js2-mode
@@ -1612,18 +1608,14 @@ programming languages.
 #+end_src
 
 *** Clojure
-    Emacs has fantastic support for Clojure with Cider. It provides
-    support for interactive programming with Clojure. Over the years
-    I've been accumulating tweaks to Cider, but the stock
-    configuration is very comprehensible.
 
-    ~subword-mode~ is enabled in ~clojure-mode~ and it treats
-    camelCase, snake_case and kebab-case as multiple words. That is,
-    the cursor stops in between as in ~some|Word~, ~some|_word~ and
-    ~some|-word~.
+Emacs has fantastic support for Clojure with Cider. It provides support for interactive programming with Clojure. Over the years I've been accumulating tweaks to Cider, but the stock configuration is very comprehensible.
 
-    Most Cider options tweaks are documented inline. For more
-    information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
+
+~subword-mode~ is enabled in ~clojure-mode~ and it treats camelCase, snake_case and kebab-case as multiple words. That is, the cursor stops in between as in ~some|Word~, ~some|_word~ and ~some|-word~.
+
+
+Most Cider options tweaks are documented inline. For more information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
 
 #+begin_src emacs-lisp
 (use-package clojure-mode :pin melpa
@@ -1709,7 +1701,8 @@ programming languages.
 #+end_src
 
 *** Docker
-    Support for working with Docker files.
+
+Support for working with Docker files.
 
 #+begin_src emacs-lisp
 (use-package dockerfile-mode
@@ -1717,7 +1710,8 @@ programming languages.
 #+end_src
 
 *** Rust
-    Support for working with Rust projects.
+
+Support for working with Rust projects.
 
 #+begin_src emacs-lisp
 (use-package rustic :pin melpa
@@ -1728,19 +1722,22 @@ programming languages.
 #+end_src
 
 *** PHP
+
 #+begin_src emacs-lisp
 (use-package php-mode)
 #+end_src
 
 *** YAML
-    Support for editing YAML files.
+
+Support for editing YAML files.
 
 #+begin_src emacs-lisp
 (use-package yaml-mode)
 #+end_src
 
 *** Go
-    Support for working with Go projects.
+
+Support for working with Go projects.
 
     #+begin_src emacs-lisp
     (use-package go-mode)
@@ -1760,14 +1757,13 @@ programming languages.
 
 ** Other packages
 
-   ipcalc is an IP calculator in Emacs.
+ipcalc is an IP calculator in Emacs.
 
    #+begin_src emacs-lisp
    (use-package ipcalc :pin melpa)
    #+end_src
 
-   Ledger mode for conquering your finances. Or in my case for doing
-   quick loan calculations
+Ledger mode for conquering your finances. Or in my case for doing quick loan calculations
 
    #+begin_src emacs-lisp
    (use-package ledger-mode
@@ -1775,30 +1771,20 @@ programming languages.
    #+end_src
 
 * Customization
-Customization and custom utility functions. Over the years I've
-accumulated many functions I don't actually use. My hope is that by
-documenting them I can either set proper bindings or simply remove
-them.
+
+Customization and custom utility functions. Over the years I've accumulated many functions I don't actually use. My hope is that by documenting them I can either set proper bindings or simply remove them.
 
 ** Modes
 
 The following modes are enabled:
 
-- ~save-place-mode~ When you visit a file, point goes to the last
-  place where it was when you previously visited the same
-  file. Defaults to a file ~places~ stored in your configuration
-  directory.
-- ~blink-cursor-mode~ Disable cursor blinking. The line containing the
-  cursor is visible by highlighting it.
-- ~delete-selection-mode~ Insert while having something highlighted
-  makes the highlighted text disappear. You know, like a normal
-  editor.
+- ~save-place-mode~ When you visit a file, point goes to the last place where it was when you previously visited the same file. Defaults to a file ~places~ stored in your configuration directory.
+- ~blink-cursor-mode~ Disable cursor blinking. The line containing the cursor is visible by highlighting it.
+- ~delete-selection-mode~ Insert while having something highlighted makes the highlighted text disappear. You know, like a normal editor.
 - ~column-number-mode~ Display the column number in the modeline.
 - ~global-visual-line-mode~ Wrap lines at the word boundary.
-- ~auto-revert-mode~ Pick up changes to files on disk automatically
-  (ie, after git pull)
-- ~which-function-mode~ Displays the name of the function where the
-  cursor is located, in the modeline. It also works with Org headers.
+- ~auto-revert-mode~ Pick up changes to files on disk automatically (ie, after git pull)
+- ~which-function-mode~ Displays the name of the function where the cursor is located, in the modeline. It also works with Org headers.
 
 #+begin_src emacs-lisp
 (setq save-place-file (concat user-emacs-directory "places"))
@@ -1818,10 +1804,8 @@ The following modes are enabled:
 #+end_src
 
 ** Global bindings
-The following are bindings to commonly used internal Emacs
-functions. Most of the time the name of the function is self
-explanatory, but there's also inline comments to explain what the
-function does.
+
+The following are bindings to commonly used internal Emacs functions. Most of the time the name of the function is self explanatory, but there's also inline comments to explain what the function does.
 
 #+begin_src emacs-lisp
 ;; delete next character or whitespace until non-whitespace character
@@ -1843,23 +1827,19 @@ function does.
 #+end_src
 
 ** Hooks
-Defines hooks for many editing modes. For example the configuration
-for ~prog-mode~.
+
+Defines hooks for many editing modes. For example the configuration for ~prog-mode~.
 
 Specifically in ~prog-mode~, the following is enabled:
-- ~electric-pair-mode~ for automatically inserting matching
-  delimiters.
-- ~rainbow-mode~ for colorizing color names in the buffer. Works with
-  both color names and hex codes.
+
+- ~electric-pair-mode~ for automatically inserting matching delimiters.
+- ~rainbow-mode~ for colorizing color names in the buffer. Works with both color names and hex codes.
 - ~visual-line-mode~ disabled for preserving long lines.
-- ~toggle-truncate-lines~ for truncating long lines and displaying an
-  arrow in the fringe instead.
+- ~toggle-truncate-lines~ for truncating long lines and displaying an arrow in the fringe instead.
 - ~show-paren-mode~ for highlighting the matching paren at point.
 - ~whitespace-mode~ for displaying spurious whitespace.
-- ~display-fill-column-indicator-column~ for displaying the column
-  indicator at the 110 column.
-- ~display-fill-column-indicator-mode~ for enabling the fill column
-  indicator.
+- ~display-fill-column-indicator-column~ for displaying the column indicator at the 110 column.
+- ~display-fill-column-indicator-mode~ for enabling the fill column indicator.
 
 Finally a ~before-save-hook~ is set to cleanup whitespace when the
 file is saved.
@@ -1890,6 +1870,7 @@ file is saved.
 #+end_src
 
 ** Defaults
+
 Here we change some default variables.
 
 #+begin_src emacs-lisp
@@ -1924,14 +1905,12 @@ Here we change some default variables.
 #+end_src
 
 ** Custom functions
-These are custom functions, mostly centered around killing and
-yanking.
 
-The ~yank-~ set of functions are meant to automatically indent yanked
-text if in programming modes.
+These are custom functions, mostly centered around killing and yanking.
 
-The ~xah-~ functions are to kill or copy lines. If no mark is set,
-then they work on the line where the cursor is located.
+The ~yank-~ set of functions are meant to automatically indent yanked text if in programming modes.
+
+The ~xah-~ functions are to kill or copy lines. If no mark is set, then they work on the line where the cursor is located.
 
 #+begin_src emacs-lisp
 ;; (require 'dash)
@@ -2054,8 +2033,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 
 ** Color emoji
 
-   Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color
-   Emoji]] font installed.
+Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color Emoji]] font installed.
 
 #+begin_src emacs-lisp
   (add-hook 'after-make-frame-functions
@@ -2067,7 +2045,8 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
 #+end_src
 
 ** Calendar
-   Display week numbers in calendar view.
+
+Display week numbers in calendar view.
 
    #+begin_src emacs-lisp
      (copy-face font-lock-constant-face 'calendar-iso-week-face)
@@ -2089,6 +2068,7 @@ C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
    #+end_src
 
 * Utility
+
 These functions have a dedicated [[Hydra]].
 
 #+begin_src emacs-lisp
@@ -2237,10 +2217,8 @@ Accessing encrypted passwords outside of emacs
 #+end_src
 
 * Keymaps
-I used these keymaps for easy typing of Spanish accented vowels. I
-don't use it nearly as much when I switched to Linux and using a
-programmable keyboard, but it's still useful when typing in a laptop
-keyboard with no easy access to a compose key.
+
+I used these keymaps for easy typing of Spanish accented vowels. I don't use it nearly as much when I switched to Linux and using a programmable keyboard, but it's still useful when typing in a laptop keyboard with no easy access to a compose key.
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "H-a") (lambda () (interactive) (insert "á")))
@@ -2255,19 +2233,15 @@ keyboard with no easy access to a compose key.
 
 * Mail
 
-  Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for
-  synchronizing mail to a local folder using IMAP.
+Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing mail to a local folder using IMAP.
 
-  ~mu4e~ is installed outside of Emacs using the OS package
-  manager. The reason is that the version of ~mu~ and ~mu4e~ must
-  match. That's why a load path is used instead of installing from
-  MELPA.
+~mu4e~ is installed outside of Emacs using the OS package manager. The reason is that the version of ~mu~ and ~mu4e~ must match. That's why a load path is used instead of installing from MELPA.
 
 #+begin_src emacs-lisp
 (use-package mu4e
   :ensure nil
   :straight (:local-repo
-             "/opt/homebrew/share/emacs/site-lisp/mu/mu4e"
+             "/home/cesaro/workspace/mu/mu4e"
              :pre-build
              ())
   :bind (("C-x m" . 'mu4e-compose-new))
