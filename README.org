@@ -263,6 +263,8 @@ Which key makes it easier to discover the major mode you are in.
    (custom-theme-set-faces
     'user
     '(org-block                 ((t (:inherit fixed-pitch))))
+    '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
+    '(org-checkbox              ((t (:inherit fixed-pitch))))
     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
     '(org-property-value        ((t (:inherit fixed-pitch))) t)
     '(org-table                 ((t (:inherit fixed-pitch))) t)
@@ -2510,7 +2512,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
 #+end_src
 
 #+begin_src emacs-lisp
-;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg")))
+;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))) this is a very long comment line. Let's see how it's displayed with the fancy fonts and everything
 (use-package org-trello
   :pin melpa
   :straight (org-trello :build (:not compile))
@@ -2522,3 +2524,8 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
 (use-package gnuplot)
 (use-package gnuplot-mode)
 #+end_src
+
+* End
+# Local Variables:
+# eval: (visual-line-mode t)
+# End:

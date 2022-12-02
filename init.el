@@ -210,9 +210,9 @@
   (add-hook 'org-mode-hook (lambda ()
                              (flyspell-mode 1)
                              (hl-line-mode 1)
-                             (auto-fill-mode 1)
+                             (auto-fill-mode 0)
                              (electric-pair-mode 1)
-                             visual-line-mode
+                             (visual-line-mode 0)
                              (toggle-truncate-lines 1)
                              (variable-pitch-mode 1)
                              (delete '("\\.pdf\\'" . default) org-file-apps)
