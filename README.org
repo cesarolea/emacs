@@ -2519,16 +2519,6 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package aggressive-indent
-  :pin melpa
-  :config
-  (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'java-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'cider-repl-mode))
-#+end_src
-
-#+begin_src emacs-lisp
 (use-package gnuplot)
 (use-package gnuplot-mode)
 #+end_src
