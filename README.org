@@ -131,7 +131,7 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
                                         ; default spell
-(setq-default ispell-program-name "aspell")
+;(setq-default ispell-program-name "aspell")
 
                                         ; custom font size depending on resolution
                                         ; doesn't work for emacs daemon instances
@@ -364,6 +364,7 @@ Provides spellchecking.
     :hook (prog-mode . flyspell-prog-mode)
     :config
     (delq 'font-lock-string-face flyspell-prog-text-faces)
+    (setq ispell-program-name "aspell")
     :diminish flyspell-mode)
 #+end_src
 
