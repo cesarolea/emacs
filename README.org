@@ -187,34 +187,24 @@ I use [[https://github.com/jwiegley/use-package][use-package]] for isolating pac
 
 ** Basic Configuration
 
-~use-package~ can also install selected packages by using the ~:ensure~ key. By having this setting set to ~true~ for all packages, we can clone this configuration from the repository and, at first load, it will fetch all packages and install them.
-
-In order to use ~use-package~, we must first install it.
-
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-
-;; Default to using melpa-stable, unless we override at the package level.
-(setq use-package-always-pin "melpa-stable"
-      use-package-always-ensure t)
+  ;; Default to using melpa-stable, unless we override at the package level.
+  (setq use-package-always-pin "melpa-stable"
+	use-package-always-ensure t)
 #+end_src
 
 *** Diminish
 
  This is an add-on to ~use-package~ to be able to specify directly in the package declaration, that we want to diminish that mode.
 
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
  (use-package diminish)
 
  (eval-after-load "visual-line" '(diminish 'visual-line-mode))
  (eval-after-load "abbrev" '(diminish 'abbrev-mode))
  (eval-after-load "eldoc" '(diminish 'eldoc-mode))
  (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
- #+end_src
+#+end_src
 
 *** Which key
 
@@ -243,6 +233,10 @@ Which key makes it easier to discover the major mode you are in.
 
  #+begin_src emacs-lisp
  (use-package all-the-icons :pin melpa)
+
+ (use-package all-the-icons-completion :pin melpa
+   :config
+   (all-the-icons-completion-mode))
 
  (use-package doom-themes :pin melpa
    :config
@@ -299,18 +293,10 @@ Which key makes it easier to discover the major mode you are in.
  This package ensures that your Emacs instance is able to use the same environment variables as your shell. Especially useful if you use non-standard shells such as the fish shell.
 
  #+begin_src emacs-lisp
- (use-package exec-path-from-shell
-   :config
-   (when (memq window-system '(mac ns x))
-     (exec-path-from-shell-initialize)))
- #+end_src
-
-*** Popwin mode
-
- Popwin is a popup window manager for Emacs which makes you free from the hell of annoying buffers that popup all over the place.
-
- #+begin_src emacs-lisp
- (use-package popwin :config (popwin-mode 1))
+   (use-package exec-path-from-shell
+     :config
+     (when (memq window-system '(mac ns x))
+       (exec-path-from-shell-initialize)))
  #+end_src
 
 *** Window movement
@@ -318,14 +304,14 @@ Which key makes it easier to discover the major mode you are in.
  Use shift + arrow keys to switch between visible buffers. Also ~ace-window~ for quickly jumping back and forth between windows.
 
  #+begin_src emacs-lisp
- (use-package windmove
-   :config (windmove-default-keybindings))
+   (use-package windmove
+     :config (windmove-default-keybindings))
 
- (use-package ace-window
-   :init (progn
-           (define-key global-map (kbd "M-'") 'ace-window)
-           (define-key global-map (kbd "C-M-'") 'aw-flip-window)
-           (define-key global-map (kbd "C-x o") nil)))
+   (use-package ace-window
+     :init
+     (define-key global-map (kbd "M-'") 'ace-window)
+     (define-key global-map (kbd "C-M-'") 'aw-flip-window)
+     (define-key global-map (kbd "C-x o") nil))
  #+end_src
 
 *** Fonts
@@ -333,12 +319,12 @@ Which key makes it easier to discover the major mode you are in.
 #+begin_src emacs-lisp
   (defun dw/replace-unicode-font-mapping (block-name old-font new-font)
     (let* ((block-idx (cl-position-if
-                           (lambda (i) (string-equal (car i) block-name))
-                           unicode-fonts-block-font-mapping))
-           (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
-           (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
+		       (lambda (i) (string-equal (car i) block-name))
+		       unicode-fonts-block-font-mapping))
+	   (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
+	   (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
       (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
-            `(,updated-block))))
+	    `(,updated-block))))
 
   (use-package unicode-fonts
     :custom
@@ -346,12 +332,12 @@ Which key makes it easier to discover the major mode you are in.
     :config
     ;; Fix the font mappings to use the right emoji font
     (mapcar
-      (lambda (block-name)
-        (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
-      '("Dingbats"
-        "Emoticons"
-        "Miscellaneous Symbols and Pictographs"
-        "Transport and Map Symbols"))
+     (lambda (block-name)
+       (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
+     '("Dingbats"
+       "Emoticons"
+       "Miscellaneous Symbols and Pictographs"
+       "Transport and Map Symbols"))
     (unicode-fonts-setup))
 
   (use-package emojify
@@ -361,12 +347,49 @@ Which key makes it easier to discover the major mode you are in.
 
 *** Diredfl
 
- Dired comes included in Emacs. Direfl adds pretty colors to its output.
+Dired comes included in Emacs. Direfl adds pretty colors to its output.
 
 #+begin_src emacs-lisp
   (use-package diredfl
     :config
     (diredfl-global-mode t))
+#+end_src
+
+** Flyspell
+
+Provides spellchecking.
+
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :hook (prog-mode . flyspell-prog-mode)
+    :config
+    (delq 'font-lock-string-face flyspell-prog-text-faces)
+    :diminish flyspell-mode)
+#+end_src
+
+** Completion
+
+Vertico
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :bind (:map minibuffer-local-map
+		("<backspace>" . dw/minibuffer-backward-kill))
+    :init
+    (vertico-mode)
+    (setq vertico-cycle t
+	  vertico-count 20)
+
+    (defun dw/minibuffer-backward-kill (arg)
+      "When minibuffer is completing a file name delete up to parent
+    folder, otherwise delete a character backward"
+      (interactive "p")
+      (if minibuffer-completing-file-name
+	  ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+	  (if (string-match-p "/." (minibuffer-contents))
+	      (zap-up-to-char (- arg) ?/)
+	    (delete-minibuffer-contents))
+	(delete-backward-char arg))))
 #+end_src
 
 ** Flycheck
@@ -397,6 +420,187 @@ Add Flycheck support for both Rust and Clojure.
   (setq exec-path (append exec-path '("~/.cargo/bin"))))
 #+end_src
 
+** Savehist
+
+Savehist mode saves some of your session history in between restart. Since I use Emacs as a daemon this is not as needed now, but still nice when using standalone Emacs sessions.
+
+It is configured to save search ring entries, and to keep the saved history in a ~savehist~ file inside the configuration directory.
+
+#+begin_src emacs-lisp
+  (use-package savehist
+    :config
+    (setq savehist-additional-variables
+	  ;; search entries
+	  '(search-ring regexp-search-ring)
+	  ;; save every minute
+	  savehist-autosave-interval 60
+	  ;; keep the home clean
+	  savehist-file (expand-file-name "savehist"
+					  (expand-file-name "savefile" user-emacs-directory)))
+    (savehist-mode 1))
+#+end_src
+
+** Orderless
+
+Allows selection to be done matching unordered parts.
+
+#+begin_src emacs-lisp
+  (use-package orderless
+    :init
+    (setq completion-styles '(orderless basic)
+	  completion-category-defaults nil
+	  completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+** Marginalia
+
+Enable rich annotations in the minibuffer.
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+    :bind (:map minibuffer-local-map
+		("M-A" . marginalia-cycle))
+
+    ;; The :init configuration is always executed (Not lazy!)
+    :init
+
+    ;; Must be in the :init section of use-package such that the mode gets
+    ;; enabled right away. Note that this forces loading the package.
+    (marginalia-mode))
+#+end_src
+
+** Recentf
+
+Keeps track of your most recent opened files so you can get back to them easily. You can specify files to ignore, which is useful for files that get visited automatically and fill up your recent file history. No binding is set; Helm is used for browsing recent files.
+
+#+begin_src emacs-lisp
+  (use-package recentf
+    :hook (after-init . recentf-mode)
+    :config
+    (recentf-mode 1)
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/Sync/roam/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude "/tmp/mu4e-*")
+    (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
+    (setq recentf-max-menu-items 25
+	  recentf-max-saved-items 20000000
+	  recentf-auto-cleanup 10))
+#+end_src
+
+** Projectile
+
+Provides project management capabilities. I don't use it on its own, rather through [Consult].
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :init
+    (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+    :config
+    (setq projectile-project-search-path '("~/workspace/")
+	  projectile-require-project-root t
+	  projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+	  projectile-indexing-method 'alien
+	  projectile-completion-system 'default
+	  projectile-project-root-files (remove "WORKSPACE" projectile-project-root-files))
+
+    (define-key projectile-mode-map (kbd "C-c p s s") nil)
+    (define-key projectile-mode-map (kbd "C-c p s s") 'consult-ag)
+
+    (projectile-mode t))
+#+end_src
+
+** Consult
+
+A completion engine that tightly integrates to Emacs.
+
+#+begin_src emacs-lisp
+  (use-package consult
+    :after (projectile)
+    :bind (("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+	   ("C-x a" . consult-buffer)
+	   ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+	   ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+	   ("C-c b" . consult-mark)                  ;; orig. bookmark-jump
+	   ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+	   ("C-c y" . consult-yank-from-kill-ring)
+	   ("C-x g" . consult-goto-line)
+	   ("C-s" . consult-line)                    ;; replaces swiper
+	   ("C-x C-r" . consult-recent-file)
+	   ("<f9>" . consult-bookmark)
+	   ("s-b"  . consult-bookmark)
+	   )
+    :init
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+	  xref-show-definitions-function #'consult-xref)
+
+    :config
+    (setq consult-preview-key (kbd "M-."))
+    (consult-customize
+     consult-theme :preview-key '(:debounce 0.2 any)
+     consult-org-heading :preview-key '(:debounce 0.2 any)
+     consult-ag :preview-key '(:debounce 0.2 any)
+     consult-line :preview-key '(:debounce 0.2 any)
+     consult-flyspell :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-file-register
+     consult--source-recent-file consult--source-project-recent-file
+     :preview-key (kbd "M-."))
+
+    (setq consult-narrow-key "<")
+
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root))))
+#+end_src
+
+*** Consult extensions & integrations
+
+**** Projectile
+
+#+begin_src emacs-lisp
+  (use-package consult-projectile
+    :after (consult)
+    :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+    :config
+    (defun my-find-file ()
+      (interactive)
+      (if (and (buffer-file-name)
+	       (projectile-project-p))
+	  (consult-projectile)
+	(consult-buffer)))
+    (global-set-key (kbd "C-x a") 'my-find-file))
+#+end_src
+
+**** The Silver Searcher
+
+#+begin_src emacs-lisp
+  (use-package consult-ag :after (consult))
+#+end_src
+
+**** Flyspell
+
+#+begin_src emacs-lisp
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map
+		("C-c C-SPC" . flyspell-correct-wrapper)
+		("C-;" . consult-flyspell)))
+
+  (use-package consult-flyspell
+    :after consult
+    :straight (consult-flyspell :type git :host gitlab :repo "OlMon/consult-flyspell" :branch "master")
+    :config
+    ;; default settings
+    (setq consult-flyspell-select-function 'flyspell-correct-at-point
+	  consult-flyspell-set-point-after-word t
+	  consult-flyspell-always-check-buffer t))
+#+end_src
+
 ** Magit
 
 The mighty Magit. Some consider this to be the killer application for Emacs. Don't use git without it.
@@ -409,37 +613,17 @@ I have it bound to ~<f10>~. Also:
 - ~global-magit-file-mode~ Enable certain magit actions in files that are part of a git repository.
 
 #+begin_src emacs-lisp
-(use-package magit :pin melpa
-  :bind (("<f10>" . magit-status)
-         ("s-m" . magit-status))
-  :config
-  (setq magit-last-seen-setup-instructions "1.4"
-        magit-push-always-verify nil
-        magit-branch-read-upstream-first nil
-        global-magit-file-mode 1)
-  (if (bound-and-true-p magit-auto-revert-mode)
-      (diminish 'magit-auto-revert-mode))
-  :diminish magit-mode)
-#+end_src
-
-** savehist
-
-Savehist mode saves some of your session history in between restart. Since I use Emacs as a daemon this is not as needed now, but still nice when using standalone Emacs sessions.
-
-It is configured to save search ring entries, and to keep the saved history in a ~savehist~ file inside the configuration directory.
-
-#+begin_src emacs-lisp
-(use-package savehist
-  :config
-  (setq savehist-additional-variables
-        ;; search entries
-        '(search-ring regexp-search-ring)
-        ;; save every minute
-        savehist-autosave-interval 60
-        ;; keep the home clean
-        savehist-file (expand-file-name "savehist"
-(expand-file-name "savefile" user-emacs-directory)))
-  (savehist-mode 1))
+  (use-package magit :pin melpa
+    :bind (("<f10>" . magit-status)
+	   ("s-m" . magit-status))
+    :config
+    (setq magit-last-seen-setup-instructions "1.4"
+	  magit-push-always-verify nil
+	  magit-branch-read-upstream-first nil
+	  global-magit-file-mode 1)
+    (if (bound-and-true-p magit-auto-revert-mode)
+	(diminish 'magit-auto-revert-mode))
+    :diminish magit-mode)
 #+end_src
 
 ** Rainbow mode
@@ -448,27 +632,6 @@ So that typing the name of a color or its hex value, displays the actual color.
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode :diminish rainbow-mode :pin gnu)
-#+end_src
-
-** Recentf
-
-Keeps track of your most recent opened files so you can get back to them easily. You can specify files to ignore, which is useful for files that get visited automatically and fill up your recent file history. No binding is set; Helm is used for browsing recent files.
-
-#+begin_src emacs-lisp
-(use-package recentf
-  :hook (after-init . recentf-mode)
-  :config
-  (recentf-mode 1)
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/elpa/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/ido.last" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/bookmarks" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.config/emacs/recentf" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/Sync/roam/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude "/tmp/mu4e-*")
-  (add-to-list 'recentf-exclude (format "%s/Mail/.*" (getenv "HOME")))
-  (setq recentf-max-menu-items 25
-        recentf-max-saved-items 20000000
-        recentf-auto-cleanup 10))
 #+end_src
 
 ** Completion engine
@@ -494,160 +657,7 @@ Company is a completion engine for Emacs. You can install several backends. Usef
   ;(global-company-mode)
   :diminish company-mode)
 
-;(use-package company-lsp :pin melpa)
-#+end_src
-
-** Ido mode
-
-One of those things you wonder why it's not default in Emacs. It's basically a completion and search engine, and much more. Several other packages either support or depend on Ido. I like to pair it with vertical mode so that candidates appear in a vertical instead of horizontal list, and flex ido for fuzzy matching.
-
-Finally, ~ido-completing-read+~ replaces stock emacs completion with ido completion wherever it is possible to do so without breaking things.
-
-#+begin_src emacs-lisp
-(use-package ido
-  :config
-  (ido-mode 1)
-  ;(setq ido-everywhere t)
-  (setq ido-use-faces t)
-  (setq ido-use-filename-at-point 'guess)
-  (setq ido-use-url-at-point nil)
-  (setq ido-enable-flex-matching t)
-  ;; restrict to current directory
-  (setq ido-auto-merge-work-directories-length -1)
-
-  (defun recentf-ido-find-file ()
-    "Find a recent file using ido."
-    (interactive)
-    (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-      (when file
-        (find-file file))))
-
-  ; (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
-  )
-
-(use-package ido-vertical-mode
-  :config
-  (ido-mode 1)
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
-
-(use-package flx-ido :pin melpa
-  :config
-  (flx-ido-mode 1)
-  (setq ido-enable-flex-matching t
-        ido-use-faces t
-        ido-use-filename-at-point t))
-
-(use-package ido-completing-read+
-  :config
-  (ido-ubiquitous-mode 1))
-#+end_src
-
-** Helm
-
-*** TODO Documentation
-
- #+begin_src emacs-lisp
- (use-package helm-flx :pin melpa
-   :config (helm-flx-mode +1))
-
- (use-package helm-ls-git :pin melpa)
-
- (use-package helm :pin melpa
-   :init
-   (helm-mode 1)
-   :config
-   ;; so helm adapts to your usage
-   ; (helm-adaptive-mode 1)
-
-   (when (executable-find "curl")
-     (setq helm-net-prefer-curl t))
-
-   (defun helm-project-kill-buffers ()
-     (interactive)
-     (mapcar 'kill-buffer
-             (helm-browse-project-get-buffers (helm-ls-git-root-dir))))
-
-   (require 'helm-config)
-   (require 'helm-ls-git)
-
-   ;; window management
-   (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
-   (add-hook 'helm-after-initialize-hook (lambda ()
-                                           (popwin:display-buffer helm-buffer t)
-                                           (popwin-mode -1)))
-
-   ;;  Restore popwin-mode after a Helm session finishes.
-   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
-
-   (setq helm-idle-delay 0.1
-         helm-input-idle-delay 0.1
-         helm-mode-fuzzy-match t
-         helm-completion-in-region-fuzzy-match t
-         helm-candidate-number-limit 50
-         history-lengt 50)
-                                         ;             (setq helm-follow-mode-persistent t)
-   (setq helm-for-files-preferred-list
-         '(helm-source-buffers-list
-           helm-source-recentf
-           helm-source-bookmarks
-           helm-source-file-cache
-           helm-source-files-in-current-dir
-           helm-source-locate))
-
-   (global-set-key "\C-x\ a" 'helm-for-files)
-   (global-set-key (kbd "C-c y") 'helm-show-kill-ring)
-   ;; replace M-x with helm's version
-   (global-set-key (kbd "M-x") 'helm-M-x)
-   ;; replace C-x b with helm's version
-   (global-set-key "\C-x\ b" 'helm-mini)
-   (global-set-key "\C-x\ \C-r" 'helm-recentf)
-   (global-set-key "\C-h\ a" 'helm-apropos)
-   (global-set-key (kbd "C-x C-f") 'helm-find-files)
-   (global-set-key (kbd "<f9>") 'helm-bookmarks)
-   (global-set-key (kbd "s-b") 'helm-bookmarks)
-   (global-set-key (kbd "C-h C-l") 'helm-locate-library)
-   (global-set-key (kbd "C-c p f") 'helm-browse-project)
-   (global-set-key (kbd "C-c p k") 'helm-project-kill-buffers)
-
-   (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring))
-
- (use-package helm-ag :pin melpa
-   :config
-   (setq helm-ag-fuzzy-match t)
-   (global-set-key (kbd "C-c p f") 'helm-do-ag-project-root))
-
- (use-package projectile :pin melpa
-   :init
-   (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
-   :config
-   (projectile-mode t)
-   (setq projectile-project-search-path '("~/workspace/")
-         projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
-         projectile-indexing-method 'alien
-         projectile-completion-system 'helm))
-
-  (use-package helm-projectile :pin melpa
-    :config
-    (defun my-find-file ()
-      (interactive)
-      (if (and (buffer-file-name)
-               (projectile-project-p))
-          (helm-projectile-find-file)
-        (helm-for-files)))
-    (global-set-key (kbd "C-x a") 'my-find-file)
-    (helm-projectile-on))
- #+end_src
-
-** Spellchecker
-
-#+begin_src emacs-lisp
-  (use-package flyspell
-    :bind ("C-c C-SPC" . ispell-word)
-    :hook (prog-mode . flyspell-prog-mode)
-    :config
-    (delq 'font-lock-string-face flyspell-prog-text-faces)
-    :diminish flyspell-mode)
+(use-package company-lsp :pin melpa)
 #+end_src
 
 ** Paredit
@@ -655,30 +665,29 @@ Finally, ~ido-completing-read+~ replaces stock emacs completion with ido complet
 Structured editing for Lisp and Lisp-like languages.
 
 #+begin_src emacs-lisp
-(use-package paredit
-  :config
-  ;; binding RET breaks cider repl eval
-  (define-key paredit-mode-map (kbd "RET") nil)
-  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-  (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-  (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
-  (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
+  (use-package paredit
+    :config
+    ;; binding RET breaks cider repl eval
+    (define-key paredit-mode-map (kbd "RET") nil)
+    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+    (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
+    (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
 
-  (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+    (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 
-  (defun override-slime-repl-bindings-with-paredit ()
-    (define-key slime-repl-mode-map
-                (read-kbd-macro paredit-backward-delete-key) nil))
-  (add-hook 'slime-repl-mode-hook
-            'override-slime-repl-bindings-with-paredit t)
-  :diminish paredit-mode)
+    (defun override-slime-repl-bindings-with-paredit ()
+      (define-key slime-repl-mode-map
+		  (read-kbd-macro paredit-backward-delete-key) nil))
+    (add-hook 'slime-repl-mode-hook
+	      'override-slime-repl-bindings-with-paredit t)
+    :diminish paredit-mode)
 #+end_src
-
 ** Org mode
 
 The gateway drug to Emacs. Org mode is difficult to put in a single word; it's a note taking application, agenda, markup language, organizer, documentation engine and more. Org mode organizes your life in text mode. Most of the options used in this package are documented as source code comments.
@@ -750,25 +759,11 @@ Org mode is able to export to several other formats, and some of them require ad
         org-drill-add-random-noise-to-intervals-p t
         org-drill-learn-fraction 0.45))
 #+end_src
-
 *** Transclusion
     
  #+begin_src emacs-lisp
  (use-package org-transclusion)
  #+end_src
-
-*** Contacts
-
-    #+begin_src emacs-lisp
-    ;; (use-package org-contacts
-    ;;   :ensure nil
-    ;;   :after org
-    ;;   :config
-    ;;   (setq org-contacts-enable-completion nil)
-    ;;   (let ((default-directory org-directory))
-    ;;     (setq org-contacts-files (list (expand-file-name "contacts.org")))))
-    #+end_src
-
 *** Roam
 
 #+begin_src emacs-lisp
@@ -821,6 +816,8 @@ Org mode is able to export to several other formats, and some of them require ad
   (org-roam-setup))
 #+end_src
 
+**** Org roam UI
+
 #+begin_src emacs-lisp
 (use-package org-roam-ui
   :pin melpa
@@ -856,21 +853,21 @@ A very powerful feature of Org is literate programming. Out of the box it is abl
   (use-package ob-restclient :pin melpa)
 
   (org-babel-do-load-languages
-     'org-babel-load-languages
-     '(
-       (emacs-lisp . t)
-       (latex      . t)
-       (js         . t)
-       (python     . t)
-       (scheme     . t)
-       (shell      . t)
-       (clojure    . t)
-       (sql        . t)
-       (restclient . t)
-       ))
+   'org-babel-load-languages
+   '(
+     (emacs-lisp . t)
+     (latex      . t)
+     (js         . t)
+     (python     . t)
+     (scheme     . t)
+     (shell      . t)
+     (clojure    . t)
+     (sql        . t)
+     (restclient . t)
+     ))
 #+end_src
 
- Executing code locally can be dangerous of course. However there might be times when you want to override the confirmation dialog. The following snippet does just that
+Executing code locally can be dangerous of course. However there might be times when you want to override the confirmation dialog. The following snippet does just that
 
 #+begin_src emacs-lisp
 (defun my-org-confirm-babel-evaluate (lang body)
@@ -888,6 +885,19 @@ So that you can export Org files to Reveal.js presentations
   :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
 #+end_src
 
+*** Trello
+
+Support for syncing tasks to trello.
+
+#+begin_src emacs-lisp
+;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg")))
+(use-package org-trello
+  :pin melpa
+  :straight (org-trello :build (:not compile))
+  :config
+  (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))))
+#+end_src
+
 ** Hydra
 
 Hydras are useful bindings grouped together. Once a hydra is invoked, you are presented with a set of options related to the hydra. It's useful to group related functionality that is not frequently used, so you can remember the bindings.
@@ -900,23 +910,7 @@ Hydras have various modes, called "colors". The most common are red and blue. Th
 
 *** Various hydras
 
- This is a collection of various hydras I've accumulated over the years. Most of them are rarely used, but some (like [[Window operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out for them and I don't remember the "native" keybinding.
-
-**** Dumb jump
-
-#+begin_src emacs-lisp
-  (defhydra dumb-jump-hydra (:color blue :columns 3)
-      "Dumb Jump"
-      ("j" xref-find-definitions "Go")
-      ("o" dumb-jump-go-other-window "Other window")
-      ("e" dumb-jump-go-prefer-external "Go external")
-      ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
-      ("i" dumb-jump-go-prompt "Prompt")
-      ("l" dumb-jump-quick-look "Quick look")
-      ("b" xref-pop-marker-stack "Back"))
-
-  (global-set-key (kbd "C-c j") 'dumb-jump-hydra/body)
-#+end_src
+This is a collection of various hydras I've accumulated over the years. Most of them are rarely used, but some (like [[Window operations]] or [[Eyebrowse]]) are so commonly used that I instinctively reach out for them and I don't remember the "native" keybinding.
 
 **** Window operations
 
@@ -959,7 +953,6 @@ Common window operations. Splitting, resizing, swapping and deleting.
    ("=" text-scale-adjust :exit t))
  (global-set-key (kbd "C-c w") 'hydra-window/body)
  #+end_src
-
 **** Moving around
 
 Collection of move commands. Useful for jumping around large files.
@@ -976,52 +969,6 @@ Collection of move commands. Useful for jumping around large files.
  (global-set-key (kbd "C-x w") 'avy-goto-word-1)
  (global-set-key (kbd "C-x g") 'avy-goto-line)
   #+end_src
-
-**** Github gists
-
-Collection of functions to work with gists.
-
- #+begin_src emacs-lisp
- (defhydra hydra-gist (:color blue)
-   "gists"
-   ("l" gist-list "List gists")
-   ("g" gitst-region-or-buffer "Gist region or buffer")
-   ("P" gist-region-or-buffer-private "Gist region or buffer private")
-   ("r" gist-region "Gist region")
-   ("R" gist-region-private "Private gist")
-   ("b" gist-buffer "Gist buffer")
-   ("B" gist-buffer-private "Gist buffer private"))
- (global-set-key (kbd "C-c q") 'hydra-gist/body)
- #+end_src
-
-**** Org mode
-
-Moving around an Org mode file.
-
- #+begin_src emacs-lisp
- (defhydra hydra-org (:color red :hint nil)
-   "
- Capture^       ^Navigation^
- -----------------------------------------------------------
- capture         _j_ next heading
- last capture    _k_ prev heading
-                 _h_ next heading (same level)
-                 _l_ prev heading (same level)
-                 _u_p higher heading
-                 _t_oggle
-                 _g_o to
- "
-   ("j" outline-next-visible-heading)
-   ("k" outline-previous-visible-heading)
-   ("h" org-forward-heading-same-level)
-   ("l" org-backward-heading-same-level)
-   ("u" outline-up-heading)
-   ("t" org-cycle)
-   ("g" org-goto :exit t))
- ;(global-set-key (kbd "C-c o") 'hydra-org/body)
-
- #+end_src
-
 **** Utility
 
 Some miscelaneous functions that don't have a home some place else.
@@ -1045,74 +992,6 @@ Some miscelaneous functions that don't have a home some place else.
    ("i" bjm/insert-file-name))
  (global-set-key (kbd "C-c u") 'hydra-utility/body)
  #+end_src
-
-**** Org roam dailies
-
-Org roam has its own dedicated keybindings. This is a hydra only for the dailies functionality.
-
-#+begin_src emacs-lisp
-(defhydra hydra-roam-dailies (:color blue :hint nil)
-  "
-Capture^         ^Find^        ^Navigation^
---------------------------------------------------------
-_t_oday           t_o_day
-_y_esterday       y_e_sterday   _p_revious note
-_d_ate            d_a_te        _n_ext note"
-  ("t" org-roam-dailies-capture-today)
-  ("y" org-roam-dailies-capture-yesterday)
-  ("d" org-roam-dailies-capture-date)
-  ("o" org-roam-dailies-goto-today)
-  ("e" org-roam-dailies-find-yesterday)
-  ("a" org-roam-dailies-find-date)
-  ("p" org-roam-dailies-find-previous-note :color red)
-  ("n" org-roam-dailies-find-next-note :color red))
-
-(global-set-key (kbd "C-c i") 'hydra-roam-dailies/body)
-#+end_src
-
-**** Flycheck
-
-Using flycheck. Mainly moving around errors in the current buffer.
-
- #+begin_src emacs-lisp
- (defhydra hydra-flycheck (:color red :hint nil)
-   "
- Navigation^  ^Buffer^
- ------------------
- _j_ Next      _C_lear
- _k_ Prev      _B_uffer
- _h_ First     _D_isable
- _l_ List      _S_etup
- "
-   ("j" flycheck-next-error)
-   ("k" flycheck-previous-error)
-   ("h" flycheck-first-error)
-   ("l" flycheck-list-errors :color blue)
-   ("C" flycheck-clear)
-   ("B" flycheck-buffer)
-   ("D" flycheck-disable-checker :color blue)
-   ("S" flycheck-verify-setup :color blue))
- (global-set-key (kbd "C-c k") 'hydra-flycheck/body)
- #+end_src
-
-**** Visual bookmarks
-
-Working with visual bookmarks. Bindings to moving around existing bookmarks, creating and toggling.
-
- #+begin_src emacs-lisp
- (defhydra hydra-bm (:color red :hint nil :timeout 1.0)
-   "Bookmarks"
-   ("t" bm-toggle "Toggle")
-   ("T" bm-toggle "Toggle" :color blue)
-   ("j" bm-next "Next")
-   ("k" bm-previous "Previous")
-   ("l" bm-show "Show local")
-   ("A" bm-show-all "Show all")
-   ("x" bm-remove-all-current-buffer :color blue)
-   ("X" bm-remove-all-all-buffers :color blue))
- (global-set-key (kbd "C-c b") 'hydra-bm/body)
- #+end_src
-
 **** Timestamp
 
 Insert various timestamps.
@@ -1208,19 +1087,6 @@ Insert various timestamps.
      (call-interactively 'org-time-stamp)))
  #+end_src
 
-** Swiper
-
-Swiper is a completion and narrowing package, similar to Ido.
-
-#+begin_src emacs-lisp
-  (use-package swiper)
-
-  (use-package swiper-helm
-    :config
-    (global-set-key "\C-s" 'swiper)
-    (global-set-key "\C-r" 'swiper))
-#+end_src
-
 ** Fireplace
 
 Add a fireplace to your Emacs session.
@@ -1228,7 +1094,6 @@ Add a fireplace to your Emacs session.
 #+begin_src emacs-lisp
 (use-package fireplace)
 #+end_src
-
 ** Editing
 
 Useful packages for text editing.
@@ -1243,7 +1108,6 @@ A very useful package to select regions delimited by various means. You can prog
    (global-set-key (kbd "C-=") 'er/expand-region)
    (global-set-key (kbd "C-M-=") 'er/contract-region))
  #+end_src
-
 *** Undo tree
 
 One of the coolest features of Emacs, one you wonder why not more editors have included it as a standard feature. It organizes your undo/redo operations as a tree structure, and gives you a visual representation of it so you can navigate the tree.
@@ -1263,7 +1127,6 @@ Never again fear a undo/redo operation makes you lose important edits!
    (defalias 'redo 'undo-tree-redo)
    :diminish undo-tree-mode)
  #+end_src
-
 *** Move text
 
 Allows you to move lines of text or selected regions up and down.
@@ -1274,7 +1137,6 @@ Allows you to move lines of text or selected regions up and down.
    :bind (("M-S-<up>" . move-text-up)
           ("M-S-<down>" . move-text-down)))
  #+end_src
-
 *** Anzu
 
 Search and replace.
@@ -1287,7 +1149,6 @@ Search and replace.
    :bind ("M-%" . anzu-query-replace)
    :diminish anzu-mode)
  #+end_src
-
 *** Shrink whitepace
 
 Another of those useful editing packages. This one allows you to remove whitespace in front of the cursor.
@@ -1296,7 +1157,6 @@ Another of those useful editing packages. This one allows you to remove whitespa
  (use-package shrink-whitespace
    :bind ("M-SPC" . shrink-whitespace))
  #+end_src
-
 *** Tramp
 
 Edit files remotely.
@@ -1323,7 +1183,6 @@ Edit files remotely.
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
 #+end_src
-
 *** Atomic Chrome
 
 Edit browser text areas in Emacs.
@@ -1340,7 +1199,6 @@ Edit browser text areas in Emacs.
     (atomic-chrome-start-server)
     :diminish AtomicChrome)
 #+end_src
-
 *** Crux
 
 Crux is an acronym for a Collection of Ridiculously Useful eXtensions for Emacs. It's basically a collection of functions accumulated over the years, from Bozhidar Batsov, creator of CIDER and Emacs Prelude.
@@ -1355,26 +1213,6 @@ Crux is an acronym for a Collection of Ridiculously Useful eXtensions for Emacs.
   ;; (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
   )
 #+end_src
-
-
-*** Buffer flip
-
-One of the most common operations is switching between open files in a buffer. This package allows you to flip between open buffers or cancel the flip operation, returning to the original buffer.
-
-#+begin_src emacs-lisp
-(use-package buffer-flip
-  :bind  (("M-<tab>" . buffer-flip)
-  :map buffer-flip-map
-          ( "M-<tab>" .   buffer-flip-forward)
-          ( "M-<iso-lefttab>" . buffer-flip-backward)
-          ( "M-ESC" .     buffer-flip-abort))
-  :config
-  (setq buffer-flip-skip-patterns
-        '("^\\*helm\\b"
-          "^\\*swiper\\*$")))
-#+end_src
-
-
 *** Super Save
 
 Save when Emacs loses focus or when idle. Forget about manual saving.
@@ -1416,7 +1254,6 @@ Display diff marks.
              (add-hook 'prog-mode-hook (lambda ()
                                          (diff-hl-mode 1)))))
  #+end_src
-
 *** Rainbow delimiters
 
 Colorful parens...
@@ -1424,7 +1261,6 @@ Colorful parens...
  #+begin_src emacs-lisp
  (use-package rainbow-delimiters)
  #+end_src
-
 *** Highlight symbols
 
 This package implements symbol highlighting, so for example when the cursor is in a certain variable name, all instances of that variable are highlighted. You can also navigate between all highlights. Very useful for programming.
@@ -1443,32 +1279,6 @@ This package implements symbol highlighting, so for example when the cursor is i
                                          (auto-highlight-symbol-mode t)))
    :diminish auto-highlight-symbol-mode)
  #+end_src
-
-*** Visual bookmarks
-
-Visible, buffer local bookmarks. Bookmarks are displayed in the fringe area, and you can jump between them.
-
- #+begin_src emacs-lisp
-   (use-package bm
-     :config (progn
-               (define-fringe-bitmap 'bm-marker-left [#xF8
-                                                      #xFC
-                                                      #xFE
-                                                      #x0F
-                                                      #x0F
-                                                      #xFE
-                                                      #xFC
-                                                      #xF8])
-               (setq bm-highlight-style 'bm-highlight-only-fringe)
-               (setq-default bm-buffer-persistence t)
-               (add-hook 'after-init-hook 'bm-repository-load)
-               (add-hook 'find-file-hooks 'bm-buffer-restore)
-               (add-hook 'kill-buffer-hook 'bm-buffer-save)
-               (add-hook 'kill-emacs-hook #'(lambda nil
-                                              (bm-buffer-save-all)
-                                              (bm-repository-save)))))
- #+end_src
-
 *** Git history
 
 Navigate your git repository history. Allows you to temporarily revert a file to a previous version.
@@ -1480,18 +1290,6 @@ Navigate your git repository history. Allows you to temporarily revert a file to
                      nil
                      :repo "https://codeberg.org/pidu/git-timemachine.git")))
 #+end_src
-
-*** S3 editing
-
-Edit files from S3.
-
-#+begin_src emacs-lisp
-(use-package s3ed :pin melpa
-  :config
-  (global-set-key (kbd "C-c s f") 's3ed-find-file)
-  (global-set-key (kbd "C-c s s") 's3ed-save-file))
-#+end_src
-
 *** REST client
 
 Add a rest client to your Emacs.
@@ -1534,7 +1332,7 @@ Web programming is especially tricky, as you typically need to use several other
 
 *** LSP
 
-A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends, but I only use it for [[Rust][Rust]] (with Rustic) at the moment.
+A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. Only used for [[Rust][Rust]] and [[Cider][Clojure]] at the moment.
 
 #+begin_src emacs-lisp
 (use-package lsp-mode :pin melpa
@@ -1743,7 +1541,6 @@ Support for working with Rust projects.
   :config
   (setq lsp-rust-analyzer-server-command (quote ("/home/cesaro/.local/bin/rust-analyzer")))
   (setq lsp-rust-server (quote rust-analyzer)))
-
 #+end_src
 
 *** PHP
@@ -1782,11 +1579,15 @@ Support for working with Go projects.
 
 ** Other packages
 
+*** ipcalc
+
 ipcalc is an IP calculator in Emacs.
 
    #+begin_src emacs-lisp
    (use-package ipcalc :pin melpa)
    #+end_src
+
+*** Ledger
 
 Ledger mode for conquering your finances. Or in my case for doing quick loan calculations
 
@@ -1795,465 +1596,13 @@ Ledger mode for conquering your finances. Or in my case for doing quick loan cal
      :mode ("\\.dat\\'" "\\.ledger\\'"))
    #+end_src
 
-* Customization
+*** Gnuplot
 
-Customization and custom utility functions. Over the years I've accumulated many functions I don't actually use. My hope is that by documenting them I can either set proper bindings or simply remove them.
-
-** Modes
-
-The following modes are enabled:
-
-- ~save-place-mode~ When you visit a file, point goes to the last place where it was when you previously visited the same file. Defaults to a file ~places~ stored in your configuration directory.
-- ~blink-cursor-mode~ Disable cursor blinking. The line containing the cursor is visible by highlighting it.
-- ~delete-selection-mode~ Insert while having something highlighted makes the highlighted text disappear. You know, like a normal editor.
-- ~column-number-mode~ Display the column number in the modeline.
-- ~global-visual-line-mode~ Wrap lines at the word boundary.
-- ~auto-revert-mode~ Pick up changes to files on disk automatically (ie, after git pull)
-- ~which-function-mode~ Displays the name of the function where the cursor is located, in the modeline. It also works with Org headers.
+Support for building and displaying graphs from org
 
 #+begin_src emacs-lisp
-(setq save-place-file (concat user-emacs-directory "places"))
-(save-place-mode 1)
-
-(blink-cursor-mode -1)
-
-(delete-selection-mode t)
-
-(column-number-mode t)
-
-(global-visual-line-mode t)
-
-(global-auto-revert-mode t)
-
-(which-function-mode t)
-#+end_src
-
-** Global bindings
-
-The following are bindings to commonly used internal Emacs functions. Most of the time the name of the function is self explanatory, but there's also inline comments to explain what the function does.
-
-#+begin_src emacs-lisp
-;; delete next character or whitespace until non-whitespace character
-(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
-
-;; comment and uncomment regions
-(global-set-key "\C-c\ -" 'comment-region)
-(global-set-key "\C-c\ +" 'uncomment-region)
-
-;; toggle line numbers
-(global-set-key [f6] 'display-line-numbers-mode)
-
-;; cleanup whitespace. This is also done on save in prog-mode buffers.
-(global-set-key [f2] 'whitespace-cleanup)
-
-;; scroll window up/down by one line, keeping the cursor where it is.
-(global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
-(global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
-#+end_src
-
-** Hooks
-
-Defines hooks for many editing modes. For example the configuration for ~prog-mode~.
-
-Specifically in ~prog-mode~, the following is enabled:
-
-- ~electric-pair-mode~ for automatically inserting matching delimiters.
-- ~rainbow-mode~ for colorizing color names in the buffer. Works with both color names and hex codes.
-- ~visual-line-mode~ disabled for preserving long lines.
-- ~toggle-truncate-lines~ for truncating long lines and displaying an arrow in the fringe instead.
-- ~show-paren-mode~ for highlighting the matching paren at point.
-- ~whitespace-mode~ for displaying spurious whitespace.
-- ~display-fill-column-indicator-column~ for displaying the column indicator at the 110 column.
-- ~display-fill-column-indicator-mode~ for enabling the fill column indicator.
-
-Finally a ~before-save-hook~ is set to cleanup whitespace when the
-file is saved.
-
-#+begin_src emacs-lisp
-;; prog mode setup
-(add-hook 'prog-mode-hook (lambda ()
-                            (electric-pair-mode 1)
-                            (hl-line-mode t)
-                            (rainbow-mode 1)
-                            (visual-line-mode 0)
-                            (toggle-truncate-lines 1)
-                            (show-paren-mode t)
-                            (whitespace-mode t)
-                            (setq display-fill-column-indicator-column 102)
-                            (display-fill-column-indicator-mode 1)
-                            (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
-                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
-
-;; but only lisps should have rainbow delimiters
-(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
-
-(add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
-
-;; If all you use is magit anyway, this is not really a loss
-(remove-hook 'find-file-hooks 'vc-find-file-hook)
-#+end_src
-
-** Defaults
-
-Here we change some default variables.
-
-#+begin_src emacs-lisp
-(setq-default tab-width 2
-	      c-basic-offset 4
-	      indent-tabs-mode nil
-	      c-default-style "linux")
-
-;; encoding
-(prefer-coding-system 'utf-8)
-(set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-
-;; highlight incremental search
-(defconst search-highlight t)
-
-;; Anwsering y/n is faster than yes/no.
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(defun buffer-too-big-p ()
-  (or (> (buffer-size) (* 5000 80))
-      (> (line-number-at-pos (point-max)) 5000)))
-
-;; Dired setup
-;; reuse current buffer by pressing 'a'
-(put 'dired-find-alternate-file 'disabled nil)
-
-;; enable some really cool extensions like C-x C-j(dired-jump)
-(require 'dired-x)
-#+end_src
-
-** Custom functions
-
-These are custom functions, mostly centered around killing and yanking.
-
-The ~yank-~ set of functions are meant to automatically indent yanked text if in programming modes.
-
-The ~xah-~ functions are to kill or copy lines. If no mark is set, then they work on the line where the cursor is located.
-
-#+begin_src emacs-lisp
-;; (require 'dash)
-
-;; (defvar yank-indent-modes '(prog-mode)
-;;   "Modes in which to indent regions that are yanked (or yank-popped)")
-
-;; (defvar yank-advised-indent-threshold 1000
-;;   "Threshold (# chars) over which indentation does not automatically occur.")
-
-;; (defun yank-advised-indent-function (beg end)
-;;   "Do indentation, as long as the region isn't too large."
-;;   (if (<= (- end beg) yank-advised-indent-threshold)
-;;       (indent-region beg end nil)))
-
-;; (defadvice yank (after yank-indent activate)
-;;   "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-;;   (if (and (not (ad-get-arg 0))
-;;            (member major-mode yank-indent-modes))
-;;       (let ((transient-mark-mode nil))
-;;         (yank-advised-indent-function (region-beginning) (region-end)))))
-
-;; (defadvice yank-pop (after yank-pop-indent activate)
-;;   "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-;;   (if (and (not (ad-get-arg 0))
-;;            (member major-mode yank-indent-modes))
-;;       (let ((transient-mark-mode nil))
-;;         (yank-advised-indent-function (region-beginning) (region-end)))))
-
-;; (defun yank-unindented ()
-;;   (interactive)
-;;   (yank 1))
-
-(defun xah-cut-line-or-region ()
-  "Cut current line, or text selection.
-When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
-
-URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
-Version 2015-05-06"
-  (interactive)
-  (let (ξp1 ξp2)
-    (if current-prefix-arg
-        (progn (setq ξp1 (point-min))
-               (setq ξp2 (point-max)))
-      (progn (if (use-region-p)
-                 (progn (setq ξp1 (region-beginning))
-                        (setq ξp2 (region-end)))
-               (progn (setq ξp1 (line-beginning-position))
-                      (setq ξp2 (line-beginning-position 2))))))
-    (kill-region ξp1 ξp2)))
-(global-set-key (kbd "C-w") 'xah-cut-line-or-region)
-
-(defun xah-copy-line-or-region ()
-  "Copy current line, or text selection.
-When `universal-argument' is called first, copy whole buffer (respects `narrow-to-region').
-
-URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
-Version 2015-05-06"
-  (interactive)
-  (let (ξp1 ξp2)
-    (if current-prefix-arg
-        (progn (setq ξp1 (point-min))
-               (setq ξp2 (point-max)))
-      (progn (if (use-region-p)
-                 (progn (setq ξp1 (region-beginning))
-                        (setq ξp2 (region-end)))
-               (progn (setq ξp1 (line-beginning-position))
-                      (setq ξp2 (line-end-position))))))
-    (kill-ring-save ξp1 ξp2)
-    (if current-prefix-arg
-        (message "buffer text copied")
-      (message "text copied"))))
-(global-set-key (kbd "M-w") 'xah-copy-line-or-region)
-
-(defun modi/switch-to-scratch-and-back (arg)
-  "Toggle between *scratch-MODE* buffer and the current buffer.
-If a scratch buffer does not exist, create it with the major mode set to that
-of the buffer from where this function is called.
-
-        COMMAND -> Open/switch to a scratch buffer in the current buffer's major mode
-    C-0 COMMAND -> Open/switch to a scratch buffer in `fundamental-mode'
-    C-u COMMAND -> Open/switch to a scratch buffer in `org-mode'
-C-u C-u COMMAND -> Open/switch to a scratch buffer in `emacs-elisp-mode'"
-  (interactive "p")
-  (if (and (= arg 1) ; no prefix
-           (string-match-p "\\*scratch" (buffer-name)))
-      (switch-to-buffer (other-buffer))
-    (let ((mode-str (cl-case arg
-                      (0  "fundamental-mode") ; C-0
-                      (4  "org-mode") ; C-u
-                      (16 "emacs-lisp-mode") ; C-u C-u
-                      (t  (format "%s" major-mode))))) ; no prefix
-      (switch-to-buffer (get-buffer-create
-                         (concat "*scratch-" mode-str "*")))
-      (funcall (intern mode-str)))))
-(global-set-key (kbd "<f8>") 'modi/switch-to-scratch-and-back)
-
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
-(defun unfill-paragraph (&optional region)
-  "Takes a multi-line paragraph and makes it into a single line of text."
-  (interactive (progn (barf-if-buffer-read-only) '(t)))
-  (let ((fill-column (point-max))
-        ;; This would override `fill-column' if it's an integer.
-        (emacs-lisp-docstring-fill-column t))
-    (fill-paragraph nil region)))
-(define-key global-map "\M-Q" 'unfill-paragraph)
-
-(defun joaot/delete-process-at-point ()
-  (interactive)
-  (let ((process (get-text-property (point) 'tabulated-list-id)))
-    (cond ((and process
-                (processp process))
-           (delete-process process)
-           (revert-buffer))
-          (t
-           (error "no process at point!")))))
-
-(define-key process-menu-mode-map (kbd "C-k") 'joaot/delete-process-at-point)
-#+end_src
-
-** Color emoji
-
-Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color Emoji]] font installed.
-
-#+begin_src emacs-lisp
-  (add-hook 'after-make-frame-functions
-            (lambda (_frame)
-              (set-fontset-font t 'symbol "Apple Color Emoji")
-              (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
-              (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-              (set-fontset-font t 'symbol "Symbola" nil 'append)))
-#+end_src
-
-** Calendar
-
-Display week numbers in calendar view.
-
-   #+begin_src emacs-lisp
-     (copy-face font-lock-constant-face 'calendar-iso-week-face)
-     (set-face-attribute 'calendar-iso-week-face nil
-                         :height 1.0 :foreground "salmon")
-     (setq calendar-week-start-day 1)
-     ;; (setq calendar-intermonth-text nil)
-
-     (setq calendar-intermonth-text
-           '(propertize
-             (format "%2d"
-                     (car
-                      (calendar-iso-from-absolute
-                       (calendar-absolute-from-gregorian (list month day year)))))
-             'font-lock-face 'calendar-iso-week-face))
-
-     (setq calendar-intermonth-header
-           (propertize "Wk" 'font-lock-face 'font-lock-keyword-face))
-   #+end_src
-
-* Utility
-
-These functions have a dedicated [[Hydra]].
-
-#+begin_src emacs-lisp
-;; Prefix all commands with Fn-u
-(define-prefix-command 'utility-map)
-(global-set-key (kbd "H-z") 'utility-map)
-(defun url-humanify ()
-  "Take the URL at point and make it human readable."
-  (interactive)
-  (let* ((area (bounds-of-thing-at-point 'url))
-         (num-params  (count-occurances-in-region "&" (car area) (cdr area)))
-         (i 0))
-    (beginning-of-thing 'url)
-    (when (search-forward "?" (cdr area) t nil)
-      (insert "\n  ")
-      (while (< i num-params)
-        (search-forward "&" nil t nil)
-        (insert "\n  ")
-        (save-excursion
-          (previous-line)
-          (beginning-of-line)
-          (let ((start (search-forward "="))
-                (end (search-forward "&")))
-            (url-decode-region start end)))
-        (setq i (+ i 1))))))
-(define-key utility-map (kbd "H-u") 'url-humanify)
-
-(defun url-decode-region (start end)
-  "Replace a region with the same contents, only URL decoded."
-  (interactive "r")
-  (let ((text (url-unhex-string (buffer-substring start end))))
-    (delete-region start end)
-    (insert text)))
-(define-key utility-map (kbd "H-d") 'url-decode-region)
-
-;; format json
-(define-key utility-map (kbd "H-j") 'json-pretty-print)
-
-(defun xml-format (begin end)
-  "Pretty format XML markup in region. You need to have 'nxml-mode'
-http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
-this.  The function inserts linebreaks to separate tags that have
-nothing but whitespace between them.  It then indents the markup
-by using nxml's indentation rules."
-  (interactive "r")
-  (save-excursion
-      (nxml-mode)
-      (goto-char begin)
-      (while (search-forward-regexp "\>[ \\t]*\<" nil t)
-        (backward-char) (insert "\n"))
-      (indent-region begin end))
-    (message "Ah, much better!"))
-(define-key utility-map (kbd "H-x") 'xml-format)
-
-; copy filename to clipboard
-(defun copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-(define-key utility-map (kbd "H-c") 'copy-file-name-to-clipboard)
-
-; show filename of current buffer
-(defun show-file-name-of-current-buffer ()
-  "Print the current buffer file name"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (message filename))))
-(define-key utility-map (kbd "H-s") 'show-file-name-of-current-buffer)
-
-(defun bjm/insert-file-name (filename &optional args)
-  "Insert name of file FILENAME into buffer after point.
-
- Prefixed with \\[universal-argument], expand the file name to
- its fully canocalized path. See `expand-file-name'.
-
- Prefixed with \\[negative-argument], use relative path to file
- name from current directory, `default-directory'. See
- `file-relative-name'.
-
- The default with no prefix is to insert the file name exactly as
- it appears in the minibuffer prompt."
-  ;; Based on insert-file in Emacs -- ashawley 20080926
-  (interactive "*fInsert file name: \nP")
-  (cond ((eq '- args)
-         (insert (expand-file-name filename)))
-        ((not (null args))
-         (insert (filename)))
-        (t
-         (insert (file-relative-name filename)))))
-
-; replacement for all the other M-u M-l nonsense
-(defun toggle-letter-case ()
-  "Toggle the letter case of current word or text selection.
-Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
-  (interactive)
-  (let (p1 p2 (deactivate-mark nil) (case-fold-search nil))
-    (if (region-active-p)
-        (setq p1 (region-beginning) p2 (region-end))
-      (let ((bds (bounds-of-thing-at-point 'word) ) )
-        (setq p1 (car bds) p2 (cdr bds)) ) )
-
-    (when (not (eq last-command this-command))
-      (save-excursion
-        (goto-char p1)
-        (cond
-         ((looking-at "[[:lower:]][[:lower:]]") (put this-command 'state "all lower"))
-         ((looking-at "[[:upper:]][[:upper:]]") (put this-command 'state "all caps") )
-         ((looking-at "[[:upper:]][[:lower:]]") (put this-command 'state "init caps") )
-         ((looking-at "[[:lower:]]") (put this-command 'state "all lower"))
-         ((looking-at "[[:upper:]]") (put this-command 'state "all caps") )
-         (t (put this-command 'state "all lower") ) ) ) )
-
-    (cond
-     ((string= "all lower" (get this-command 'state))
-      (upcase-initials-region p1 p2) (put this-command 'state "init caps"))
-     ((string= "init caps" (get this-command 'state))
-      (upcase-region p1 p2) (put this-command 'state "all caps"))
-     ((string= "all caps" (get this-command 'state))
-      (downcase-region p1 p2) (put this-command 'state "all lower")) )
-    ) )
-(global-set-key (kbd "M-c") 'toggle-letter-case)
-
-(defun my/org-days-between (start end)
-  "Number of days between START and END (exclusive).
-This includes START but not END."
-  (- (calendar-absolute-from-gregorian (org-date-to-gregorian end))
-     (calendar-absolute-from-gregorian (org-date-to-gregorian start))))
-#+end_src
-
-Accessing encrypted passwords outside of emacs
-
-#+begin_src emacs-lisp
-  (defun efs/lookup-password (&rest keys)
-    (let ((result (apply #'auth-source-search keys)))
-      (if result
-          (funcall (plist-get (car result) :secret))
-          nil)))
-#+end_src
-
-* Keymaps
-
-I used these keymaps for easy typing of Spanish accented vowels. I don't use it nearly as much when I switched to Linux and using a programmable keyboard, but it's still useful when typing in a laptop keyboard with no easy access to a compose key.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "H-a") (lambda () (interactive) (insert "á")))
-(global-set-key (kbd "H-e") (lambda () (interactive) (insert "é")))
-(global-set-key (kbd "H-i") (lambda () (interactive) (insert "í")))
-(global-set-key (kbd "H-o") (lambda () (interactive) (insert "ó")))
-(global-set-key (kbd "H-u") (lambda () (interactive) (insert "ú")))
-(global-set-key (kbd "H-n") (lambda () (interactive) (insert "ñ")))
-(global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
-(global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
+(use-package gnuplot)
+(use-package gnuplot-mode)
 #+end_src
 
 * Mail
@@ -2511,20 +1860,406 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
                   mails)))
 #+end_src
 
-#+begin_src emacs-lisp
-;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))) this is a very long comment line. Let's see how it's displayed with the fancy fonts and everything
-(use-package org-trello
-  :pin melpa
-  :straight (org-trello :build (:not compile))
-  :config
-  (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))))
-#+end_src
+* Customization
+
+Customization and custom utility functions. Over the years I've accumulated many functions I don't actually use. My hope is that by documenting them I can either set proper bindings or simply remove them.
+
+** Modes
+
+The following modes are enabled:
+
+- ~save-place-mode~ When you visit a file, point goes to the last place where it was when you previously visited the same file. Defaults to a file ~places~ stored in your configuration directory.
+- ~blink-cursor-mode~ Disable cursor blinking. The line containing the cursor is visible by highlighting it.
+- ~delete-selection-mode~ Insert while having something highlighted makes the highlighted text disappear. You know, like a normal editor.
+- ~column-number-mode~ Display the column number in the modeline.
+- ~global-visual-line-mode~ Wrap lines at the word boundary.
+- ~auto-revert-mode~ Pick up changes to files on disk automatically (ie, after git pull)
+- ~which-function-mode~ Displays the name of the function where the cursor is located, in the modeline. It also works with Org headers.
 
 #+begin_src emacs-lisp
-(use-package gnuplot)
-(use-package gnuplot-mode)
+(setq save-place-file (concat user-emacs-directory "places"))
+(save-place-mode 1)
+
+(blink-cursor-mode -1)
+
+(delete-selection-mode t)
+
+(column-number-mode t)
+
+(global-visual-line-mode t)
+
+(global-auto-revert-mode t)
+
+(which-function-mode t)
 #+end_src
 
+** Global bindings
+
+The following are bindings to commonly used internal Emacs functions. Most of the time the name of the function is self explanatory, but there's also inline comments to explain what the function does.
+
+#+begin_src emacs-lisp
+;; delete next character or whitespace until non-whitespace character
+(global-set-key (kbd "C-c d") 'c-hungry-delete-forward)
+
+;; comment and uncomment regions
+(global-set-key "\C-c\ -" 'comment-region)
+(global-set-key "\C-c\ +" 'uncomment-region)
+
+;; toggle line numbers
+(global-set-key [f6] 'display-line-numbers-mode)
+
+;; cleanup whitespace. This is also done on save in prog-mode buffers.
+(global-set-key [f2] 'whitespace-cleanup)
+
+;; scroll window up/down by one line, keeping the cursor where it is.
+(global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+(global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
+#+end_src
+
+** Hooks
+
+Defines hooks for many editing modes. For example the configuration for ~prog-mode~.
+
+Specifically in ~prog-mode~, the following is enabled:
+
+- ~electric-pair-mode~ for automatically inserting matching delimiters.
+- ~rainbow-mode~ for colorizing color names in the buffer. Works with both color names and hex codes.
+- ~visual-line-mode~ disabled for preserving long lines.
+- ~toggle-truncate-lines~ for truncating long lines and displaying an arrow in the fringe instead.
+- ~show-paren-mode~ for highlighting the matching paren at point.
+- ~whitespace-mode~ for displaying spurious whitespace.
+- ~display-fill-column-indicator-column~ for displaying the column indicator at the 110 column.
+- ~display-fill-column-indicator-mode~ for enabling the fill column indicator.
+
+Finally a ~before-save-hook~ is set to cleanup whitespace when the
+file is saved.
+
+#+begin_src emacs-lisp
+;; prog mode setup
+(add-hook 'prog-mode-hook (lambda ()
+                            (electric-pair-mode 1)
+                            (hl-line-mode t)
+                            (rainbow-mode 1)
+                            (visual-line-mode 0)
+                            (toggle-truncate-lines 1)
+                            (show-paren-mode t)
+                            (whitespace-mode t)
+                            (setq display-fill-column-indicator-column 102)
+                            (display-fill-column-indicator-mode 1)
+                            (add-hook 'before-save-hook #'whitespace-cleanup nil 'make-it-local)
+                            (local-set-key (kbd "C-M-;") #'comment-or-uncomment-sexp)))
+
+;; but only lisps should have rainbow delimiters
+(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+
+(add-hook 'text-mode-hook (lambda () (flycheck-mode 0)))
+
+;; If all you use is magit anyway, this is not really a loss
+(remove-hook 'find-file-hooks 'vc-find-file-hook)
+#+end_src
+** Defaults
+
+Here we change some default variables.
+
+#+begin_src emacs-lisp
+(setq-default tab-width 2
+	      c-basic-offset 4
+	      indent-tabs-mode nil
+	      c-default-style "linux")
+
+;; encoding
+(prefer-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+
+;; highlight incremental search
+(defconst search-highlight t)
+
+;; Anwsering y/n is faster than yes/no.
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(defun buffer-too-big-p ()
+  (or (> (buffer-size) (* 5000 80))
+      (> (line-number-at-pos (point-max)) 5000)))
+
+;; Dired setup
+;; reuse current buffer by pressing 'a'
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; enable some really cool extensions like C-x C-j(dired-jump)
+(require 'dired-x)
+#+end_src
+** Custom functions
+
+These are custom functions, mostly centered around killing and yanking.
+
+The ~yank-~ set of functions are meant to automatically indent yanked text if in programming modes.
+
+The ~xah-~ functions are to kill or copy lines. If no mark is set, then they work on the line where the cursor is located.
+
+#+begin_src emacs-lisp
+(defun xah-cut-line-or-region ()
+  "Cut current line, or text selection.
+When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
+
+URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
+Version 2015-05-06"
+  (interactive)
+  (let (ξp1 ξp2)
+    (if current-prefix-arg
+        (progn (setq ξp1 (point-min))
+               (setq ξp2 (point-max)))
+      (progn (if (use-region-p)
+                 (progn (setq ξp1 (region-beginning))
+                        (setq ξp2 (region-end)))
+               (progn (setq ξp1 (line-beginning-position))
+                      (setq ξp2 (line-beginning-position 2))))))
+    (kill-region ξp1 ξp2)))
+(global-set-key (kbd "C-w") 'xah-cut-line-or-region)
+
+(defun xah-copy-line-or-region ()
+  "Copy current line, or text selection.
+When `universal-argument' is called first, copy whole buffer (respects `narrow-to-region').
+
+URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
+Version 2015-05-06"
+  (interactive)
+  (let (ξp1 ξp2)
+    (if current-prefix-arg
+        (progn (setq ξp1 (point-min))
+               (setq ξp2 (point-max)))
+      (progn (if (use-region-p)
+                 (progn (setq ξp1 (region-beginning))
+                        (setq ξp2 (region-end)))
+               (progn (setq ξp1 (line-beginning-position))
+                      (setq ξp2 (line-end-position))))))
+    (kill-ring-save ξp1 ξp2)
+    (if current-prefix-arg
+        (message "buffer text copied")
+      (message "text copied"))))
+(global-set-key (kbd "M-w") 'xah-copy-line-or-region)
+
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+(defun unfill-paragraph (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
+(define-key global-map "\M-Q" 'unfill-paragraph)
+
+(defun joaot/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
+(define-key process-menu-mode-map (kbd "C-k") 'joaot/delete-process-at-point)
+#+end_src
+** Color emoji
+
+Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color Emoji]] font installed.
+
+#+begin_src emacs-lisp
+  (add-hook 'after-make-frame-functions
+            (lambda (_frame)
+              (set-fontset-font t 'symbol "Apple Color Emoji")
+              (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+              (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+              (set-fontset-font t 'symbol "Symbola" nil 'append)))
+#+end_src
+** Calendar
+
+Display week numbers in calendar view.
+
+   #+begin_src emacs-lisp
+     (copy-face font-lock-constant-face 'calendar-iso-week-face)
+     (set-face-attribute 'calendar-iso-week-face nil
+                         :height 1.0 :foreground "salmon")
+     (setq calendar-week-start-day 1)
+     ;; (setq calendar-intermonth-text nil)
+
+     (setq calendar-intermonth-text
+           '(propertize
+             (format "%2d"
+                     (car
+                      (calendar-iso-from-absolute
+                       (calendar-absolute-from-gregorian (list month day year)))))
+             'font-lock-face 'calendar-iso-week-face))
+
+     (setq calendar-intermonth-header
+           (propertize "Wk" 'font-lock-face 'font-lock-keyword-face))
+   #+end_src
+* Utility
+
+These functions have a dedicated [[Hydra]].
+
+#+begin_src emacs-lisp
+;; Prefix all commands with Fn-u
+(define-prefix-command 'utility-map)
+(global-set-key (kbd "H-z") 'utility-map)
+(defun url-humanify ()
+  "Take the URL at point and make it human readable."
+  (interactive)
+  (let* ((area (bounds-of-thing-at-point 'url))
+         (num-params  (count-occurances-in-region "&" (car area) (cdr area)))
+         (i 0))
+    (beginning-of-thing 'url)
+    (when (search-forward "?" (cdr area) t nil)
+      (insert "\n  ")
+      (while (< i num-params)
+        (search-forward "&" nil t nil)
+        (insert "\n  ")
+        (save-excursion
+          (previous-line)
+          (beginning-of-line)
+          (let ((start (search-forward "="))
+                (end (search-forward "&")))
+            (url-decode-region start end)))
+        (setq i (+ i 1))))))
+(define-key utility-map (kbd "H-u") 'url-humanify)
+
+(defun url-decode-region (start end)
+  "Replace a region with the same contents, only URL decoded."
+  (interactive "r")
+  (let ((text (url-unhex-string (buffer-substring start end))))
+    (delete-region start end)
+    (insert text)))
+(define-key utility-map (kbd "H-d") 'url-decode-region)
+
+;; format json
+(define-key utility-map (kbd "H-j") 'json-pretty-print)
+
+(defun xml-format (begin end)
+  "Pretty format XML markup in region. You need to have 'nxml-mode'
+http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+this.  The function inserts linebreaks to separate tags that have
+nothing but whitespace between them.  It then indents the markup
+by using nxml's indentation rules."
+  (interactive "r")
+  (save-excursion
+      (nxml-mode)
+      (goto-char begin)
+      (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+        (backward-char) (insert "\n"))
+      (indent-region begin end))
+    (message "Ah, much better!"))
+(define-key utility-map (kbd "H-x") 'xml-format)
+
+; copy filename to clipboard
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+(define-key utility-map (kbd "H-c") 'copy-file-name-to-clipboard)
+
+; show filename of current buffer
+(defun show-file-name-of-current-buffer ()
+  "Print the current buffer file name"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (message filename))))
+(define-key utility-map (kbd "H-s") 'show-file-name-of-current-buffer)
+
+(defun bjm/insert-file-name (filename &optional args)
+  "Insert name of file FILENAME into buffer after point.
+
+ Prefixed with \\[universal-argument], expand the file name to
+ its fully canocalized path. See `expand-file-name'.
+
+ Prefixed with \\[negative-argument], use relative path to file
+ name from current directory, `default-directory'. See
+ `file-relative-name'.
+
+ The default with no prefix is to insert the file name exactly as
+ it appears in the minibuffer prompt."
+  ;; Based on insert-file in Emacs -- ashawley 20080926
+  (interactive "*fInsert file name: \nP")
+  (cond ((eq '- args)
+         (insert (expand-file-name filename)))
+        ((not (null args))
+         (insert (filename)))
+        (t
+         (insert (file-relative-name filename)))))
+
+; replacement for all the other M-u M-l nonsense
+(defun toggle-letter-case ()
+  "Toggle the letter case of current word or text selection.
+Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
+  (interactive)
+  (let (p1 p2 (deactivate-mark nil) (case-fold-search nil))
+    (if (region-active-p)
+        (setq p1 (region-beginning) p2 (region-end))
+      (let ((bds (bounds-of-thing-at-point 'word) ) )
+        (setq p1 (car bds) p2 (cdr bds)) ) )
+
+    (when (not (eq last-command this-command))
+      (save-excursion
+        (goto-char p1)
+        (cond
+         ((looking-at "[[:lower:]][[:lower:]]") (put this-command 'state "all lower"))
+         ((looking-at "[[:upper:]][[:upper:]]") (put this-command 'state "all caps") )
+         ((looking-at "[[:upper:]][[:lower:]]") (put this-command 'state "init caps") )
+         ((looking-at "[[:lower:]]") (put this-command 'state "all lower"))
+         ((looking-at "[[:upper:]]") (put this-command 'state "all caps") )
+         (t (put this-command 'state "all lower") ) ) ) )
+
+    (cond
+     ((string= "all lower" (get this-command 'state))
+      (upcase-initials-region p1 p2) (put this-command 'state "init caps"))
+     ((string= "init caps" (get this-command 'state))
+      (upcase-region p1 p2) (put this-command 'state "all caps"))
+     ((string= "all caps" (get this-command 'state))
+      (downcase-region p1 p2) (put this-command 'state "all lower")) )
+    ) )
+(global-set-key (kbd "M-c") 'toggle-letter-case)
+
+(defun my/org-days-between (start end)
+  "Number of days between START and END (exclusive).
+This includes START but not END."
+  (- (calendar-absolute-from-gregorian (org-date-to-gregorian end))
+     (calendar-absolute-from-gregorian (org-date-to-gregorian start))))
+#+end_src
+
+Accessing encrypted passwords outside of emacs
+
+#+begin_src emacs-lisp
+  (defun efs/lookup-password (&rest keys)
+    (let ((result (apply #'auth-source-search keys)))
+      (if result
+          (funcall (plist-get (car result) :secret))
+          nil)))
+#+end_src
+* Keymaps
+
+I used these keymaps for easy typing of Spanish accented vowels. I don't use it nearly as much when I switched to Linux and using a programmable keyboard, but it's still useful when typing in a laptop keyboard with no easy access to a compose key.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "H-a") (lambda () (interactive) (insert "á")))
+(global-set-key (kbd "H-e") (lambda () (interactive) (insert "é")))
+(global-set-key (kbd "H-i") (lambda () (interactive) (insert "í")))
+(global-set-key (kbd "H-o") (lambda () (interactive) (insert "ó")))
+(global-set-key (kbd "H-u") (lambda () (interactive) (insert "ú")))
+(global-set-key (kbd "H-n") (lambda () (interactive) (insert "ñ")))
+(global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
+(global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
+#+end_src
 * End
 # Local Variables:
 # eval: (visual-line-mode t)
