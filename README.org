@@ -102,7 +102,6 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 	    delete-by-moving-to-trash t
 	    system-time-locale "C"
 
-	    ;; avoid duplicates in helm's M-x
 	    history-delete-duplicates t
 
 	    ;; inhibit message on how to exit client frame
@@ -469,7 +468,7 @@ Enable rich annotations in the minibuffer.
 
 ** Recentf
 
-Keeps track of your most recent opened files so you can get back to them easily. You can specify files to ignore, which is useful for files that get visited automatically and fill up your recent file history. No binding is set; Helm is used for browsing recent files.
+Keeps track of your most recent opened files so you can get back to them easily. You can specify files to ignore, which is useful for files that get visited automatically and fill up your recent file history. No binding is set; Consult is used for browsing recent files.
 
 #+begin_src emacs-lisp
   (use-package recentf
@@ -749,10 +748,6 @@ Org mode is able to export to several other formats, and some of them require ad
                             (not (habit))
                             (ts :from -1 :to -1))))
           ))))
-
-(use-package helm-org-ql :pin melpa
-  :after (org-ql)
-  :bind (:map org-mode-map (("s-q" . helm-org-ql))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1256,8 +1251,7 @@ Jump to definition without generating etags or external tools.
     :config
     (dumb-jump-mode t)
     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-    (global-set-key (kbd "<f12>") 'xref-find-definitions)
-    (setq dumb-jump-selector 'helm))
+    (global-set-key (kbd "<f12>") 'xref-find-definitions))
 #+end_src
 
 *** Diffing
@@ -1300,11 +1294,7 @@ This package implements symbol highlighting, so for example when the cursor is i
 Navigate your git repository history. Allows you to temporarily revert a file to a previous version.
 
 #+begin_src emacs-lisp
-(use-package git-timemachine
-  :straight `(git-timemachine
-              :fork (:host
-                     nil
-                     :repo "https://codeberg.org/pidu/git-timemachine.git")))
+(use-package git-timemachine)
 #+end_src
 *** REST client
 
@@ -1317,8 +1307,6 @@ Add a rest client to your Emacs.
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
-
-(use-package restclient-helm :pin melpa)
 #+end_src
 
 ** Programming modes
@@ -1390,10 +1378,6 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-ui-sideline-show-code-actions nil
         lsp-modeline-code-actions-enable nil
         lsp-headerline-breadcrumb-enable nil))
-
-(use-package helm-lsp :pin melpa
-  :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 (use-package dap-mode :pin melpa
   :config
