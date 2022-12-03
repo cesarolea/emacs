@@ -761,8 +761,14 @@ Org mode is able to export to several other formats, and some of them require ad
   (require 'ob-async))
 #+end_src
 
+*** Drill
+
+~org-drill~ is an implementation of [[https://en.wikipedia.org/wiki/Spaced_repetition][spaced repetition]] to assist in learning, similar to flashcards.
+
 #+begin_src emacs-lisp
 (use-package org-drill :pin melpa
+  :bind (:map org-mode-map
+         ("C-c i" . org-drill))
   :config
   (require 'org-drill)
   (setq org-drill-spaced-repetition-algorithm 'sm2
