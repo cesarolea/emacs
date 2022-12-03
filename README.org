@@ -385,7 +385,11 @@ Vertico
         (if (string-match-p "/." (minibuffer-contents))
             (zap-up-to-char (- arg) ?/)
           (delete-minibuffer-contents))
-      (delete-backward-char arg))))
+      (delete-backward-char arg)))
+
+  ;; fixes tramp completions
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
 ** Flycheck
