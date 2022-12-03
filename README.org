@@ -233,11 +233,7 @@ Which key makes it easier to discover the major mode you are in.
 
  #+begin_src emacs-lisp
  (use-package all-the-icons :pin melpa)
-
- (use-package all-the-icons-completion :pin melpa
-   :config
-   (all-the-icons-completion-mode))
-
+ 
  (use-package doom-themes :pin melpa
    :config
    (setq doom-themes-enable-bold t
@@ -373,24 +369,24 @@ Provides spellchecking.
 Vertico
 
 #+begin_src emacs-lisp
-  (use-package vertico
-    :bind (:map minibuffer-local-map
-		("<backspace>" . dw/minibuffer-backward-kill))
-    :init
-    (vertico-mode)
-    (setq vertico-cycle t
-	  vertico-count 20)
+(use-package vertico
+  :bind (:map minibuffer-local-map
+              ("<backspace>" . dw/minibuffer-backward-kill))
+  :init
+  (vertico-mode)
+  (setq vertico-cycle t
+        vertico-count 20)
 
-    (defun dw/minibuffer-backward-kill (arg)
-      "When minibuffer is completing a file name delete up to parent
-    folder, otherwise delete a character backward"
-      (interactive "p")
-      (if minibuffer-completing-file-name
-	  ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
-	  (if (string-match-p "/." (minibuffer-contents))
-	      (zap-up-to-char (- arg) ?/)
-	    (delete-minibuffer-contents))
-	(delete-backward-char arg))))
+  (defun dw/minibuffer-backward-kill (arg)
+    "When minibuffer is completing a file name delete up to parent
+  folder, otherwise delete a character backward"
+    (interactive "p")
+    (if minibuffer-completing-file-name
+        ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+        (if (string-match-p "/." (minibuffer-contents))
+            (zap-up-to-char (- arg) ?/)
+          (delete-minibuffer-contents))
+      (delete-backward-char arg))))
 #+end_src
 
 ** Flycheck
@@ -519,44 +515,46 @@ Provides project management capabilities. I don't use it on its own, rather thro
 A completion engine that tightly integrates to Emacs.
 
 #+begin_src emacs-lisp
-  (use-package consult
-    :after (projectile)
-    :bind (("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-	   ("C-x a" . consult-buffer)
-	   ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-	   ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-	   ("C-c b" . consult-mark)                  ;; orig. bookmark-jump
-	   ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-	   ("C-c y" . consult-yank-from-kill-ring)
-	   ("C-x g" . consult-goto-line)
-	   ("C-s" . consult-line)                    ;; replaces swiper
-	   ("C-x C-r" . consult-recent-file)
-	   ("<f9>" . consult-bookmark)
-	   ("s-b"  . consult-bookmark)
-	   )
-    :init
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-	  xref-show-definitions-function #'consult-xref)
+(use-package consult
+  :after (projectile)
+  :bind (("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x a" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-c b" . consult-mark)                  ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-c y" . consult-yank-from-kill-ring)
+         ("C-x g" . consult-goto-line)
+         ("C-s" . consult-line)                    ;; replaces swiper
+         ("C-x C-r" . consult-recent-file)
+         ("<f9>" . consult-bookmark)
+         ("s-b"  . consult-bookmark)
+         :map org-mode-map
+         ("C-c o" . consult-org-heading)
+         )
+  :init
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
 
-    :config
-    (setq consult-preview-key (kbd "M-."))
-    (consult-customize
-     consult-theme :preview-key '(:debounce 0.2 any)
-     consult-org-heading :preview-key '(:debounce 0.2 any)
-     consult-ag :preview-key '(:debounce 0.2 any)
-     consult-line :preview-key '(:debounce 0.2 any)
-     consult-flyspell :preview-key '(:debounce 0.2 any)
-     consult-ripgrep consult-git-grep consult-grep
-     consult-bookmark consult-recent-file consult-xref
-     consult--source-bookmark consult--source-file-register
-     consult--source-recent-file consult--source-project-recent-file
-     :preview-key (kbd "M-."))
+  :config
+  (setq consult-preview-key (kbd "M-."))
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-org-heading :preview-key '(:debounce 0.2 any)
+   consult-ag :preview-key '(:debounce 0.2 any)
+   consult-line :preview-key '(:debounce 0.2 any)
+   consult-flyspell :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   :preview-key (kbd "M-."))
 
-    (setq consult-narrow-key "<")
+  (setq consult-narrow-key "<")
 
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-function (lambda (_) (projectile-project-root))))
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
 #+end_src
 
 *** Consult extensions & integrations
@@ -600,6 +598,17 @@ A completion engine that tightly integrates to Emacs.
     (setq consult-flyspell-select-function 'flyspell-correct-at-point
 	  consult-flyspell-set-point-after-word t
 	  consult-flyspell-always-check-buffer t))
+#+end_src
+
+**** Icons
+
+Display icons in completion candidates. Requires the ~all-the-icons~ package.
+
+#+begin_src emacs-lisp
+(use-package all-the-icons-completion :pin melpa
+  :after consult
+  :config
+  (all-the-icons-completion-mode))
 #+end_src
 
 ** Magit
@@ -1435,7 +1444,6 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 
 Emacs has fantastic support for Clojure with Cider. It provides support for interactive programming with Clojure. Over the years I've been accumulating tweaks to Cider, but the stock configuration is very comprehensible.
 
-
 ~subword-mode~ is enabled in ~clojure-mode~ and it treats camelCase, snake_case and kebab-case as multiple words. That is, the cursor stops in between as in ~some|Word~, ~some|_word~ and ~some|-word~.
 
 
@@ -1454,7 +1462,9 @@ Most Cider options tweaks are documented inline. For more information refer to t
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
                                             (subword-mode t)
-                                            (diminish 'subword-mode))))
+                                            (diminish 'subword-mode)
+                                            ;; highlight symbol provided by lsp
+                                            (auto-highlight-symbol-mode 0))))
   (add-hook 'clojure-mode-hook #'eldoc-mode)
   (diminish 'eldoc-mode))
 
