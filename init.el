@@ -217,9 +217,6 @@
 
         org-habit-show-all-today nil
 
-        ;; hides * for bold, / for italics, etc
-        org-hide-emphasis-markers t
-
         ;; so when hitting enter after a heading, it keeps proper indentation
         org-adapt-indentation t
 

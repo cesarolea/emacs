@@ -719,13 +719,6 @@ Org mode is able to export to several other formats, and some of them require ad
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package org-superstar :pin melpa
-  :config
-  (setq org-superstar-special-todo-items t)
-  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
-#+end_src
-
-#+begin_src emacs-lisp
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
 #+end_src
@@ -765,6 +758,37 @@ Org mode is able to export to several other formats, and some of them require ad
 (use-package ob-async :pin melpa
   :config
   (require 'ob-async))
+#+end_src
+
+*** Org modern
+
+#+begin_src emacs-lisp
+(use-package org-modern
+  :config
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
+
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   ;;org-ellipsis "…"
+
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
+
+(global-org-modern-mode))
 #+end_src
 
 *** Drill
