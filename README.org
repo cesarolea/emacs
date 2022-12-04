@@ -232,7 +232,7 @@ Which key makes it easier to discover the major mode you are in.
 
  #+begin_src emacs-lisp
  (use-package all-the-icons :pin melpa)
- 
+
  (use-package doom-themes :pin melpa
    :config
    (setq doom-themes-enable-bold t
@@ -247,25 +247,7 @@ Which key makes it easier to discover the major mode you are in.
    (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 160 120))
 
    ;; Set the variable pitch face
-   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular)
-
-   (custom-theme-set-faces
-    'user
-    '(org-block                 ((t (:inherit fixed-pitch))))
-    '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
-    '(org-checkbox              ((t (:inherit fixed-pitch))))
-    '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-    '(org-property-value        ((t (:inherit fixed-pitch))) t)
-    '(org-table                 ((t (:inherit fixed-pitch))) t)
-    '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-    '(org-formula               ((t (:inherit fixed-pitch))) t)
-    '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-    '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
-    '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-    '(org-document-title        ((t (:height 2.0 :underline nil))))
-    '(org-level-1               ((t (:inherit outline-1 :height 1.5))))
-    '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
-    '(org-level-3               ((t (:inherit outline-3 :height 1.1))))))
+   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular))
 
  (use-package doom-modeline :pin melpa
    :init (doom-modeline-mode 1)
@@ -788,7 +770,30 @@ Org mode is able to export to several other formats, and some of them require ad
    org-agenda-current-time-string
    "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode))
+  (custom-set-variables '(org-modern-table nil))
+  (custom-set-variables '(org-modern-timestamp nil))
+
+  (global-org-modern-mode)
+
+  ;; avoid styling tables as they break when containing timestamps
+  (custom-theme-set-faces
+   'user
+   ;; '(org-block                 ((t (:inherit fixed-pitch))))
+   ;; '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
+   ;; '(org-checkbox              ((t (:inherit fixed-pitch))))
+   ;; '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   ;; '(org-property-value        ((t (:inherit fixed-pitch))) t)
+      '(org-table                 ((t (:inherit fixed-pitch))) t)
+   ;; '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   ;; '(org-formula               ((t (:inherit fixed-pitch))) t)
+   ;; '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   ;; '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
+   ;; '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+   ;; '(org-document-title        ((t (:height 2.0 :underline nil))))
+   ;; '(org-level-1               ((t (:inherit outline-1 :height 1.5))))
+   ;; '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
+   ;; '(org-level-3               ((t (:inherit outline-3 :height 1.1))))
+   ))
 #+end_src
 
 *** Drill
