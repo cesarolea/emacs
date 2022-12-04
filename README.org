@@ -2103,6 +2103,17 @@ Display week numbers in calendar view.
      (setq calendar-intermonth-header
            (propertize "Wk" 'font-lock-face 'font-lock-keyword-face))
    #+end_src
+** Shell
+
+   Since I use the fish shell, this custom command runs ~ansi-term~ with that specific shell.
+
+   #+begin_src emacs-lisp
+   (defun fish-shell ()
+     "Run ansi-term with a specific shell"
+     (interactive)
+     (ansi-term "fish"))
+   #+end_src
+
 * Utility
 
 These functions have a dedicated [[Hydra]].
