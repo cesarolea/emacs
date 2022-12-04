@@ -1376,9 +1376,10 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 
 (use-package lsp-ui :pin melpa
   :commands lsp-ui-mode
+  :bind (("C-'" . 'lsp-ui-doc-glance))
   :config
   (setq lsp-ui-doc-position 'at-point
-        lsp-ui-doc-show-with-cursor t
+        lsp-ui-doc-show-with-cursor nil
         lsp-ui-sideline-show-code-actions nil
         lsp-modeline-code-actions-enable nil
         lsp-headerline-breadcrumb-enable nil))
@@ -1494,10 +1495,10 @@ Most Cider options tweaks are documented inline. For more information refer to t
 
   ;; C-S-x send defun to rebl
   ;; C-x C-r send last sexp to rebl (Normally bound to "find-file-read-only"... Who actually uses that though?)
-  (add-hook 'cider-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-S-x") #'rebl-eval-defun-at-point)
-              (local-set-key (kbd "C-x C-r") #'rebl-eval-last-sexp)))
+  ;; (add-hook 'cider-mode-hook
+  ;;           (lambda ()
+  ;;             (local-set-key (kbd "C-S-x") #'rebl-eval-defun-at-point)
+  ;;             (local-set-key (kbd "C-x C-r") #'rebl-eval-last-sexp)))
 
   (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
