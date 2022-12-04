@@ -548,10 +548,17 @@ A completion engine that tightly integrates to Emacs.
    consult-ag :preview-key '(:debounce 0.2 any)
    consult-line :preview-key '(:debounce 0.2 any)
    consult-flyspell :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
+   consult-ripgrep
+   consult-git-grep
+   consult-grep
+   consult-projectile
+   consult-bookmark
+   consult-recent-file
+   consult-xref
+   consult--source-bookmark
+   consult--source-file-register
+   consult--source-recent-file
+   consult--source-project-recent-file
    :preview-key (kbd "M-."))
 
   (setq consult-narrow-key "<")
