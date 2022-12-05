@@ -1354,6 +1354,16 @@ Add a rest client to your Emacs.
 
 These are packages related to adding Emacs support for multiple programming languages.
 
+*** Tree-sitter
+
+Tree-sitter is an incremental parsing tool able to generate an AST from grammar definitions; allows Emacs to better "understand" the code structure to do structural navigation and syntax highlighting without resorting to regular expressions for the supported languages.
+
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :config
+  (setq treesit-extra-load-path '("~/.config/emacs/tree-sitter")))
+#+end_src
+
 *** Web
 
 Web programming is especially tricky, as you typically need to use several other modes in the same file. I don't do a lot of Web programming these days, but when I need to, Web mode is good enough.
@@ -2314,7 +2324,7 @@ I used these keymaps for easy typing of Spanish accented vowels. I don't use it 
 (global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
 (global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
 #+end_src
-* End
+* COMMENT Local variables
 # Local Variables:
 # eval: (visual-line-mode t)
 # End:
