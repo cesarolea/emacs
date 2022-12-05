@@ -84,6 +84,11 @@
            "* TODO %?\n  ADDED: %t\n\n%i" :empty-lines 1)
           ("wm" "Monday" entry (file "~/Dropbox/org/Monday.org.gpg")
            "* TODO %?\n  :PROPERTIES:\n  :orgtrello_users: cesarolea7\n  :END:\n" :empty-lines 1)
+          ("wn" "Newsletter" entry (file+olp "~/Dropbox/org/weekly-check-in.org.gpg" "Newsletter" "Latest")
+           "*** %?
+:PROPERTIES:
+:ADDED: %U
+:END" :empty-lines 1)
           ;; these are for mu4e configured below
           ("m" "Email Workflow")
           ("mf" "Follow Up" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Follow Up")
