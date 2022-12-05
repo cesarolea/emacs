@@ -237,11 +237,11 @@ Which key makes it easier to discover the major mode you are in.
    :config
    (setq doom-themes-enable-bold t
          doom-themes-enable-italic t)
-   (load-theme 'doom-nord t)
+   (load-theme 'doom-nord-aurora t)
    (doom-themes-org-config)
 
    ;; Font configuration
-   ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 130 :weight 'regular)
+   (set-face-attribute 'default nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 150 110) :weight 'regular)
 
    ;; Set the fixed pitch face
    (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 160 120))
