@@ -537,6 +537,7 @@ A completion engine that tightly integrates to Emacs.
    consult-bookmark
    consult-recent-file
    consult-xref
+   consult-locate
    consult--source-bookmark
    consult--source-file-register
    consult--source-recent-file
