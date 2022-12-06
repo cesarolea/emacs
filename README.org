@@ -1681,9 +1681,9 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
   (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
   (add-hook 'mu4e-compose-mode-hook #'(lambda ()
                                         (flyspell-mode)
-                                        (visual-line-mode t)
+                                        (visual-line-mode 1)
                                         (auto-save-mode -1)
-                                        (auto-fill-mode t)))
+                                        (auto-fill-mode 1)))
 
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
