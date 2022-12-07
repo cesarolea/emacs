@@ -753,7 +753,7 @@ Org mode is able to export to several other formats, and some of them require ad
    org-auto-align-tags nil
    org-tags-column 0
    org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
+   org-special-ctrl-a/e nil
    org-insert-heading-respect-content t
 
    ;; Org styling, hide markup etc.
@@ -1876,6 +1876,9 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
   ;; alternatively, if you only want to be reminded when no htmlize was
   ;; used:
   (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+  (add-hook 'org-mime-src-mode-hook (lambda ()
+                                      (visual-line-mode nil)
+                                      (auto-fill-mode)))
 
   (define-key mu4e-compose-mode-map (kbd "C-c C-e") 'org-mime-edit-mail-in-org-mode)
   (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
