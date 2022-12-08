@@ -475,7 +475,7 @@ Keeps track of your most recent opened files so you can get back to them easily.
 
 ** Projectile
 
-Provides project management capabilities. I don't use it on its own, rather through [Consult].
+Provides project management capabilities. I don't use it on its own, rather through [[Consult]].
 
 #+begin_src emacs-lisp
   (use-package projectile
@@ -507,7 +507,7 @@ A completion engine that tightly integrates to Emacs.
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-c b" . consult-mark)                  ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-x p b" . consult-projectile)          ;; orig. project-switch-to-buffer
          ("C-c y" . consult-yank-from-kill-ring)
          ("C-x g" . consult-goto-line)
          ("C-s" . consult-line)                    ;; replaces swiper
@@ -753,7 +753,7 @@ Org mode is able to export to several other formats, and some of them require ad
    org-auto-align-tags nil
    org-tags-column 0
    org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e nil
+   org-special-ctrl-a/e t
    org-insert-heading-respect-content t
 
    ;; Org styling, hide markup etc.
@@ -1043,6 +1043,26 @@ Some miscelaneous functions that don't have a home some place else.
    ("t" toggle-letter-case :color red)
    ("i" bjm/insert-file-name))
  (global-set-key (kbd "C-c u") 'hydra-utility/body)
+ #+end_src
+
+I mainly use ~group-number~ to format currency in org-mode tables.
+ 
+ #+begin_src emacs-lisp
+ (defun group-number (num &optional size char sigil)
+   "Format NUM as string grouped to SIZE with CHAR."
+   ;; Based on code for `math-group-float' in calc-ext.el
+   (let* ((size (or size 3))
+          (char (or char ","))
+          (str (if (stringp num)
+                   num
+                 (number-to-string num)))
+          (pt (or (string-match "[^0-9a-zA-Z]" str) (length str))))
+     (while (> pt size)
+       (setq str (concat (substring str 0 (- pt size))
+                         char
+                         (substring str (- pt size)))
+             pt (- pt size)))
+     (if sigil (concat sigil str) str)))
  #+end_src
 **** Timestamp
 
