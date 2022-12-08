@@ -281,15 +281,50 @@ Which key makes it easier to discover the major mode you are in.
  Use shift + arrow keys to switch between visible buffers. Also ~ace-window~ for quickly jumping back and forth between windows.
 
  #+begin_src emacs-lisp
-   (use-package windmove
-     :config (windmove-default-keybindings))
+ (use-package windmove
+   :config (windmove-default-keybindings))
 
-   (use-package ace-window
-     :init
-     (define-key global-map (kbd "M-'") 'ace-window)
-     (define-key global-map (kbd "C-M-'") 'aw-flip-window)
-     (define-key global-map (kbd "C-x o") nil))
+ (use-package ace-window
+   :bind ("C-x o" . 'ace-window))
  #+end_src
+
+*** Window placement
+
+Controls how certain windows are arranged and the properties of said windows. For example shell, documentation, etc.
+
+~display-buffer-alist~ contains an associative list of regexes to match certain windows. If there's a match emacs applies the window properties and parameters to the buffer that will be displayed in said window. A common action is to display the buffer in a "[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Side-Windows.html][side window]]" intended for information related to the main content.
+
+#+begin_src emacs-lisp
+(defun my/ansi-term ()
+  "Start fish shell in a terminal emulator. Like `ansi-term', but respect buffer display actions."
+  (interactive)
+  (let ((switch-to-buffer-obey-display-actions t))
+    (ansi-term "fish")))
+
+(add-to-list 'display-buffer-alist
+             '("\\*ansi-term\\*.*"
+               (display-buffer-in-side-window)
+               (inhibit-same-window . t)
+               (side . bottom)
+               (window-height . 0.25)
+               (window-parameters . ((no-delete-other-windows . t)))))
+
+(define-key global-map (kbd "<f8>") 'window-toggle-side-windows)
+#+end_src
+
+Help buffers should also go to a side window: at the bottom if there's already a side window there or at the right if there's no side window displayed yet. Prevents multiple help buffers from popping up by reusing the same window.
+
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\*[Hh]elp\\*"
+               (display-buffer-in-side-window)
+               (inhibit-same-window . t)
+               (side . bottom)
+               (slot . 1)
+               (window-height . 0.25)
+               (window-parameters . ((no-other-window . t)
+                                     (mode-line-format . (" " "%b"))))))
+#+end_src
 
 *** Fonts
 
