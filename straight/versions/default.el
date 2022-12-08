@@ -9,7 +9,7 @@
  ("avy" . "955c8dedd68c74f3cf692c1249513f048518c4c9")
  ("bui.el" . "f3a137628e112a91910fd33c0cff0948fa58d470")
  ("cfrs" . "f3a21f237b2a54e6b9f8a420a9da42b4f0a63121")
- ("cider" . "92c1b6de20805a9caa556cc671ac39080e4e89cc")
+ ("cider" . "700ded1d6c245e01fca7f364db1561ad1e1bb595")
  ("clj-refactor.el" . "8300d5cab861668f313fbbbb3e2926e3e5130e86")
  ("clojure-mode" . "3717e449dded7c8d9f50369bd34a19c077c2c538")
  ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
