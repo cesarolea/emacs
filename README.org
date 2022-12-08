@@ -312,7 +312,7 @@ Controls how certain windows are arranged and the properties of said windows. Fo
 (define-key global-map (kbd "<f8>") 'window-toggle-side-windows)
 #+end_src
 
-Help buffers should also go to a side window: at the bottom if there's already a side window there or at the right if there's no side window displayed yet. Prevents multiple help buffers from popping up by reusing the same window.
+Help buffers should also go to a side window. Prevents multiple help buffers from popping up by reusing the same window. Help buffers can be "popped up" to read their full content if needed.
 
 #+begin_src emacs-lisp
 (add-to-list 'display-buffer-alist
@@ -324,6 +324,13 @@ Help buffers should also go to a side window: at the bottom if there's already a
                (window-height . 0.25)
                (window-parameters . ((no-other-window . t)
                                      (mode-line-format . (" " "%b"))))))
+
+(defun my/make-frame-floating-with-current-buffer ()
+  (interactive)
+  (make-frame '((name . "emacs-popup")
+                (height . 30)
+                (width. 80)
+                (minibuffer . nil))))
 #+end_src
 
 *** Fonts
