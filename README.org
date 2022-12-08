@@ -307,12 +307,26 @@ Controls how certain windows are arranged and the properties of said windows. Fo
 (add-to-list 'display-buffer-alist
              '("\\*ansi-term\\*.*"
                (display-buffer-in-side-window)
-               (inhibit-same-window . t)
                (side . bottom)
                (window-height . 0.25)
+               (slot . -1)
                (window-parameters . ((no-delete-other-windows . t)))))
 
 (define-key global-map (kbd "<f8>") 'window-toggle-side-windows)
+#+end_src
+
+For [[Clojure]] I use cider. Make it's repl a side window that can't be targeted by other window, since cider already uses the command ~cider-switch-to-last-clojure-buffer~ to move back and forth from any buffer in ~clojure-mode~.
+
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\*cider-repl .*"
+               (display-buffer-in-side-window)
+               (inhibit-same-window . t)
+               (side . bottom)
+               (window-height . 0.25)
+               (slot . 0)
+               (window-parameters . ((no-delete-other-windows . t)
+                                     (no-other-window . t)))))
 #+end_src
 
 Help buffers should also go to a side window. Prevents multiple help buffers from popping up by reusing the same window. Help buffers can be "popped up" to read their full content if needed.
@@ -1552,7 +1566,6 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 Emacs has fantastic support for Clojure with Cider. It provides support for interactive programming with Clojure. Over the years I've been accumulating tweaks to Cider, but the stock configuration is very comprehensible.
 
 ~subword-mode~ is enabled in ~clojure-mode~ and it treats camelCase, snake_case and kebab-case as multiple words. That is, the cursor stops in between as in ~some|Word~, ~some|_word~ and ~some|-word~.
-
 
 Most Cider options tweaks are documented inline. For more information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
 
