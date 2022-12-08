@@ -109,6 +109,9 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 
 	    ;; regex test setting
 	    reb-re-syntax 'string
+
+      ;; locale stuff
+      locale-coding-system 'utf-8
 	    )
 
 ;; prevent suspending emacs frames by mistake
