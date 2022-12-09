@@ -1930,7 +1930,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
           ("maildir:\"/fastmail/*\" AND flag:flagged"                                                            "Fastmail Pinned"         ?n)
           ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                                    "Fastmail Inbox"          ?P)
           ("mime:application/pdf AND NOT flag:trashed"                                                           "Messages with PDF files" ?f)
-          ("flag:unread AND NOT (flag:trashed OR maildir:\"/fastmail/Sent\" OR maildir:\"/fastmail/Spam\")"      "Unread messages"         ?i)
+          ("flag:unread AND NOT flag:trashed AND NOT (maildir:\"/fastmail/Sent\" OR maildir:\"/fastmail/Spam\")" "Unread messages"         ?i)
           ("date:today..now AND NOT flag:trashed"                                                                "Today's messages"        ?t)
           ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")"          "Sent messages"           ?s)
           ("from:cesar to:technology AND Newsletter AND maildir:\"/loanpro/[Gmail]/Sent Mail\""                  "Sent newsletters"        ?N)))
