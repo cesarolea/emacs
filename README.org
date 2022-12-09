@@ -288,7 +288,10 @@ Which key makes it easier to discover the major mode you are in.
    :config (windmove-default-keybindings))
 
  (use-package ace-window
-   :bind ("C-x o" . 'ace-window))
+   :bind ("C-x o" . 'ace-window)
+   :config
+   (setq aw-scope 'frame
+         aw-ignore-current t))
  #+end_src
 
 *** Window placement
