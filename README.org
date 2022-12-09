@@ -307,11 +307,13 @@ Controls how certain windows are arranged and the properties of said windows. Fo
 (add-to-list 'display-buffer-alist
              '("\\*ansi-term\\*.*"
                (display-buffer-in-side-window)
+               (inhibit-same-window . t)
                (side . bottom)
                (window-height . 0.25)
                (slot . -1)
                (window-parameters . ((no-delete-other-windows . t)))))
 
+(define-key global-map (kbd "<f7>") 'my/ansi-term)
 (define-key global-map (kbd "<f8>") 'window-toggle-side-windows)
 #+end_src
 
@@ -348,6 +350,8 @@ Help buffers should also go to a side window. Prevents multiple help buffers fro
                 (height . 30)
                 (width. 80)
                 (minibuffer . nil))))
+
+(define-key global-map (kbd "<f5>") 'my/make-frame-floating-with-current-buffer)
 #+end_src
 
 *** Fonts
