@@ -596,6 +596,7 @@ A completion engine that tightly integrates to Emacs.
    consult-ag :preview-key '(:debounce 0.2 any)
    consult-line :preview-key '(:debounce 0.2 any)
    consult-flyspell :preview-key '(:debounce 0.2 any)
+   consult-mark :preview-key '(:debounce 0.2 any)
    consult-ripgrep
    consult-git-grep
    consult-grep
