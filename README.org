@@ -711,7 +711,8 @@ Company is a completion engine for Emacs. You can install several backends. Usef
 (use-package company
   :hook ((cider-repl-mode . company-mode)
          (cider-mode      . company-mode)
-         (clojure-mode    . company-mode))
+         (clojure-mode    . company-mode)
+         (emacs-lisp-mode . company-mode))
   :bind (:map company-active-map
               ("C-n" .   company-select-next)
               ("C-p" .   company-select-previous)
