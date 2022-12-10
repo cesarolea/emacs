@@ -136,7 +136,7 @@
 
     %^{Palabra}
 
-*** Frasi di esempli
+*** Frasi di esempi
 
     %?" :empty-lines 1 :immediate-finish t)))
 
