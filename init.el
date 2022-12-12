@@ -130,15 +130,15 @@
 
 *** Italiano
 
-    %^{Parole}
+%^{Parole}
 
 *** Español
 
-    %^{Palabra}
+%^{Palabra}
 
 *** Frasi di esempi
 
-    %?" :empty-lines 1 :immediate-finish t)))
+%?" :empty-lines 1 :immediate-finish t)))
 
   ;; Agenda list
   ;; Ignores TODO items with a scheduled and/or deadline date that
