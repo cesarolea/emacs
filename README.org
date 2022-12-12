@@ -129,37 +129,14 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
                                         ; load the custom file that was defined earlier
 (load custom-file)
 
-                                        ; themes
+;; themes
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
-                                        ; default spell
-;(setq-default ispell-program-name "aspell")
+;; default spell
+;; (setq-default ispell-program-name "aspell")
 
-                                        ; custom font size depending on resolution
-                                        ; doesn't work for emacs daemon instances
-(defun fontify-frame (frame)
-  (interactive)
-  (set-frame-parameter frame 'font
-                       (if (equal system-type 'darwin)
-                           "IBM Plex Mono 16"
-                         "IBM Plex Mono 12"))
-  ;; Font configuration
-  ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 130 :weight 'regular)
-
-  ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 160 120))
-
-  ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular))
-
-                                        ; Fontify any future frames
-(push 'fontify-frame after-make-frame-functions)
-
-                                        ; execution path so homebrew binaries work
+;; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-
-                                        ; fontify current frame
-(fontify-frame nil)
 
 (put 'list-threads 'disabled nil)
 
@@ -229,6 +206,70 @@ Which key makes it easier to discover the major mode you are in.
  (use-package use-package-ensure-system-package)
  #+end_src
 
+*** Fonts
+
+Configure fonts; both variable pitch for writing, and fixed pitch for coding.
+
+#+begin_src emacs-lisp
+(defun my/font-config ()
+
+  ;; Font configuration
+  (set-face-attribute 'default nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 170 110) :weight 'regular)
+
+  ;; Set the fixed pitch face
+  (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 170 120))
+
+  ;; Set the variable pitch face
+  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular))
+#+end_src
+
+I normally run emacs as a daemon, so frame fontification must be configured as well.
+
+#+begin_src emacs-lisp
+;; Fontify any future frames
+(push 'fontify-frame after-make-frame-functions)
+
+;; custom font size depending on resolution
+;; doesn't work for emacs daemon instances
+(defun fontify-frame (frame)
+  (interactive)
+  (my/font-config))
+
+;; fontify current frame
+(fontify-frame nil)
+#+end_src
+
+Unicode, emojis, etc.
+
+#+begin_src emacs-lisp
+  (defun dw/replace-unicode-font-mapping (block-name old-font new-font)
+    (let* ((block-idx (cl-position-if
+		       (lambda (i) (string-equal (car i) block-name))
+		       unicode-fonts-block-font-mapping))
+	   (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
+	   (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
+      (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
+	    `(,updated-block))))
+
+  (use-package unicode-fonts
+    :custom
+    (unicode-fonts-skip-font-groups '(low-quality-glyphs))
+    :config
+    ;; Fix the font mappings to use the right emoji font
+    (mapcar
+     (lambda (block-name)
+       (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
+     '("Dingbats"
+       "Emoticons"
+       "Miscellaneous Symbols and Pictographs"
+       "Transport and Map Symbols"))
+    (unicode-fonts-setup))
+
+  (use-package emojify
+    :hook (erc-mode . emojify-mode)
+    :commands emojify-mode)
+#+end_src
+
 *** Theme
 
  I use the Doom theme with the Doom modeline. This requires icon configuration. The modeline configuration has a fix so that icons are shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
@@ -242,15 +283,7 @@ Which key makes it easier to discover the major mode you are in.
          doom-themes-enable-italic t)
    (load-theme 'doom-nord t)
    (doom-themes-org-config)
-
-   ;; Font configuration
-   (set-face-attribute 'default nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 150 110) :weight 'regular)
-
-   ;; Set the fixed pitch face
-   (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 160 120))
-
-   ;; Set the variable pitch face
-   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular))
+   (my/font-config))
 
  (use-package doom-modeline :pin melpa
    :init (doom-modeline-mode 1)
@@ -355,37 +388,6 @@ Help buffers should also go to a side window. Prevents multiple help buffers fro
                 (minibuffer . nil))))
 
 (define-key global-map (kbd "<f5>") 'my/make-frame-floating-with-current-buffer)
-#+end_src
-
-*** Fonts
-
-#+begin_src emacs-lisp
-  (defun dw/replace-unicode-font-mapping (block-name old-font new-font)
-    (let* ((block-idx (cl-position-if
-		       (lambda (i) (string-equal (car i) block-name))
-		       unicode-fonts-block-font-mapping))
-	   (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
-	   (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
-      (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
-	    `(,updated-block))))
-
-  (use-package unicode-fonts
-    :custom
-    (unicode-fonts-skip-font-groups '(low-quality-glyphs))
-    :config
-    ;; Fix the font mappings to use the right emoji font
-    (mapcar
-     (lambda (block-name)
-       (dw/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
-     '("Dingbats"
-       "Emoticons"
-       "Miscellaneous Symbols and Pictographs"
-       "Transport and Map Symbols"))
-    (unicode-fonts-setup))
-
-  (use-package emojify
-    :hook (erc-mode . emojify-mode)
-    :commands emojify-mode)
 #+end_src
 
 *** Diredfl
