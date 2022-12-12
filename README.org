@@ -577,7 +577,6 @@ A completion engine that tightly integrates to Emacs.
          ("C-c b" . consult-mark)                  ;; orig. bookmark-jump
          ("C-x p b" . consult-projectile)          ;; orig. project-switch-to-buffer
          ("C-c y" . consult-yank-from-kill-ring)
-         ("C-x g" . consult-goto-line)
          ("C-s" . consult-line)                    ;; replaces swiper
          ("C-x C-r" . consult-recent-file)
          ("<f9>" . consult-bookmark)
@@ -1084,7 +1083,7 @@ Collection of move commands. Useful for jumping around large files.
    "movement"
    ("c" avy-goto-char-2 "Go to char")
    ("l" avy-goto-line "Go to line")
-   ("L" goto-line "Go to line number")
+   ("L" consult-goto-line "Go to line number")
    ("w" avy-goto-word-1 "Go to word"))
  (global-set-key (kbd "C-c g") 'hydra-movement/body)
 
