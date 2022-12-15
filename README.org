@@ -132,9 +132,6 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 ;; themes
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
 
-;; default spell
-;; (setq-default ispell-program-name "aspell")
-
 ;; execution path so homebrew binaries work
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 
@@ -402,15 +399,16 @@ Dired comes included in Emacs. Direfl adds pretty colors to its output.
 
 ** Flyspell
 
-Provides spellchecking.
+Provides spellchecking. Configures ~aspell~ as spellcheck engine.
 
 #+begin_src emacs-lisp
-  (use-package flyspell
-    :hook (prog-mode . flyspell-prog-mode)
-    :config
-    (delq 'font-lock-string-face flyspell-prog-text-faces)
-    (setq ispell-program-name "aspell")
-    :diminish flyspell-mode)
+(use-package flyspell
+  :hook (prog-mode . flyspell-prog-mode)
+  :config
+  (delq 'font-lock-string-face flyspell-prog-text-faces)
+  (setq ispell-program-name "aspell")
+  (define-key flyspell-mode-map (kbd "C-.") nil)
+  :diminish flyspell-mode)
 #+end_src
 
 ** Completion
