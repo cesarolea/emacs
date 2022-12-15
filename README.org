@@ -211,13 +211,13 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
 (defun my/font-config ()
 
   ;; Font configuration
-  (set-face-attribute 'default nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 170 110) :weight 'regular)
+  (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height (if (equal system-type 'darwin) 190 110) :weight 'regular)
 
   ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height (if (equal system-type 'darwin) 170 120))
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka Nerd Font Mono" :height (if (equal system-type 'darwin) 180 120))
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 170 130) :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height (if (equal system-type 'darwin) 180 130) :weight 'regular))
 #+end_src
 
 I normally run emacs as a daemon, so frame fontification must be configured as well.
@@ -300,7 +300,7 @@ Unicode, emojis, etc.
 
 *** Exec path
 
- This package ensures that your Emacs instance is able to use the same environment variables as your shell. Especially useful if you use non-standard shells such as the fish shell.
+This package ensures that your Emacs instance is able to use the same environment variables as your shell. Especially useful if you use non-standard shells such as the fish shell.
 
  #+begin_src emacs-lisp
    (use-package exec-path-from-shell
@@ -311,7 +311,7 @@ Unicode, emojis, etc.
 
 *** Window movement
 
- Use shift + arrow keys to switch between visible buffers. Also ~ace-window~ for quickly jumping back and forth between windows.
+Use shift + arrow keys to switch between visible buffers. Also ~ace-window~ for quickly jumping back and forth between windows.
 
  #+begin_src emacs-lisp
  (use-package windmove
