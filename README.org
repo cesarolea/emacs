@@ -670,6 +670,39 @@ Display icons in completion candidates. Requires the ~all-the-icons~ package.
   (all-the-icons-completion-mode))
 #+end_src
 
+** Embark
+
+Embark enables an inverted flow of actions, where instead of picking the action first (for example ~find-file~) and then the object (the file itself) it allows you to find the file and then decide what to do with it: open it in the current buffer, in another frame, renaming it, moving it to a different location, etc. It works with many targets: files, selections, bookmarks, things at point, etc.
+
+#+begin_src emacs-lisp
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("M-." . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
 ** Magit
 
 The mighty Magit. Some consider this to be the killer application for Emacs. Don't use git without it.
