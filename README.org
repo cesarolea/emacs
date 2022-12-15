@@ -217,7 +217,7 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
   (set-face-attribute 'fixed-pitch nil :font "Iosevka Nerd Font Mono" :height (if (equal system-type 'darwin) 180 120))
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height (if (equal system-type 'darwin) 180 130) :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular))
 #+end_src
 
 I normally run emacs as a daemon, so frame fontification must be configured as well.
