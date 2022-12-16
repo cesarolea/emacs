@@ -544,21 +544,21 @@ Keeps track of your most recent opened files so you can get back to them easily.
 Provides project management capabilities. I don't use it on its own, rather through [[Consult]].
 
 #+begin_src emacs-lisp
-  (use-package projectile
-    :init
-    (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
-    :config
-    (setq projectile-project-search-path '("~/workspace/")
-	  projectile-require-project-root t
-	  projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
-	  projectile-indexing-method 'alien
-	  projectile-completion-system 'default
-	  projectile-project-root-files (remove "WORKSPACE" projectile-project-root-files))
+(use-package projectile
+  :init
+  (custom-set-variables '(projectile-keymap-prefix (kbd "C-c p")))
+  :config
+  (setq projectile-project-search-path '("~/workspace/")
+	projectile-require-project-root t
+	projectile-mode-line-function '(lambda () (format " P[%s]" (projectile-project-name)))
+	projectile-indexing-method 'alien
+	projectile-completion-system 'default
+	projectile-project-root-files (remove "WORKSPACE" projectile-project-root-files))
 
-    (define-key projectile-mode-map (kbd "C-c p s s") nil)
-    (define-key projectile-mode-map (kbd "C-c p s s") 'consult-ag)
+  (define-key projectile-mode-map (kbd "C-c p s s") nil)
+  (define-key projectile-mode-map (kbd "C-c p s s") 'consult-ripgrep)
 
-    (projectile-mode t))
+  (projectile-mode t))
 #+end_src
 
 ** Consult
@@ -593,10 +593,10 @@ A completion engine that tightly integrates to Emacs.
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-org-heading :preview-key '(:debounce 0.2 any)
    consult-ag :preview-key '(:debounce 0.2 any)
+   consult-ripgrep :preview-key '(:debounce 0.2 any)
    consult-line :preview-key '(:debounce 0.2 any)
    consult-flyspell :preview-key '(:debounce 0.2 any)
    consult-mark :preview-key '(:debounce 0.2 any)
-   consult-ripgrep
    consult-git-grep
    consult-grep
    consult-projectile
