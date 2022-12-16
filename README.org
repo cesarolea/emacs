@@ -870,6 +870,7 @@ Org mode is able to export to several other formats, and some of them require ad
    ;; Org styling, hide markup etc.
    org-hide-emphasis-markers t
    org-pretty-entities t
+   org-pretty-entities-include-sub-superscripts nil
    ;;org-ellipsis "…"
 
    ;; Agenda styling
