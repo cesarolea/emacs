@@ -387,6 +387,17 @@ Help buffers should also go to a side window. Prevents multiple help buffers fro
 (define-key global-map (kbd "<f5>") 'my/make-frame-floating-with-current-buffer)
 #+end_src
 
+*** Beacon
+
+When moving around its easy to lose track of where your cursor is. Beacon is a minor mode that temporarily highlights the current line.
+
+#+begin_src emacs-lisp
+(use-package beacon
+  :config
+  (setq beacon-color "#ebcb8b")
+  (beacon-mode 1))
+#+end_src
+
 *** Diredfl
 
 Dired comes included in Emacs. Direfl adds pretty colors to its output.
