@@ -81,6 +81,7 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 	    apropos-do-all t
 	    mouse-yank-at-point t
 	    dired-listing-switches "-agho --group-directories-first"
+      insert-directory-program (if (equal system-type 'darwin) "gls" "ls")
 	    search-default-mode #'char-fold-to-regexp
 	    gc-cons-threshold 100000000
 	    read-process-output-max (* 1024 1024)
