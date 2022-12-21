@@ -10,7 +10,7 @@
  ("beacon" . "85261a928ae0ec3b41e639f05291ffd6bf7c231c")
  ("bui.el" . "f3a137628e112a91910fd33c0cff0948fa58d470")
  ("cfrs" . "f3a21f237b2a54e6b9f8a420a9da42b4f0a63121")
- ("cider" . "700ded1d6c245e01fca7f364db1561ad1e1bb595")
+ ("cider" . "80408364f8e6870d8f5a33e0e096b86f1a7ef144")
  ("clj-refactor.el" . "8300d5cab861668f313fbbbb3e2926e3e5130e86")
  ("clojure-mode" . "3453cd229b412227aaffd1dc2870fa8fa213c5b1")
  ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")

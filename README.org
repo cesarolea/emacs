@@ -11,13 +11,13 @@ Initial load time is not a priority in this configuration, as I use Emacs as a d
 
 #+begin_src emacs-lisp
 (when (fboundp 'native-compile-async)
-  (setq comp-deferred-compilation t
-        comp-deferred-compilation-black-list '("/mu4e.*\\.el$"
-                                               "/mu4e-.*\\.el$"
-                                               "/org-mime.*\\.el$"
-                                               "/org-trello.*\\.el$"
-                                               "/org-trello-.*\\.el$"
-                                               "/cesarolea7.el$"))
+  (setq inhibit-automatic-native-compilation nil
+        native-comp-deferred-compilation-deny-list '("/mu4e.*\\.el$"
+                                                     "/mu4e-.*\\.el$"
+                                                     "/org-mime.*\\.el$"
+                                                     "/org-trello.*\\.el$"
+                                                     "/org-trello-.*\\.el$"
+                                                     "/cesarolea7.el$"))
   (setq native-comp-async-report-warnings-errors 'silent))
 #+end_src
 
