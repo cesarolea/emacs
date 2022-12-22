@@ -332,14 +332,14 @@ Controls how certain windows are arranged and the properties of said windows. Fo
 ~display-buffer-alist~ contains an associative list of regexes to match certain windows. If there's a match emacs applies the window properties and parameters to the buffer that will be displayed in said window. A common action is to display the buffer in a "[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Side-Windows.html][side window]]" intended for information related to the main content.
 
 #+begin_src emacs-lisp
-(defun my/ansi-term ()
-  "Start fish shell in a terminal emulator. Like `ansi-term', but respect buffer display actions."
+(defun my/term ()
+  "Start fish shell in a terminal emulator."
   (interactive)
   (let ((switch-to-buffer-obey-display-actions t))
-    (ansi-term "fish")))
+    (vterm)))
 
 (add-to-list 'display-buffer-alist
-             '("\\*ansi-term\\*.*"
+             '("\\*vterm\\*.*"
                (display-buffer-in-side-window)
                (inhibit-same-window . t)
                (side . bottom)
@@ -347,7 +347,7 @@ Controls how certain windows are arranged and the properties of said windows. Fo
                (slot . -1)
                (window-parameters . ((no-delete-other-windows . t)))))
 
-(define-key global-map (kbd "<f7>") 'my/ansi-term)
+(define-key global-map (kbd "<f7>") 'my/term)
 (define-key global-map (kbd "<f8>") 'window-toggle-side-windows)
 #+end_src
 
@@ -396,6 +396,8 @@ When moving around its easy to lose track of where your cursor is. Beacon is a m
 (use-package beacon
   :config
   (setq beacon-color "#ebcb8b")
+  (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
+  (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
   (beacon-mode 1))
 #+end_src
 
@@ -1792,6 +1794,17 @@ Support for building and displaying graphs from org
 #+begin_src emacs-lisp
 (use-package gnuplot)
 (use-package gnuplot-mode)
+#+end_src
+
+** Terminal emulator
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :config
+  (setq vterm-shell "fish"
+        vterm-clear-scrollback-when-clearing t
+        vterm-kill-buffer-on-exit t
+        vterm-copy-exclude-prompt t))
 #+end_src
 
 * Mail
