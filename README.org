@@ -930,7 +930,7 @@ Org mode is able to export to several other formats, and some of them require ad
   (set-face-attribute 'org-drill-visible-cloze-hint-face nil
                       :foreground "#5e81ac")
   (set-face-attribute 'org-drill-hidden-cloze-face nil
-                      :foreground "#81a1c1"
+                      :foreground "#e5e9f0"
                       :background "#5e81ac")
   (setq org-drill-new-count-color    "#b48ead"
         org-drill-mature-count-color "#a3be8c"
