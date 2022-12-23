@@ -278,7 +278,11 @@ Unicode, emojis, etc.
  (use-package doom-themes :pin melpa
    :config
    (setq doom-themes-enable-bold t
-         doom-themes-enable-italic t)
+         doom-themes-enable-italic t
+         doom-nord-brighter-modeline nil
+         doom-nord-brighter-comments t
+         doom-nord-comment-bg t
+         doom-nord-region-highlight t)
    (load-theme 'doom-nord t)
    (doom-themes-org-config)
    (my/font-config))
