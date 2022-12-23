@@ -1386,16 +1386,16 @@ Edit files remotely.
 Edit browser text areas in Emacs.
 
 #+begin_src emacs-lisp
-  (use-package atomic-chrome
-    :pin melpa
-    :config
-    (setq atomic-chrome-default-major-mode  'text-mode
-          atomic-chrome-buffer-open-style   'split)
-    ;; (setq atomic-chrome-url-major-mode-alist
-    ;;       '(("flotiya\\.local" . js2-mode)
-    ;;         ("phabricator" . text-mode)))
-    (atomic-chrome-start-server)
-    :diminish AtomicChrome)
+(use-package atomic-chrome
+  :pin melpa
+  :config
+  (setq atomic-chrome-default-major-mode  'text-mode
+        atomic-chrome-buffer-open-style   'frame)
+  ;; (setq atomic-chrome-url-major-mode-alist
+  ;;       '(("flotiya\\.local" . js2-mode)
+  ;;         ("phabricator" . text-mode)))
+  (atomic-chrome-start-server)
+  :diminish AtomicChrome)
 #+end_src
 *** Crux
 
