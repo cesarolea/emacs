@@ -1828,6 +1828,8 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
 
 ~mu4e~ is installed outside of Emacs using the OS package manager. The reason is that the version of ~mu~ and ~mu4e~ must match. That's why a load path is used instead of installing from MELPA.
 
+** Mail client
+
 #+begin_src emacs-lisp
 (use-package mu4e
   :ensure nil
@@ -2045,42 +2047,87 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
   (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
   (define-key mu4e-compose-mode-map (kbd "C-c C-t") 'org-mime-revert-to-plain-text-mail)
   )
-
-(use-package mu4e-alert
-  :pin melpa
-  :hook (after-init . mu4e-alert-enable-notifications)
-  :after (mu4e)
-  :config
-  (mu4e-alert-set-default-style 'libnotify)
-  ;; skip alerting for mails in All Mail
-  (setq mu4e-alert-interesting-mail-query
-        (concat
-         "flag:unread"
-         " AND NOT flag:trashed"
-         " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Sent\")"))
-
-  ;; fix issue alert only displays when emacs opens for the first time
-  ;; https://github.com/iqbalansari/mu4e-alert/issues/40
-  (defun mu4e-alert--get-mu4e-frame ()
-    "Try getting a frame containing a mu4e buffer."
-    (car (delq nil (mapcar (lambda (buffer)
-                             (when (and buffer
-                                        (get-buffer-window buffer t))
-                               (window-frame (get-buffer-window buffer t))))
-                           (list mu4e-main-buffer-name)))))
-
-  (defun mu4e-alert-filter-repeated-mails (mails)
-    "Filters the MAILS that have been seen already."
-    (cl-remove-if (lambda (mail)
-                    (prog1 (and (not mu4e-alert-notify-repeated-mails)
-                                (ht-get mu4e-alert-repeated-mails
-                                        (plist-get mail :message-id)))
-                      (ht-set! mu4e-alert-repeated-mails
-                               (plist-get mail :message-id)
-                               t)
-                      ))
-                  mails)))
 #+end_src
+
+** Mail composer
+
+I want to be able to compose mail using Org. With ~org-mime~ you get an ~org-mode~ buffer to compose your email with all your ~org~ bindings and goodies. The email body can later converted to HTML using ~htmlize~.
+
+#+begin_src emacs-lisp
+(use-package org-mime :pin melpa
+  :config
+  (setq org-mime-export-options '(:section-numbers nil
+                                                   :with-author nil
+                                                   :with-toc nil))
+  (add-hook 'org-mime-html-hook
+            (lambda ()
+              (org-mime-change-element-style
+               "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
+                             "#E6E1DC" "#232323"))))
+
+  ;; make it so it always htmlize the buffer
+  ;; that's the sad reality of things
+  ;; (add-hook 'message-send-hook 'org-mime-htmlize)
+
+  ;; alternatively, if you only want to be reminded when no htmlize was
+  ;; used:
+  (add-hook 'message-send-hook 'org-mime-confirm-when-no-multipart)
+  (add-hook 'org-mime-src-mode-hook (lambda ()
+                                      (visual-line-mode nil)
+                                      (auto-fill-mode)))
+
+  (define-key mu4e-compose-mode-map (kbd "C-c C-e") 'org-mime-edit-mail-in-org-mode)
+  (define-key mu4e-compose-mode-map (kbd "C-c C-h") 'org-mime-htmlize)
+  (define-key mu4e-compose-mode-map (kbd "C-c C-t") 'org-mime-revert-to-plain-text-mail))
+#+end_src
+
+** Mail notifications
+
+Notify of new mail. What triggers a notification can be configured by setting ~mu4e-alert-interesting-mail-query~. In my case I want to be notified of mail flagged as unread, and that's not:
+
+1. Trashed
+2. Archived, or
+3. Marked as spam
+
+How notifications are displayed depend on the underlying OS. In linux it uses the ~notify-send~ program, and in macOS it uses ~terminal-notifier~.
+
+    #+begin_src emacs-lisp
+    (use-package mu4e-alert
+      :pin melpa
+      :hook (after-init . mu4e-alert-enable-notifications)
+      :after (mu4e)
+      :config
+      (mu4e-alert-set-default-style (if (equal system-type 'darwin) 'notifier 'libnotify))
+
+      ;; skip alerting for mails in All Mail
+      (setq mu4e-alert-interesting-mail-query
+            (concat
+             "flag:unread"
+             " AND NOT flag:trashed"
+             " AND NOT (maildir:\"/loanpro/[Gmail]/All Mail\" OR maildir:\"/fastmail/INBOX\" OR maildir:\"/fastmail/Spam\" OR maildir:\"/fastmail/Sent\")"))
+
+      ;; fix issue alert only displays when emacs opens for the first time
+      ;; https://github.com/iqbalansari/mu4e-alert/issues/40
+      (defun mu4e-alert--get-mu4e-frame ()
+        "Try getting a frame containing a mu4e buffer."
+        (car (delq nil (mapcar (lambda (buffer)
+                                 (when (and buffer
+                                            (get-buffer-window buffer t))
+                                   (window-frame (get-buffer-window buffer t))))
+                               (list mu4e-main-buffer-name)))))
+
+      (defun mu4e-alert-filter-repeated-mails (mails)
+        "Filters the MAILS that have been seen already."
+        (cl-remove-if (lambda (mail)
+                        (prog1 (and (not mu4e-alert-notify-repeated-mails)
+                                    (ht-get mu4e-alert-repeated-mails
+                                            (plist-get mail :message-id)))
+                          (ht-set! mu4e-alert-repeated-mails
+                                   (plist-get mail :message-id)
+                                   t)
+                          ))
+                      mails)))
+    #+end_src
 
 * Customization
 
