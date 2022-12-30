@@ -1509,7 +1509,25 @@ These are packages related to adding Emacs support for multiple programming lang
 Tree-sitter is an incremental parsing tool able to generate an AST from grammar definitions; allows Emacs to better "understand" the code structure to do structural navigation and syntax highlighting without resorting to regular expressions for the supported languages.
 
 #+begin_src emacs-lisp
+(use-package tree-sitter-langs
+  :hook
+  (tree-sitter-after-on . tree-sitter-hl-mode))
+
 (use-package tree-sitter
+  :init
+  (require 'tree-sitter)
+  (require 'tree-sitter-langs)
+  :hook
+  ((css-mode
+    js-mode
+    json-mode
+    php-mode
+    ruby-mode
+    rust-mode
+    sh-mode
+    terraform-mode
+    typescript-mode
+    yaml-mode) . (lambda () (tree-sitter-mode 1)))
   :config
   (setq treesit-extra-load-path '("~/.config/emacs/tree-sitter")))
 #+end_src
