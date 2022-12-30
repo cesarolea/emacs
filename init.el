@@ -88,7 +88,7 @@
            "*** %?
 :PROPERTIES:
 :ADDED: %U
-:END" :empty-lines 1)
+:END:" :empty-lines 1)
           ;; these are for mu4e configured below
           ("m" "Email Workflow")
           ("mf" "Follow Up" entry (file+olp "~/Dropbox/org/Mail.org.gpg" "Follow Up")
