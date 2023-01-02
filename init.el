@@ -126,7 +126,7 @@
    :ADDED: %U
    :END:
 
-   Tradurre la parola.
+Tradurre la parola.
 
 *** Italiano
 
@@ -137,6 +137,8 @@
 %^{Palabra}
 
 *** Frasi di esempi
+
+1.
 
 %?" :empty-lines 1 :immediate-finish t)))
 
