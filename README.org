@@ -113,6 +113,10 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 
       ;; locale stuff
       locale-coding-system 'utf-8
+
+      ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+      read-extended-command-predicate #'command-completion-default-include-p
+      tab-always-indent 'complete
 	    )
 
 ;; prevent suspending emacs frames by mistake
@@ -511,11 +515,11 @@ It is configured to save search ring entries, and to keep the saved history in a
 Allows selection to be done matching unordered parts.
 
 #+begin_src emacs-lisp
-  (use-package orderless
-    :init
-    (setq completion-styles '(orderless basic)
-	  completion-category-defaults nil
-	  completion-category-overrides '((file (styles partial-completion)))))
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless partial-completion basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
 ** Marginalia
@@ -754,31 +758,86 @@ So that typing the name of a color or its hex value, displays the actual color.
 (use-package rainbow-mode :diminish rainbow-mode :pin gnu)
 #+end_src
 
+** Text completion engine
+
+*** Corfu
+
+Corfu is used as a text completion engine package, similar to what company used to provide, but relies on built-in completion functions (capf).
+
+#+begin_src emacs-lisp
+(use-package corfu
+  :straight (corfu :files (:defaults "extensions/*")
+                   :includes (corfu-info corfu-history))
+  :custom
+  (corfu-cyle t)                    ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                    ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  (corfu-preview-current nil)       ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-scroll-margin 3)           ;; Use scroll margin
+  (corfu-min-width 40)              ;; Minimal width of the popup
+  (corfu-max-width corfu-min-width) ;; Always the same size
+  (corfu-echo-documentation t)      ;; Show documentation in echo area
+  ;; :hook ((prog-mode       . corfu-mode)
+  ;;        (cider-mode      . corfu-mode)
+  ;;        (cider-repl-mode . corfu-mode)
+  ;;        (emacs-lisp-mode . corfu-mode)
+  ;;        (clojure-mode    . corfu-mode))
+  :init
+  (global-corfu-mode)
+  (corfu-popupinfo-mode)
+  :bind (:map corfu-map
+              ("C-n"      . corfu-next)
+              ("C-p"      . corfu-previous)
+              ("<escape>" . corfu-quit)
+              ("<return>" . corfu-insert)
+              ("M-d"      . corfu-show-documentation)
+              ("M-l"      . corfu-show-location))
+  )
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package kind-icon
+  :after corfu
+  :custom
+  (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default)                             ; Have background color be the same as `corfu' face background
+  (kind-icon-blend-background nil)                                    ; Use midpoint color between foreground and background colors ("blended")?
+  (kind-icon-blend-frac 0.08)
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter) ; Enable `kind-icon'
+  )
+#+end_src
+
 ** Completion engine
 
 Company is a completion engine for Emacs. You can install several backends. Useful in programming modes. I'm installing the lsp backend for using company completion in languages that use LSP (such as rust).
 
 #+begin_src emacs-lisp
-(use-package company
-  :hook ((cider-repl-mode . company-mode)
-         (cider-mode      . company-mode)
-         (clojure-mode    . company-mode)
-         (emacs-lisp-mode . company-mode))
-  :bind (:map company-active-map
-              ("C-n" .   company-select-next)
-              ("C-p" .   company-select-previous)
-              ("RET" .   company-complete-selection)
-              ("<ret>" . company-complete-selection))
-  :config
-  (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1
-        company-idle-delay 0.0)
-  (add-to-list 'company-backends 'company-restclient)
-  (global-set-key (kbd "C-'") 'company-complete)
-  ;(global-company-mode)
-  :diminish company-mode)
+;; (use-package company
+;;   :hook ((cider-repl-mode . company-mode)
+;;          (cider-mode      . company-mode)
+;;          (clojure-mode    . company-mode)
+;;          (emacs-lisp-mode . company-mode))
+;;   :bind (:map company-active-map
+;;               ("C-n" .   company-select-next)
+;;               ("C-p" .   company-select-previous)
+;;               ("RET" .   company-complete-selection)
+;;               ("<ret>" . company-complete-selection))
+;;   :config
+;;   (setq company-tooltip-align-annotations t
+;;         company-minimum-prefix-length 1
+;;         company-idle-delay 0.0)
+;;   (add-to-list 'company-backends 'company-restclient)
+;;   (global-set-key (kbd "C-'") 'company-complete)
+;;   ;(global-company-mode)
+;;   :diminish company-mode)
 
-(use-package company-lsp :pin melpa)
+;; (use-package company-lsp :pin melpa)
 #+end_src
 
 ** Paredit
@@ -1498,10 +1557,10 @@ Add a rest client to your Emacs.
 #+begin_src emacs-lisp
 (use-package restclient :pin melpa)
 
-(use-package company-restclient :pin melpa
-  :config (progn
-            (add-hook 'restclient-mode-hook #'company-mode)
-            (add-to-list 'company-backends 'company-restclient)))
+;; (use-package company-restclient :pin melpa
+;;   :config (progn
+;;             (add-hook 'restclient-mode-hook #'company-mode)
+;;             (add-to-list 'company-backends 'company-restclient)))
 #+end_src
 
 ** Programming modes
@@ -1565,14 +1624,16 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 (use-package lsp-mode :pin melpa
   :commands lsp
   :diminish lsp-mode
-  :hook ((rust-mode     . lsp-deferred)
-         (lsp-mode      . lsp-enable-which-key-integration)
-         (c-mode        . lsp-deferred)
-         (c++-mode      . lsp-deferred)
-         (elixir-mode   . lsp-deferred)
-         (clojure-mode  . lsp-deferred)
-         (clojurec-mode . lsp-deferred)
-         )
+  :custom
+  (lsp-completion-provider :none)
+  :hook ((rust-mode           . lsp-deferred)
+         (lsp-mode            . lsp-enable-which-key-integration)
+         (c-mode              . lsp-deferred)
+         (c++-mode            . lsp-deferred)
+         (elixir-mode         . lsp-deferred)
+         (clojure-mode        . lsp-deferred)
+         (clojurec-mode       . lsp-deferred)
+         (lsp-completion-mode . my/lsp-mode-setup-completion))
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
         lsp-elixir-mix-target "~/.asdf/shims/mix"
@@ -1580,6 +1641,9 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
                                               '("bash" "-c" "/opt/homebrew/bin/clojure-lsp")
                                             '("bash" "-c" "/usr/local/bin/clojure-lsp")))
   (add-to-list 'exec-path "~/bin/elixir-ls")
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))) ;; configure orderless
   :config
   (setq lsp-enable-snippet          nil
         lsp-enable-links            nil
@@ -1588,10 +1652,8 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-auto-configure          t
         lsp-lens-enable             t
         lsp-signature-auto-activate nil
-        lsp-completion-provider     :capf
         lsp-idle-delay              0.500
-        lsp-eldoc-enable-hover      nil
-        lsp-enable-completion-at-point nil))
+        lsp-eldoc-enable-hover      nil))
 
 (use-package lsp-ui :pin melpa
   :commands lsp-ui-mode
@@ -1683,15 +1745,15 @@ Most Cider options tweaks are documented inline. For more information refer to t
 
 (use-package cider
   :config
-  (defun company-remove-ispell ()
-    (when (boundp 'company-backends)
-      (make-local-variable 'company-backends)
-      ;; remove ispell
-      (setq company-backends (delete 'company-dabbrev company-backends))))
-  (add-hook 'prog-mode-hook 'company-remove-ispell)
+  ;; (defun company-remove-ispell ()
+  ;;   (when (boundp 'company-backends)
+  ;;     (make-local-variable 'company-backends)
+  ;;     ;; remove ispell
+  ;;     (setq company-backends (delete 'company-dabbrev company-backends))))
+  ;; (add-hook 'prog-mode-hook 'company-remove-ispell)
 
-  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  ;; (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  ;; (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
