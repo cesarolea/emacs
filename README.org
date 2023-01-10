@@ -1455,6 +1455,7 @@ Display diff marks.
              (add-hook 'prog-mode-hook (lambda ()
                                          (diff-hl-mode 1)))))
  #+end_src
+
 *** Rainbow delimiters
 
 Colorful parens...
@@ -1462,6 +1463,7 @@ Colorful parens...
  #+begin_src emacs-lisp
  (use-package rainbow-delimiters)
  #+end_src
+
 *** Highlight symbols
 
 This package implements symbol highlighting, so for example when the cursor is in a certain variable name, all instances of that variable are highlighted. You can also navigate between all highlights. Very useful for programming.
@@ -1480,6 +1482,7 @@ This package implements symbol highlighting, so for example when the cursor is i
                                          (auto-highlight-symbol-mode t)))
    :diminish auto-highlight-symbol-mode)
  #+end_src
+
 *** Git history
 
 Navigate your git repository history. Allows you to temporarily revert a file to a previous version.
@@ -1487,6 +1490,7 @@ Navigate your git repository history. Allows you to temporarily revert a file to
 #+begin_src emacs-lisp
 (use-package git-timemachine)
 #+end_src
+
 *** REST client
 
 Add a rest client to your Emacs.
