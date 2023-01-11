@@ -497,17 +497,17 @@ Savehist mode saves some of your session history in between restart. Since I use
 It is configured to save search ring entries, and to keep the saved history in a ~savehist~ file inside the configuration directory.
 
 #+begin_src emacs-lisp
-  (use-package savehist
-    :config
-    (setq savehist-additional-variables
-	  ;; search entries
-	  '(search-ring regexp-search-ring)
-	  ;; save every minute
-	  savehist-autosave-interval 60
-	  ;; keep the home clean
-	  savehist-file (expand-file-name "savehist"
-					  (expand-file-name "savefile" user-emacs-directory)))
-    (savehist-mode 1))
+(use-package savehist
+  :config
+  (setq savehist-additional-variables
+        ;; search entries
+        '(search-ring regexp-search-ring corfu-history)
+        ;; save every minute
+        savehist-autosave-interval 60
+        ;; keep the home clean
+        savehist-file (expand-file-name "savehist"
+                                        (expand-file-name "savefile" user-emacs-directory)))
+  (savehist-mode 1))
 #+end_src
 
 ** Orderless
@@ -789,6 +789,8 @@ Corfu is used as a text completion engine package, similar to what company used 
   :init
   (global-corfu-mode)
   (corfu-popupinfo-mode)
+  (corfu-echo-mode)
+  (corfu-history-mode)
   :bind (:map corfu-map
               ("C-n"      . corfu-next)
               ("C-p"      . corfu-previous)
@@ -1664,10 +1666,6 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-ui-sideline-show-code-actions nil
         lsp-modeline-code-actions-enable nil
         lsp-headerline-breadcrumb-enable nil))
-
-(use-package dap-mode :pin melpa
-  :config
-  (dap-mode 1))
 #+end_src
 
 *** JavaScript
@@ -2610,6 +2608,7 @@ Accessing encrypted passwords outside of emacs
           (funcall (plist-get (car result) :secret))
           nil)))
 #+end_src
+
 * Keymaps
 
 I used these keymaps for easy typing of Spanish accented vowels. I don't use it nearly as much when I switched to Linux and using a programmable keyboard, but it's still useful when typing in a laptop keyboard with no easy access to a compose key.
@@ -2624,6 +2623,7 @@ I used these keymaps for easy typing of Spanish accented vowels. I don't use it 
 (global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
 (global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
 #+end_src
+
 * COMMENT Local variables
 # Local Variables:
 # eval: (visual-line-mode t)
