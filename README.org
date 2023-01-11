@@ -799,6 +799,9 @@ Corfu is used as a text completion engine package, similar to what company used 
   )
 #+end_src
 
+*** Icons
+
+[[Corfu]] can display icons to distinguish each entry by kind.
 
 #+begin_src emacs-lisp
 (use-package kind-icon
@@ -813,31 +816,27 @@ Corfu is used as a text completion engine package, similar to what company used 
   )
 #+end_src
 
-** Completion engine
+*** Completion at point function (capf) extensions
 
-Company is a completion engine for Emacs. You can install several backends. Useful in programming modes. I'm installing the lsp backend for using company completion in languages that use LSP (such as rust).
+[[Corfu]] can be extended with additional completion at point functions (capf). The /cape/ package also provides facilities to convert existing /company/ completion functions to standard /capf/ functions so they can be used with standard emacs and [[Corfu]]. It is used later in [[REST client]] to make its completion compatible with [[Corfu]].
 
 #+begin_src emacs-lisp
-;; (use-package company
-;;   :hook ((cider-repl-mode . company-mode)
-;;          (cider-mode      . company-mode)
-;;          (clojure-mode    . company-mode)
-;;          (emacs-lisp-mode . company-mode))
-;;   :bind (:map company-active-map
-;;               ("C-n" .   company-select-next)
-;;               ("C-p" .   company-select-previous)
-;;               ("RET" .   company-complete-selection)
-;;               ("<ret>" . company-complete-selection))
-;;   :config
-;;   (setq company-tooltip-align-annotations t
-;;         company-minimum-prefix-length 1
-;;         company-idle-delay 0.0)
-;;   (add-to-list 'company-backends 'company-restclient)
-;;   (global-set-key (kbd "C-'") 'company-complete)
-;;   ;(global-company-mode)
-;;   :diminish company-mode)
-
-;; (use-package company-lsp :pin melpa)
+(use-package cape
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+)
 #+end_src
 
 ** Paredit
@@ -1557,10 +1556,11 @@ Add a rest client to your Emacs.
 #+begin_src emacs-lisp
 (use-package restclient :pin melpa)
 
-;; (use-package company-restclient :pin melpa
-;;   :config (progn
-;;             (add-hook 'restclient-mode-hook #'company-mode)
-;;             (add-to-list 'company-backends 'company-restclient)))
+(use-package company-restclient :pin melpa
+  :after cape
+  :config
+  (setq completion-at-point-functions
+        (list (cape-company-to-capf #'company-restclient))))
 #+end_src
 
 ** Programming modes
