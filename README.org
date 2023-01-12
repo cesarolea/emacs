@@ -403,7 +403,7 @@ When moving around its easy to lose track of where your cursor is. Beacon is a m
 #+begin_src emacs-lisp
 (use-package beacon
   :config
-  (setq beacon-color "#ebcb8b")
+  (setq beacon-color "#8fbcbb")
   (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
   (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
   (beacon-mode 1))
@@ -1652,6 +1652,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 
         lsp-keymap-prefix           "C-c l"
         lsp-auto-configure          t
+        lsp-enable-dap-auto-configure nil
         lsp-lens-enable             t
         lsp-signature-auto-activate nil
         lsp-idle-delay              0.500
@@ -1676,7 +1677,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 (use-package js2-mode
   :hook (((js2-mode js2-mode-jsx) . js2-imenu-extras-mode)
          ; (js2-mode . lsp)
-         (js2-mode . dap-mode)
+         ; (js2-mode . dap-mode)
          (js2-mode . (lambda () (indent-tabs-mode 0)))
          (xref-backend-functions . dumb-jump-xref-activate))
   :bind (:map js2-mode-map ("M-." . nil))
@@ -1684,8 +1685,8 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
   :interpreter "node"
   :config
   (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
-  (require 'dap-node)
-  (require 'dap-firefox)
+  ;; (require 'dap-node)
+  ;; (require 'dap-firefox)
   (setq js-chain-indent t
         js2-basic-offset 2
         js2-indent-level 2
@@ -1798,14 +1799,15 @@ Most Cider options tweaks are documented inline. For more information refer to t
 
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
-(use-package clj-refactor
-  :config
-  (defun clj-refactor-mode-hook ()
-    (clj-refactor-mode 1)
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c C-m")
-    )
-  (add-hook 'clojure-mode-hook #'clj-refactor-mode-hook))
+;; commenting out because it pulls multiple-cursors. Let's see if I miss it.
+;; (use-package clj-refactor
+;;   :config
+;;   (defun clj-refactor-mode-hook ()
+;;     (clj-refactor-mode 1)
+;;     ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+;;     (cljr-add-keybindings-with-prefix "C-c C-m")
+;;     )
+;;   (add-hook 'clojure-mode-hook #'clj-refactor-mode-hook))
 #+end_src
 
 *** Docker
@@ -1902,6 +1904,18 @@ Support for building and displaying graphs from org
         vterm-clear-scrollback-when-clearing t
         vterm-kill-buffer-on-exit t
         vterm-copy-exclude-prompt t))
+#+end_src
+
+** Translation
+
+[[https://www.reverso.net][Reverso]] is an AI-driven translation service. The ~reverso.el~ package integrates that service directly in Emacs.
+
+#+begin_src emacs-lisp
+(use-package reverso
+  :straight (:host github :repo "SqrtMinusOne/reverso.el")
+  :bind ("<f11>" . reverso-translate)
+  :config
+  (setq reverso-languages '(italian spanish english)))
 #+end_src
 
 * Mail
