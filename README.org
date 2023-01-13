@@ -1821,10 +1821,20 @@ ipcalc is an IP calculator in Emacs.
 
 Ledger mode for conquering your finances. Or in my case for doing quick loan calculations
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
    (use-package ledger-mode
      :mode ("\\.dat\\'" "\\.ledger\\'"))
-   #+end_src
+#+end_src
+
+Completions for ~ledger-mode~
+
+#+begin_src emacs-lisp
+(use-package company-ledger
+  :ensure company
+  :init
+  (with-eval-after-load 'company
+    (add-to-list 'company-backends 'company-ledger)))
+#+end_src
 
 *** Gnuplot
 
@@ -1855,7 +1865,7 @@ Support for building and displaying graphs from org
   :straight (:host github :repo "SqrtMinusOne/reverso.el")
   :bind ("<f11>" . reverso-translate)
   :config
-  (setq reverso-languages '(italian spanish english)))
+  (setq reverso-languages '(italian spanish)))
 #+end_src
 
 * Mail
