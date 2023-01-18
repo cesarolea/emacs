@@ -994,6 +994,10 @@ Org mode is able to export to several other formats, and some of them require ad
                  (direction . right)
                  (window-width . 0.33)
                  (window-height . fit-window-to-buffer)))
+
+  (add-hook 'org-roam-capture-new-node-hook #'(lambda ()
+                                                (toggle-truncate-lines nil)
+                                                (visual-line-mode t)))
   (require 'org-roam-protocol)
   (org-roam-setup))
 #+end_src
