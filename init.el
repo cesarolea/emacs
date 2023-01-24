@@ -121,10 +121,10 @@
           ("d" "Drill")
           ("dv" "Vocabolario" entry (file+olp "~/Dropbox/org/italiano.org.gpg" "Vocabolario")
            "** Parole   :drill:
-   :PROPERTIES:
-   :DRILL_CARD_TYPE: twosided
-   :ADDED: %U
-   :END:
+:PROPERTIES:
+:DRILL_CARD_TYPE: twosided
+:ADDED: %U
+:END:
 
 Tradurre la parola.
 
