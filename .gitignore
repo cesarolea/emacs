@@ -1,5 +1,8 @@
+projects
 multisession/
 tree-sitter/
+tree-sit-repos/
+tree-sit-parsers/
 .mc-lists.el
 .extension/
 eln-cache/
