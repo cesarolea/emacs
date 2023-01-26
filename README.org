@@ -1804,16 +1804,16 @@ Support for working with Go projects.
 
 Python is the only major mode so far that leverages [[Tree-sitter]] for syntax highlight and structural editing. Instead of ~python-mode~, set ~python-ts-mode~ as the major mode for editing python source files. 
 
-    #+begin_src emacs-lisp
-    (add-to-list 'interpreter-mode-alist '("python[0-9.]*" . python-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-mode))
-    #+end_src
+#+begin_src emacs-lisp
+(add-to-list 'interpreter-mode-alist '("python[0-9.]*" . python-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-mode))
+#+end_src
 
 *** Elixir
 
-    #+begin_src emacs-lisp
-    (use-package elixir-mode)
-    #+end_src
+#+begin_src emacs-lisp
+(use-package elixir-mode)
+#+end_src
 
 ** Other packages
 
@@ -1821,17 +1821,17 @@ Python is the only major mode so far that leverages [[Tree-sitter]] for syntax h
 
 ipcalc is an IP calculator in Emacs.
 
-   #+begin_src emacs-lisp
-   (use-package ipcalc :pin melpa)
-   #+end_src
+#+begin_src emacs-lisp
+(use-package ipcalc :pin melpa)
+#+end_src
 
 *** Ledger
 
 Ledger mode for conquering your finances. Or in my case for doing quick loan calculations
 
 #+begin_src emacs-lisp
-   (use-package ledger-mode
-     :mode ("\\.dat\\'" "\\.ledger\\'"))
+(use-package ledger-mode
+  :mode ("\\.dat\\'" "\\.ledger\\'"))
 #+end_src
 
 Completions for ~ledger-mode~
