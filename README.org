@@ -1520,28 +1520,30 @@ These are packages related to adding Emacs support for multiple programming lang
 
 Tree-sitter is an incremental parsing tool able to generate an AST from grammar definitions; allows Emacs to better "understand" the code structure to do structural navigation and syntax highlighting without resorting to regular expressions for the supported languages.
 
-#+begin_src emacs-lisp
-(use-package tree-sitter-langs
-  :hook
-  (tree-sitter-after-on . tree-sitter-hl-mode))
+The following package takes care of managing the language parsers, that way you don't have to do it manually:
 
-(use-package tree-sitter
-  :init
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
-  :hook
-  ((css-mode
-    js-mode
-    json-mode
-    php-mode
-    ruby-mode
-    rust-mode
-    sh-mode
-    terraform-mode
-    typescript-mode
-    yaml-mode) . (lambda () (tree-sitter-mode 1)))
-  :config
-  (setq treesit-extra-load-path '("~/.config/emacs/tree-sitter")))
+#+begin_src emacs-lisp
+;; (use-package tree-sitter-langs
+;;   :hook
+;;   (tree-sitter-after-on . tree-sitter-hl-mode))
+
+;; (use-package tree-sitter
+;;   :init
+;;   (require 'tree-sitter)
+;;   (require 'tree-sitter-langs)
+;;   :hook
+;;   ((css-mode
+;;     js-mode
+;;     json-mode
+;;     php-mode
+;;     ruby-mode
+;;     rust-mode
+;;     sh-mode
+;;     terraform-mode
+;;     typescript-mode
+;;     yaml-mode) . (lambda () (tree-sitter-mode 1)))
+;;   :config
+;;   (setq treesit-extra-load-path '("~/.config/emacs/tree-sitter")))
 #+end_src
 
 *** Web
@@ -1573,13 +1575,14 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 (use-package lsp-mode :pin melpa
   :commands lsp
   :diminish lsp-mode
-  :hook ((rust-mode     . lsp-deferred)
-         (lsp-mode      . lsp-enable-which-key-integration)
-         (c-mode        . lsp-deferred)
-         (c++-mode      . lsp-deferred)
-         (elixir-mode   . lsp-deferred)
-         (clojure-mode  . lsp-deferred)
-         (clojurec-mode . lsp-deferred)
+  :hook ((rust-mode      . lsp-deferred)
+         (lsp-mode       . lsp-enable-which-key-integration)
+         (c-mode         . lsp-deferred)
+         (c++-mode       . lsp-deferred)
+         (elixir-mode    . lsp-deferred)
+         (elixir-ts-mode . lsp-deferred)
+         (clojure-mode   . lsp-deferred)
+         (clojurec-mode  . lsp-deferred)
          )
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
@@ -1812,7 +1815,7 @@ Python is the only major mode so far that leverages [[Tree-sitter]] for syntax h
 *** Elixir
 
 #+begin_src emacs-lisp
-(use-package elixir-mode)
+(use-package elixir-ts-mode)
 #+end_src
 
 ** Other packages
@@ -2062,7 +2065,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
           ("maildir:\"/fastmail/*\" AND flag:flagged"                                                            "Fastmail Pinned"         ?n)
           ("maildir:\"/fastmail/INBOX\" AND NOT flag:trashed"                                                    "Fastmail Inbox"          ?P)
           ("mime:application/pdf AND NOT flag:trashed"                                                           "Messages with PDF files" ?f)
-          ("flag:unread AND NOT flag:trashed AND NOT (maildir:\"/fastmail/Sent\" OR maildir:\"/fastmail/Spam\")" "Unread messages"         ?i)
+          ("flag:unread AND NOT flag:trashed AND NOTv(maildir:\"/fastmail/Sent\" OR maildir:\"/fastmail/Spam\" OR maildir:\"/loanpro/[Gmail]/Trash\")"    "Unread messages"         ?i)
           ("date:today..now AND NOT flag:trashed"                                                                "Today's messages"        ?t)
           ("date:today..nod AND (maildir:\"/loanpro/[Gmail]/Sent Mail\" OR maildir:\"/fastmail/Sent\")"          "Sent messages"           ?s)
           ("from:cesar to:technology AND Newsletter AND maildir:\"/loanpro/[Gmail]/Sent Mail\""                  "Sent newsletters"        ?N)))
