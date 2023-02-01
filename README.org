@@ -402,6 +402,7 @@ When moving around its easy to lose track of where your cursor is. Beacon is a m
   (setq beacon-color "#8fbcbb")
   (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
   (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
+  (add-to-list 'beacon-dont-blink-major-modes 'org-agenda-mode)
   (beacon-mode 1))
 #+end_src
 
@@ -772,7 +773,8 @@ Company is a completion engine for Emacs. You can install several backends. Usef
   :config
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 1
-        company-idle-delay 0.0)
+        company-idle-delay 0.0
+        company-selection-wrap-around t)
   (add-to-list 'company-backends 'company-restclient)
   (global-set-key (kbd "C-'") 'company-complete)
   ;(global-company-mode)
@@ -780,6 +782,9 @@ Company is a completion engine for Emacs. You can install several backends. Usef
 
 (use-package company-lsp :pin melpa)
 #+end_src
+
+
+
 
 ** Paredit
 
