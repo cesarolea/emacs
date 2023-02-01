@@ -140,7 +140,79 @@ Tradurre la parola.
 
 1.
 
-%?" :empty-lines 1 :immediate-finish t)))
+%?" :empty-lines 1 :immediate-finish t)
+          ("dc" "Coniugazioni" entry (file+olp "~/Dropbox/org/coniugazione.org.pgp" "Irregolari")
+           "** Coniugazione :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %^{Verbo}
+:END:
+
+Yo []
+
+*** Italiano
+
+Io [%?]
+
+** Coniugazione   :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %\\1
+:END:
+
+Tu []
+
+*** Italiano
+
+Tu []
+
+** Coniugazione   :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %\\1
+:END:
+
+El/Ella []
+
+*** Italiano
+
+Lui/Lei []
+
+** Coniugazione   :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %\\1
+:END:
+
+Nosotros []
+
+*** Italiano
+
+Noi []
+
+** Coniugazione   :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %\\1
+:END:
+
+Ustedes []
+
+*** Italiano
+
+Voi []
+
+** Coniugazione   :drill:
+:PROPERTIES:
+:ADDED: %U
+:VERBO: %\\1
+:END:
+
+Ellos []
+
+*** Italiano
+
+Loro []" :empty-lines 1 :immediate-finish t)))
 
   ;; Agenda list
   ;; Ignores TODO items with a scheduled and/or deadline date that
