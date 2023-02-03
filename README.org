@@ -397,13 +397,13 @@ Help buffers should also go to a side window. Prevents multiple help buffers fro
 When moving around its easy to lose track of where your cursor is. Beacon is a minor mode that temporarily highlights the current line.
 
 #+begin_src emacs-lisp
-(use-package beacon
-  :config
-  (setq beacon-color "#8fbcbb")
-  (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
-  (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
-  (add-to-list 'beacon-dont-blink-major-modes 'org-agenda-mode)
-  (beacon-mode 1))
+;; (use-package beacon
+;;   :config
+;;   (setq beacon-color "#8fbcbb")
+;;   (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
+;;   (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
+;;   (add-to-list 'beacon-dont-blink-major-modes 'org-agenda-mode)
+;;   (beacon-mode 1))
 #+end_src
 
 *** Diredfl
