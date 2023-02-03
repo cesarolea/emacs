@@ -607,7 +607,7 @@ A completion engine that tightly integrates to Emacs.
         xref-show-definitions-function #'consult-xref)
 
   :config
-  (setq consult-preview-key (kbd "M-."))
+  (setq consult-preview-key "M-.")
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-org-heading :preview-key '(:debounce 0.2 any)
@@ -627,7 +627,7 @@ A completion engine that tightly integrates to Emacs.
    consult--source-file-register
    consult--source-recent-file
    consult--source-project-recent-file
-   :preview-key (kbd "M-."))
+   :preview-key "M-.")
 
   (setq consult-narrow-key "<")
 
