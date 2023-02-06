@@ -1765,7 +1765,8 @@ Most Cider options tweaks are documented inline. For more information refer to t
         lsp-enable-indentation nil ;; use cider's indentation
         )
 
-  (setq-default cider-show-error-buffer nil)
+  (setq-default cider-show-error-buffer  nil
+                cider-auto-jump-to-error nil)
 
   ;; Show the errors buffer
   (defun mm/pop-cider-error ()
