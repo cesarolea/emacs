@@ -969,6 +969,17 @@ Org mode is able to export to several other formats, and some of them require ad
          ("C-c n o" . org-id-get-create)
          ("C-c n I" . org-roam-node-insert-immediate))
   :config
+  ;; override default note capture template to add visual line mode
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?" :target
+           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
+
+,* COMMENT
+# Local Variables:
+# eval: (visual-line-mode t)
+# End:
+")
+           :unnarrowed t)))
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (cons arg args))
@@ -978,6 +989,7 @@ Org mode is able to export to several other formats, and some of them require ad
 
   (setq org-roam-directory (expand-file-name "~/Sync/roam/")
         org-roam-completion-everywhere t
+        ;; org-roam-database-connector 'sqlite-builtin
         org-roam-db-location (expand-file-name "~/Sync/roam/org-roam.db")
         org-roam-index-file "20201109112056-index.org"
         org-roam-dailies-directory "dailies/"
@@ -1753,6 +1765,21 @@ Most Cider options tweaks are documented inline. For more information refer to t
         lsp-enable-indentation nil ;; use cider's indentation
         )
 
+  (setq-default cider-show-error-buffer nil)
+
+  ;; Show the errors buffer
+  (defun mm/pop-cider-error ()
+    (interactive)
+    (if-let
+        ((cider-error
+          (get-buffer "*cider-error*")))
+        (pop-to-buffer cider-error)
+      (message
+       "no cider error buffer")))
+
+  (define-key cider-mode-map (kbd "C-c E") #'mm/pop-cider-error)
+
+  (define-key cider-mode-map (kbd "C-c X") #'cider-selector)
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 ;; commenting out because it pulls multiple-cursors. Let's see if I miss it.
