@@ -814,6 +814,7 @@ Structured editing for Lisp and Lisp-like languages.
 	      'override-slime-repl-bindings-with-paredit t)
     :diminish paredit-mode)
 #+end_src
+
 ** Org mode
 
 The gateway drug to Emacs. Org mode is difficult to put in a single word; it's a note taking application, agenda, markup language, organizer, documentation engine and more. Org mode organizes your life in text mode. Most of the options used in this package are documented as source code comments.
@@ -864,6 +865,16 @@ Org mode is able to export to several other formats, and some of them require ad
 (use-package ob-async :pin melpa
   :config
   (require 'ob-async))
+#+end_src
+
+*** Org sidebar
+
+Display an outline of the current document. Useful when working with a large document and you want to see its outline.
+
+#+begin_src emacs-lisp
+(use-package org-sidebar
+  :straight (:host github :repo "alphapapa/org-sidebar")
+  :bind (:map org-mode-map ("C-c C-x b" . org-sidebar-tree-toggle)))
 #+end_src
 
 *** Org modern
