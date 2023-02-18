@@ -324,6 +324,7 @@ Loro []" :empty-lines 1 :immediate-finish t)))
                              (visual-line-mode 0)
                              (toggle-truncate-lines 1)
                              (variable-pitch-mode 1)
+                             (abbrev-mode 1)
                              (delete '("\\.pdf\\'" . default) org-file-apps)
                              (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
