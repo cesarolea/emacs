@@ -436,27 +436,45 @@ Vertico
 
 #+begin_src emacs-lisp
 (use-package vertico
-  :bind (:map minibuffer-local-map
-              ("<backspace>" . dw/minibuffer-backward-kill))
+  ;; :bind (:map minibuffer-local-map
+  ;;             ("<backspace>" . dw/minibuffer-backward-kill))
   :init
   (vertico-mode)
   (setq vertico-cycle t
         vertico-count 20)
 
-  (defun dw/minibuffer-backward-kill (arg)
-    "When minibuffer is completing a file name delete up to parent
-  folder, otherwise delete a character backward"
-    (interactive "p")
-    (if minibuffer-completing-file-name
-        ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
-        (if (string-match-p "/." (minibuffer-contents))
-            (zap-up-to-char (- arg) ?/)
-          (delete-minibuffer-contents))
-      (delete-backward-char arg)))
+  ;; (defun dw/minibuffer-backward-kill (arg)
+  ;;   "When minibuffer is completing a file name delete up to parent
+  ;; folder, otherwise delete a character backward"
+  ;;   (interactive "p")
+  ;;   (if minibuffer-completing-file-name
+  ;;       ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+  ;;       (if (string-match-p "/." (minibuffer-contents))
+  ;;           (zap-up-to-char (- arg) ?/)
+  ;;         (delete-minibuffer-contents))
+  ;;     (delete-backward-char arg)))
 
   ;; fixes tramp completions
   (setq completion-styles '(orderless basic)
         completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+Vertico comes with some extensions. 
+
+*** Vertico directory
+
+Provides ido-like directory navigation
+
+#+begin_src emacs-lisp
+(use-package vertico-directory
+  :after vertico
+  :straight nil
+  :load-path "straight/repos/vertico/extensions/"
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 #+end_src
 
 ** Flycheck
