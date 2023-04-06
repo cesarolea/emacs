@@ -2003,7 +2003,13 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
         mu4e-compose-format-flowed t
         mu4e-use-fancy-chars nil
         fill-flowed-encode-column 998
-        message-send-mail-function 'smtpmail-send-it)
+        message-send-mail-function 'smtpmail-send-it
+        ;; mu4e-read-option-use-builtin nil               ;; don't use mu4e completion
+        ;; mu4e-completing-read-function 'completing-read ;; use emacs completion
+        mail-user-agent 'mu4e-user-agent                  ;; mu4e as default mail client
+        read-mail-command 'mu4e
+        mu4e-support-modeline nil
+        )
 
   ;; prefer text mail
   (with-eval-after-load "mm-decode"
@@ -2257,7 +2263,7 @@ Customization and custom utility functions. Over the years I've accumulated many
 The following modes are enabled:
 
 - ~save-place-mode~ When you visit a file, point goes to the last place where it was when you previously visited the same file. Defaults to a file ~places~ stored in your configuration directory.
-- ~blink-cursor-mode~ Disable cursor blinking. The line containing the cursor is visible by highlighting it.
+- ~blink-cursor-mode~ Enable cursor blinking, and set it to red.
 - ~delete-selection-mode~ Insert while having something highlighted makes the highlighted text disappear. You know, like a normal editor.
 - ~column-number-mode~ Display the column number in the modeline.
 - ~global-visual-line-mode~ Wrap lines at the word boundary.
@@ -2268,7 +2274,8 @@ The following modes are enabled:
 (setq save-place-file (concat user-emacs-directory "places"))
 (save-place-mode 1)
 
-(blink-cursor-mode -1)
+;; blink cursor
+(blink-cursor-mode t)
 
 (delete-selection-mode t)
 
@@ -2645,6 +2652,7 @@ Accessing encrypted passwords outside of emacs
           (funcall (plist-get (car result) :secret))
           nil)))
 #+end_src
+
 * Keymaps
 
 I used these keymaps for easy typing of Spanish accented vowels. I don't use it nearly as much when I switched to Linux and using a programmable keyboard, but it's still useful when typing in a laptop keyboard with no easy access to a compose key.
@@ -2659,6 +2667,7 @@ I used these keymaps for easy typing of Spanish accented vowels. I don't use it 
 (global-set-key (kbd "H-?") (lambda () (interactive) (insert "¿")))
 (global-set-key (kbd "H-!") (lambda () (interactive) (insert "¡")))
 #+end_src
+
 * COMMENT Local variables
 # Local Variables:
 # eval: (visual-line-mode t)
