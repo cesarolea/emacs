@@ -1980,6 +1980,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
         mu4e-headers-skip-duplicates t
         mu4e-update-interval (* 5 60)
         mu4e-index-update-in-background t
+        mu4e-index-update-error-warning t
 
         ;; set to nil to display indexing messages. It's very annoying since it
         ;; obscures the minibuffer content and conflicts with eldoc mode or org-drill
