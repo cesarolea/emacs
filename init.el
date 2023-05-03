@@ -326,7 +326,7 @@ Loro []" :empty-lines 1 :immediate-finish t)))
                              (variable-pitch-mode 1)
                              (abbrev-mode 1)
                              (delete '("\\.pdf\\'" . default) org-file-apps)
-                             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+                             (add-to-list 'org-file-apps '("\\.pdf\\'" . "open %s"))))
 
   (defun set-exec-path-from-shell-PATH ()
     (let ((path-from-shell
