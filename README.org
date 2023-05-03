@@ -308,10 +308,10 @@ Unicode, emojis, etc.
 This package ensures that your Emacs instance is able to use the same environment variables as your shell. Especially useful if you use non-standard shells such as the fish shell.
 
  #+begin_src emacs-lisp
-   (use-package exec-path-from-shell
-     :config
-     (when (memq window-system '(mac ns x))
-       (exec-path-from-shell-initialize)))
+ (use-package exec-path-from-shell
+   :config
+   (when (daemonp)
+     (exec-path-from-shell-initialize)))
  #+end_src
 
 *** Window movement
