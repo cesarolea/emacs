@@ -299,7 +299,10 @@ Unicode, emojis, etc.
 
    (setq doom-modeline-buffer-encoding t
          doom-modeline-modal-icon t
+         doom-modeline-icon t
          doom-modeline-env-version t
+         doom-modeline-mu4e t
+         doom-modeline-battery nil
          inhibit-compacting-font-caches t))
  #+end_src
 
@@ -803,7 +806,6 @@ Company is a completion engine for Emacs. You can install several backends. Usef
 
 
 
-
 ** Paredit
 
 Structured editing for Lisp and Lisp-like languages.
@@ -1086,21 +1088,22 @@ Display an outline of the current document. Useful when working with a large doc
 A very powerful feature of Org is literate programming. Out of the box it is able to execute code blocks from many different programming languages. Here I am adding a rest client as well, so that you can document an API.
 
 #+begin_src emacs-lisp
-  (use-package ob-restclient :pin melpa)
+(use-package ob-restclient :pin melpa)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '(
-     (emacs-lisp . t)
-     (latex      . t)
-     (js         . t)
-     (python     . t)
-     (scheme     . t)
-     (shell      . t)
-     (clojure    . t)
-     (sql        . t)
-     (restclient . t)
-     ))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (emacs-lisp . t)
+   (latex      . t)
+   (js         . t)
+   (python     . t)
+   (scheme     . t)
+   (shell      . t)
+   (clojure    . t)
+   (sql        . t)
+   (restclient . t)
+   (plantuml   . t)
+   ))
 #+end_src
 
 Executing code locally can be dangerous of course. However there might be times when you want to override the confirmation dialog. The following snippet does just that
@@ -1619,7 +1622,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 
 #+begin_src emacs-lisp
 (use-package lsp-mode :pin melpa
-  :commands lsp
+  :commands (lsp lsp-deferred)
   :diminish lsp-mode
   :hook ((rust-mode      . lsp-deferred)
          (lsp-mode       . lsp-enable-which-key-integration)
@@ -1628,12 +1631,11 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
          (elixir-mode    . lsp-deferred)
          (elixir-ts-mode . lsp-deferred)
          (clojure-mode   . lsp-deferred)
-         (clojurec-mode  . lsp-deferred)
-         )
+         (clojurec-mode  . lsp-deferred))
   :init
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
-        lsp-elixir-mix-target "~/.asdf/shims/mix"
-        lsp-clojure-custom-server-commant (if (equal system-type 'darwin)
+        lsp-elixir-mix-target "/opt/homebrew/bin/mix"
+        lsp-clojure-custom-server-command (if (equal system-type 'darwin)
                                               '("bash" "-c" "/opt/homebrew/bin/clojure-lsp")
                                             '("bash" "-c" "/usr/local/bin/clojure-lsp")))
   (add-to-list 'exec-path "~/bin/elixir-ls")
@@ -1729,6 +1731,19 @@ Most Cider options tweaks are documented inline. For more information refer to t
   (setq clojure-indent-style 'align-arguments
         clojure-align-forms-automatically nil
         clojure-toplevel-inside-comment-form t)
+
+  ;; lsp
+  (setq lsp-enable-indentation            t
+        lsp-enable-snippet                nil
+        lsp-enable-links                  nil
+        lsp-signature-auto-activate       nil
+        lsp-eldoc-enable-hover            nil
+        lsp-enable-completion-at-point    nil
+        lsp-ui-doc-show-with-cursor       nil
+        lsp-ui-sideline-show-code-actions nil
+        lsp-modeline-code-actions-enable  nil
+        lsp-headerline-breadcrumb-enable  nil)
+
   (put-clojure-indent 'for-all :defn)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
@@ -1753,45 +1768,22 @@ Most Cider options tweaks are documented inline. For more information refer to t
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
-  ;; Similar to C-x C-e, but sends to REBL
-  (defun rebl-eval-last-sexp ()
-    (interactive)
-    (let* ((bounds (cider-last-sexp 'bounds))
-           (s (cider-last-sexp))
-           (reblized (concat "(cognitect.rebl/inspect " s ")")))
-      (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
-
-  ;; Similar to C-M-x, but sends to REBL
-  (defun rebl-eval-defun-at-point ()
-    (interactive)
-    (let* ((bounds (cider-defun-at-point 'bounds))
-           (s (cider-defun-at-point))
-           (reblized (concat "(cognitect.rebl/inspect " s ")")))
-      (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
-
-  ;; C-S-x send defun to rebl
-  ;; C-x C-r send last sexp to rebl (Normally bound to "find-file-read-only"... Who actually uses that though?)
-  ;; (add-hook 'cider-mode-hook
-  ;;           (lambda ()
-  ;;             (local-set-key (kbd "C-S-x") #'rebl-eval-defun-at-point)
-  ;;             (local-set-key (kbd "C-x C-r") #'rebl-eval-last-sexp)))
-
   (setq nrepl-hide-special-buffers t
-        cider-repl-use-clojure-font-lock t ; syntax highlighting in REPL
-        cider-overlays-use-font-lock t ; syntax highlight evaluation overlays
-        cider-repl-toggle-pretty-printing t ; REPL always pretty-prints results
-        cider-repl-display-help-banner nil ; don't display start banner
-        nrepl-prompt-to-kill-server-buffer-on-quit nil ; don't prompt to kill server buffers on quit
-        cider-repl-wrap-history t ; wrap around history when end is reached
-        cider-save-file-on-load t ; don't prompt when eval, just save
+        cider-repl-use-clojure-font-lock t                     ; syntax highlighting in REPL
+        cider-overlays-use-font-lock t                         ; syntax highlight evaluation overlays
+        cider-repl-toggle-pretty-printing t                    ; REPL always pretty-prints results
+        cider-repl-display-help-banner nil                     ; don't display start banner
+        nrepl-prompt-to-kill-server-buffer-on-quit nil         ; don't prompt to kill server buffers on quit
+        cider-repl-wrap-history t                              ; wrap around history when end is reached
+        cider-save-file-on-load t                              ; don't prompt when eval, just save
         cider-font-lock-dynamically '(macro core function var) ; font lock from all namespaces
-        org-babel-clojure-backend 'cider ; let org-mode know to use a cider repl to execute snippets
+        org-babel-clojure-backend 'cider                       ; let org-mode know to use a cider repl to execute snippets
         cider-repl-display-help-banner nil
         cider-eldoc-display-for-symbol-at-point t
         cider-repl-buffer-size-limit 100000
-        cider-use-xref nil ; keep using cider's own xref backend instead of emacs built in
+        cider-use-xref nil                                     ; keep using cider's own xref backend instead of emacs built in
         cider-eldoc-display-for-symbol-at-point nil
-        lsp-enable-indentation nil ;; use cider's indentation
+        lsp-enable-indentation nil                             ; use cider's indentation
         )
 
   (setq-default cider-show-error-buffer  nil
@@ -1877,7 +1869,19 @@ Python is the only major mode so far that leverages [[Tree-sitter]] for syntax h
 *** Elixir
 
 #+begin_src emacs-lisp
-(use-package elixir-ts-mode)
+(use-package elixir-ts-mode
+  :config
+  (setq lsp-enable-indentation            t
+        lsp-enable-snippet                t
+        lsp-enable-links                  t
+        lsp-signature-auto-activate       '(:on-trigger-char :on-server-request)
+        lsp-eldoc-enable-hover            t
+        lsp-enable-completion-at-point    t
+        lsp-ui-doc-show-with-cursor       t
+        lsp-ui-doc-position               'bottom
+        lsp-ui-sideline-show-code-actions t
+        lsp-modeline-code-actions-enable  t
+        lsp-headerline-breadcrumb-enable  t))
 #+end_src
 
 ** Other packages
@@ -1939,6 +1943,14 @@ Support for building and displaying graphs from org
   :bind ("<f11>" . reverso-translate)
   :config
   (setq reverso-languages '(italian spanish)))
+#+end_src
+
+** Diagrams
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :config
+  (setq org-plantuml-jar-path (expand-file-name "/opt/homebrew/opt/plantuml/libexec/plantuml.jar")))
 #+end_src
 
 * Mail
