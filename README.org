@@ -113,6 +113,9 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 
       ;; locale stuff
       locale-coding-system 'utf-8
+
+      ;; don't show bookmarks in fringe
+      bookmark-set-fringe-mark nil
 	    )
 
 ;; prevent suspending emacs frames by mistake
@@ -274,6 +277,9 @@ Unicode, emojis, etc.
 
  #+begin_src emacs-lisp
  (use-package all-the-icons :pin melpa)
+
+ ;; required by doom-modeline
+ (use-package nerd-icons :pin melpa)
 
  (use-package doom-themes :pin melpa
    :config
@@ -1073,7 +1079,7 @@ Display an outline of the current document. Useful when working with a large doc
 
 #+begin_src emacs-lisp
 (use-package deft
-  :bind ("s-f" . deft)
+  :bind ("s-F" . deft)
   :commands (deft)
   :config
   (setq deft-extensions '("org")
