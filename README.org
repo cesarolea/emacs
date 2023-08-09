@@ -1357,7 +1357,9 @@ Insert various timestamps.
 Add a fireplace to your Emacs session.
 
 #+begin_src emacs-lisp
-(use-package fireplace)
+(use-package fireplace
+  :config
+  (setq fireplace-sound-file-path "~/.config/emacs/fireplace.mp3"))
 #+end_src
 ** Editing
 
@@ -1790,6 +1792,7 @@ Most Cider options tweaks are documented inline. For more information refer to t
         cider-use-xref nil                                     ; keep using cider's own xref backend instead of emacs built in
         cider-eldoc-display-for-symbol-at-point nil
         lsp-enable-indentation nil                             ; use cider's indentation
+        cider-reuse-dead-repls 'auto                           ; don't prompt to reuse dead buffers, just do it
         )
 
   (setq-default cider-show-error-buffer  nil
