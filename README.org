@@ -1945,7 +1945,13 @@ Support for building and displaying graphs from org
 *** Multiple terminals
 
 #+begin_src emacs-lisp
-(use-package multi-vterm)
+(use-package multi-vterm
+  :bind (:map vterm-mode-map
+              ("<f7>" . multi-vterm)
+              ("C-n"  . multi-vterm-next)
+              ("C-p"  . multi-vterm-prev))
+  :config
+  (define-key vterm-mode-map (kbd "C-q") #'vterm-send-next-key))
 #+end_src
 
 ** Translation
