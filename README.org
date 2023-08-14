@@ -349,10 +349,10 @@ Controls how certain windows are arranged and the properties of said windows. Fo
   "Start fish shell in a terminal emulator."
   (interactive)
   (let ((switch-to-buffer-obey-display-actions t))
-    (vterm)))
+    (multi-vterm)))
 
 (add-to-list 'display-buffer-alist
-             '("\\*vterm\\*.*"
+             '("\\*vterminal<[0-9]+>\\*"
                (display-buffer-in-side-window)
                (inhibit-same-window . t)
                (side . bottom)
@@ -1940,6 +1940,12 @@ Support for building and displaying graphs from org
         vterm-clear-scrollback-when-clearing t
         vterm-kill-buffer-on-exit t
         vterm-copy-exclude-prompt t))
+#+end_src
+
+*** Multiple terminals
+
+#+begin_src emacs-lisp
+(use-package multi-vterm)
 #+end_src
 
 ** Translation
