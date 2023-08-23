@@ -173,6 +173,18 @@ I use [[https://github.com/jwiegley/use-package][use-package]] for isolating pac
 	use-package-always-ensure t)
 #+end_src
 
+*** EPG
+
+EasyPG comes built into Emacs. It's an interface to GnuPG. The configuration is to fix a compatibility issue with the newer GnuPG 2.4.3.
+
+See: https://dev.gnupg.org/T6481
+
+#+begin_src emacs-lisp
+(use-package epg
+  :config
+  (fset 'epg-wait-for-status 'ignore))
+#+end_src
+
 *** Diminish
 
  This is an add-on to ~use-package~ to be able to specify directly in the package declaration, that we want to diminish that mode.
@@ -1364,6 +1376,14 @@ Add a fireplace to your Emacs session.
 ** Editing
 
 Useful packages for text editing.
+
+*** Markdown
+
+#+begin_src emacs-lisp
+(use-package grip-mode
+  :config
+  (setq grip-preview-use-webkit t))
+#+end_src
 
 *** Expand region
 
