@@ -813,7 +813,9 @@ Company is a completion engine for Emacs. You can install several backends. Usef
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 1
         company-idle-delay 0.0
-        company-selection-wrap-around t)
+        company-selection-wrap-around t
+        company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+                            company-echo-metadata-frontend))
   (add-to-list 'company-backends 'company-restclient)
   (global-set-key (kbd "C-'") 'company-complete)
   ;(global-company-mode)
