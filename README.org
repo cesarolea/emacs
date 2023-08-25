@@ -815,6 +815,7 @@ Company is a completion engine for Emacs. You can install several backends. Usef
         company-idle-delay 0.0
         company-selection-wrap-around t
         company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+                            company-preview-if-just-one-frontend
                             company-echo-metadata-frontend))
   (add-to-list 'company-backends 'company-restclient)
   (global-set-key (kbd "C-'") 'company-complete)
@@ -1763,16 +1764,7 @@ Most Cider options tweaks are documented inline. For more information refer to t
         clojure-toplevel-inside-comment-form t)
 
   ;; lsp
-  (setq lsp-enable-indentation            t
-        lsp-enable-snippet                nil
-        lsp-enable-links                  nil
-        lsp-signature-auto-activate       nil
-        lsp-eldoc-enable-hover            nil
-        lsp-enable-completion-at-point    nil
-        lsp-ui-doc-show-with-cursor       nil
-        lsp-ui-sideline-show-code-actions nil
-        lsp-modeline-code-actions-enable  nil
-        lsp-headerline-breadcrumb-enable  nil)
+  
 
   (put-clojure-indent 'for-all :defn)
   :init
@@ -1797,6 +1789,17 @@ Most Cider options tweaks are documented inline. For more information refer to t
   (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-mode-hook
+            (lambda () (setq lsp-enable-indentation            nil
+                             lsp-enable-snippet                nil
+                             lsp-enable-links                  nil
+                             lsp-signature-auto-activate       nil
+                             lsp-eldoc-enable-hover            nil
+                             lsp-enable-completion-at-point    nil
+                             lsp-ui-doc-show-with-cursor       nil
+                             lsp-ui-sideline-show-code-actions nil
+                             lsp-modeline-code-actions-enable  nil
+                             lsp-headerline-breadcrumb-enable  nil)))
 
   (setq nrepl-hide-special-buffers t
         cider-repl-use-clojure-font-lock t                     ; syntax highlighting in REPL
@@ -1902,17 +1905,19 @@ Python is the only major mode so far that leverages [[Tree-sitter]] for syntax h
 #+begin_src emacs-lisp
 (use-package elixir-ts-mode
   :config
-  (setq lsp-enable-indentation            t
-        lsp-enable-snippet                t
-        lsp-enable-links                  t
-        lsp-signature-auto-activate       '(:on-trigger-char :on-server-request)
-        lsp-eldoc-enable-hover            t
-        lsp-enable-completion-at-point    t
-        lsp-ui-doc-show-with-cursor       t
-        lsp-ui-doc-position               'bottom
-        lsp-ui-sideline-show-code-actions t
-        lsp-modeline-code-actions-enable  t
-        lsp-headerline-breadcrumb-enable  t))
+  (add-hook 'elixir-ts-mode-hook
+            (lambda ()
+              (setq lsp-enable-indentation            t
+                    lsp-enable-snippet                t
+                    lsp-enable-links                  t
+                    lsp-signature-auto-activate       '(:on-trigger-char :on-server-request)
+                    lsp-eldoc-enable-hover            t
+                    lsp-enable-completion-at-point    t
+                    lsp-ui-doc-show-with-cursor       t
+                    lsp-ui-doc-position               'bottom
+                    lsp-ui-sideline-show-code-actions t
+                    lsp-modeline-code-actions-enable  t
+                    lsp-headerline-breadcrumb-enable  t))))
 #+end_src
 
 ** Other packages
