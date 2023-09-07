@@ -1026,7 +1026,7 @@ Display an outline of the current document. Useful when working with a large doc
         '(("d" "default" plain "%?" :target
            (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
 
-,* COMMENT
+,* COMMENT :noexport:
 # Local Variables:
 # eval: (visual-line-mode t)
 # End:
