@@ -90,9 +90,9 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 	    jit-lock-stealth-time 0.2
 	    jit-lock-stealth-verbose nil
 	    auto-window-vscroll nil
-	    scroll-margin 10
+	    ;; scroll-margin 10
 	    scroll-conservatively 100000
-	    scroll-preserve-screen-position 1
+	    ;; scroll-preserve-screen-position 1
 	    frame-title-format '((:eval (if (buffer-file-name)
 					                            (abbreviate-file-name (buffer-file-name))
 				                            "%b")))
@@ -117,6 +117,9 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
       ;; don't show bookmarks in fringe
       bookmark-set-fringe-mark nil
 	    )
+
+(setq-default scroll-margin 0)
+(setq-default scroll-preserve-screen-position nil)
 
 ;; prevent suspending emacs frames by mistake
 (global-unset-key (kbd "C-z"))
@@ -159,6 +162,16 @@ By default, Emacs will create backup files (files ending in ~~~) in the same dir
 
 ;; Default and per-save backups go here:
 (setq backup-directory-alist '(("" . "~/.config/emacs/backups")))
+#+end_src
+
+** Per-frame configuration
+
+#+begin_src emacs-lisp
+(add-hook 'after-make-frame-functions
+          (lambda (_frame)
+            ;; disable the menu (macOS)
+            (menu-bar-mode -1)
+            ))
 #+end_src
 
 * Packages
@@ -227,10 +240,10 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
 (defun my/font-config ()
 
   ;; Font configuration
-  (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height (if (equal system-type 'darwin) 190 120) :weight 'regular)
+  (set-face-attribute 'default nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 190 120) :weight 'regular)
 
   ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka Nerd Font Mono" :height (if (equal system-type 'darwin) 180 130))
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130))
 
   ;; Set the variable pitch face
   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular))
@@ -773,17 +786,18 @@ I have it bound to ~<f10>~. Also:
 - ~global-magit-file-mode~ Enable certain magit actions in files that are part of a git repository.
 
 #+begin_src emacs-lisp
-  (use-package magit :pin melpa
-    :bind (("<f10>" . magit-status)
-	   ("s-m" . magit-status))
-    :config
-    (setq magit-last-seen-setup-instructions "1.4"
-	  magit-push-always-verify nil
-	  magit-branch-read-upstream-first nil
-	  global-magit-file-mode 1)
-    (if (bound-and-true-p magit-auto-revert-mode)
-	(diminish 'magit-auto-revert-mode))
-    :diminish magit-mode)
+(use-package magit :pin melpa
+  :bind (("<f10>" . magit-status)
+         ("s-m" . magit-status))
+  :config
+  (setq magit-last-seen-setup-instructions "1.4"
+        magit-push-always-verify nil
+        magit-branch-read-upstream-first nil
+        global-magit-file-mode 1
+        magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (if (bound-and-true-p magit-auto-revert-mode)
+      (diminish 'magit-auto-revert-mode))
+  :diminish magit-mode)
 #+end_src
 
 ** Rainbow mode
@@ -814,9 +828,11 @@ Company is a completion engine for Emacs. You can install several backends. Usef
         company-minimum-prefix-length 1
         company-idle-delay 0.0
         company-selection-wrap-around t
+        company-auto-update-doc nil
         company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
                             company-preview-if-just-one-frontend
-                            company-echo-metadata-frontend))
+                            company-echo-metadata-frontend)
+        )
   (add-to-list 'company-backends 'company-restclient)
   (global-set-key (kbd "C-'") 'company-complete)
   ;(global-company-mode)
@@ -1110,6 +1126,8 @@ A very powerful feature of Org is literate programming. Out of the box it is abl
 
 #+begin_src emacs-lisp
 (use-package ob-restclient :pin melpa)
+
+(use-package ob-graphql :pin melpa)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1680,7 +1698,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-lens-enable             t
         lsp-signature-auto-activate nil
         lsp-completion-provider     :capf
-        lsp-idle-delay              0.500
+        lsp-idle-delay              1.5
         lsp-eldoc-enable-hover      nil
         lsp-enable-completion-at-point nil))
 
@@ -1764,8 +1782,6 @@ Most Cider options tweaks are documented inline. For more information refer to t
         clojure-toplevel-inside-comment-form t)
 
   ;; lsp
-  
-
   (put-clojure-indent 'for-all :defn)
   :init
   (add-hook 'clojure-mode-hook (lambda () (progn
@@ -1820,8 +1836,9 @@ Most Cider options tweaks are documented inline. For more information refer to t
         cider-reuse-dead-repls 'auto                           ; don't prompt to reuse dead buffers, just do it
         )
 
-  (setq-default cider-show-error-buffer  nil
-                cider-auto-jump-to-error nil)
+  ;; Uncomment the code below to prevent the error buffer from popping up
+  ;; (setq-default cider-show-error-buffer  nil
+  ;;               cider-auto-jump-to-error nil)
 
   ;; Show the errors buffer
   (defun mm/pop-cider-error ()
@@ -2026,6 +2043,9 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
                                         (visual-line-mode 1)
                                         (auto-save-mode -1)
                                         (auto-fill-mode 1)))
+  (add-hook 'mu4e-headers-mode-hook #'(lambda ()
+                                      (setq scroll-margin 10
+                                            scroll-preserve-screen-position 1)))
 
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
@@ -2525,12 +2545,12 @@ Version 2015-05-06"
 Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color Emoji]] font installed.
 
 #+begin_src emacs-lisp
-  (add-hook 'after-make-frame-functions
-            (lambda (_frame)
-              (set-fontset-font t 'symbol "Apple Color Emoji")
-              (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
-              (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-              (set-fontset-font t 'symbol "Symbola" nil 'append)))
+(add-hook 'after-make-frame-functions
+          (lambda (_frame)
+            (set-fontset-font t 'symbol "Apple Color Emoji")
+            (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+            (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
+            (set-fontset-font t 'symbol "Symbola" nil 'append)))
 #+end_src
 ** Calendar
 
