@@ -841,7 +841,6 @@ Company is a completion engine for Emacs. You can install several backends. Usef
 #+end_src
 
 
-
 ** Paredit
 
 Structured editing for Lisp and Lisp-like languages.
@@ -1879,10 +1878,10 @@ Support for working with Docker files.
 Support for working with Rust projects.
 
 #+begin_src emacs-lisp
-(use-package rustic :pin melpa
-  :config
-  (setq lsp-rust-analyzer-server-command (quote ("/home/cesaro/.local/bin/rust-analyzer")))
-  (setq lsp-rust-server (quote rust-analyzer)))
+;; (use-package rustic :pin melpa
+;;   :config
+;;   (setq lsp-rust-analyzer-server-command (quote ("/home/cesaro/.local/bin/rust-analyzer")))
+;;   (setq lsp-rust-server (quote rust-analyzer)))
 #+end_src
 
 *** PHP
@@ -1903,9 +1902,9 @@ Support for editing YAML files.
 
 Support for working with Go projects.
 
-    #+begin_src emacs-lisp
-    (use-package go-mode)
-    #+end_src
+#+begin_src emacs-lisp
+;; (use-package go-mode)
+#+end_src
     
 *** Python
 
