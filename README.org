@@ -83,7 +83,6 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 	    dired-listing-switches "-agho --group-directories-first"
       insert-directory-program (if (equal system-type 'darwin) "gls" "ls")
 	    search-default-mode #'char-fold-to-regexp
-	    gc-cons-threshold 100000000
 	    read-process-output-max (* 1024 1024)
 	    jit-lock-defer-time nil
 	    jit-lock-stealth-nice 0.1
@@ -1856,14 +1855,14 @@ Most Cider options tweaks are documented inline. For more information refer to t
   (define-key cider-repl-mode-map (kbd "C-c M-o") #'cider-repl-clear-buffer))
 
 ;; commenting out because it pulls multiple-cursors. Let's see if I miss it.
-;; (use-package clj-refactor
-;;   :config
-;;   (defun clj-refactor-mode-hook ()
-;;     (clj-refactor-mode 1)
-;;     ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-;;     (cljr-add-keybindings-with-prefix "C-c C-m")
-;;     )
-;;   (add-hook 'clojure-mode-hook #'clj-refactor-mode-hook))
+(use-package clj-refactor
+  :config
+  (defun clj-refactor-mode-hook ()
+    (clj-refactor-mode 1)
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c C-m")
+    )
+  (add-hook 'clojure-mode-hook #'clj-refactor-mode-hook))
 #+end_src
 
 *** Docker
@@ -2044,8 +2043,8 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
                                         (auto-save-mode -1)
                                         (auto-fill-mode 1)))
   (add-hook 'mu4e-headers-mode-hook #'(lambda ()
-                                      (setq scroll-margin 10
-                                            scroll-preserve-screen-position 1)))
+                                        (setq-local scroll-margin 10
+                                                    scroll-preserve-screen-position 1)))
 
   (define-key gnus-mime-button-map "e" nil)
   (define-key mu4e-view-mode-map (kbd "e") 'mu4e-view-save-attachments)
