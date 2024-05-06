@@ -245,7 +245,10 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
   (set-face-attribute 'fixed-pitch nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130))
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular)
+
+  ;; Set the symbol face
+  ;; (set-face-attribute 'org-modern-symbol nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130)))
 #+end_src
 
 I normally run emacs as a daemon, so frame fontification must be configured as well.
@@ -969,14 +972,14 @@ Display an outline of the current document. Useful when working with a large doc
   ;; avoid styling tables as they break when containing timestamps
   (custom-theme-set-faces
    'user
-   ;; '(org-block                 ((t (:inherit fixed-pitch))))
-   ;; '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
+      '(org-block                 ((t (:inherit fixed-pitch))))
+      '(org-code                  ((t (:inherit (shadow fixed-pitch)))))
    ;; '(org-checkbox              ((t (:inherit fixed-pitch))))
    ;; '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
    ;; '(org-property-value        ((t (:inherit fixed-pitch))) t)
       '(org-table                 ((t (:inherit fixed-pitch))) t)
-   ;; '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   ;; '(org-formula               ((t (:inherit fixed-pitch))) t)
+      '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+      '(org-formula               ((t (:inherit fixed-pitch))) t)
    ;; '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
    ;; '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
    ;; '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
@@ -1832,6 +1835,7 @@ Most Cider options tweaks are documented inline. For more information refer to t
         cider-eldoc-display-for-symbol-at-point nil
         lsp-enable-indentation nil                             ; use cider's indentation
         cider-reuse-dead-repls 'auto                           ; don't prompt to reuse dead buffers, just do it
+        cider-merge-sessions 'project                          ; workaround to group repl sessions originating from different config files (e.g. deps and shadow-cljs)
         )
 
   ;; Uncomment the code below to prevent the error buffer from popping up
@@ -2171,7 +2175,9 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
                   (mu4e-refile-folder . "/loanpro/[Gmail]/All Mail")
                   (mu4e-trash-folder . "/loanpro/[Gmail]/Trash")
                   (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
-                  (mu4e-compose-signature . "<#part type=text/html><div style=\"overflow:hidden;font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif\"><div style=\"float:left;border-right:2px solid rgb(37,78,99);padding:2px 5px 2px 0px\"><img src=\"https://ci5.googleusercontent.com/proxy/zF8n9Ku_SQQGnN25zCnkJnCffq1NMPY7iyYXUt90-A8dheNrUeFRthp3CHCv9G7XHciT_nWIcwgEblQitXMl502QSWE5x6pl-VfKbr47tDPENNUbtpLN=s0-d-e1-ft#https://www.loanpro.io/wp-content/uploads/2022/11/signature-logo.png\" style=\"width:60px\" class=\"CToWUd\" data-bit=\"iit\"></div><div style=\"float:left;padding-left:10px;margin-top:4px\"><p style=\"color:rgb(32,44,54);padding:0px;margin:0px;font-size:15px;font-weight:bold\">César Olea</p><p style=\"color:rgb(247,144,30);padding:0px;margin:0px;font-size:12px\">Chief Technology Officer</p><div style=\"color:rgb(32,44,54);padding:0px;margin:5px 0px 0px;font-size:12px;font-weight:bold\"><a href=\"https://loanpro.io/\" style=\"color:rgb(32,44,54);border-right:2px solid rgb(247,144,30);padding-right:5px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1686699239211000&amp;usg=AOvVaw3sUd4ScGMAd8861yOUPj3o\">loanpro.io</a><span style=\"padding-left:1px\">(800) 559-4776</span></div></div></div><#/part>")
+                  (message-signature-file "~/.config/mu4e-signature")
+                  (message-signature . t)
+                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding:2px 5px 2px 0px\"><img src=\"https://ci3.googleusercontent.com/meips/ADKq_NbTasQN4vVs4VUoArSxaUo7qwo4awfGku7I865U_IUG4sVjmwnVj2UFduhrEQhW81aXRRIi2Snd-ZKU6QS4Exi76HQTKpt34CAqCaXux6SQGhNVM8lxI4MJXpl3CcNeC3bePp6T3RlDlyc_zMA3sCNhx_Q4GIpY7mw7zV5I4YW5zU3m538qTjVkeFOhTu14XsBBTlE_DLzX4MDo0utXT-I3qA=s0-d-e1-ft#https://static.helpjuice.com/helpjuice_production/uploads/upload/image/12133/3922053/1711053779722-loanpro-favicon-400x400-rounded-edge.png\" style=\"width:60px\" class=\"CToWUd\" data-bit=\"iit\"></div><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding-left:10px;margin-top:4px\"><p style=\"margin:0px;padding:0px;font-size:15px;font-weight:bold\">César Olea</p><p style=\"margin:0px;color:rgb(82,51,237);padding:0px;font-size:12px\">Chief Technology Officer</p><div style=\"padding:0px;margin:0px;font-size:12px\"><span><a href=\"https://loanpro.io/\" style=\"color:rgb(0,0,0);padding-right:5px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1711480526077000&amp;usg=AOvVaw2nOveOBdPCJklL0f-xovKU\">loanpro.io</a></span></div></div></div><#/part>")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-smtp-service . 465)
                   (smtpmail-stream-type . ssl)

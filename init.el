@@ -45,7 +45,23 @@
   ;; esc cancels all
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-  (put 'narrow-to-region 'disabled nil))
+  (put 'narrow-to-region 'disabled nil)
+
+  ;; gc settings
+
+  ;; when the minibuffer is open, set the gc threshold to the maximum possible
+  ;; to avoid gc pauses
+  (defun my-minibuffer-setup-hook ()
+    (setq gc-cons-threshold most-positive-fixnum))
+
+  ;; when the minibuffer closes, set the gc threshold to the original value
+  (defun my-minibuffer-exit-hook ()
+    (setq gc-cons-threshold 800000))
+
+  (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+  (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+  )
 
 ;; load org
 (use-package org
