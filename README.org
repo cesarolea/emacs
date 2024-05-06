@@ -228,7 +228,7 @@ Which key makes it easier to discover the major mode you are in.
  This package allows you to install related binary (or system) programs are installed when certain packages are installed.
 
  #+begin_src emacs-lisp
- (use-package use-package-ensure-system-package)
+ ;; (use-package use-package-ensure-system-package)
  #+end_src
 
 *** Fonts
@@ -248,7 +248,8 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular)
 
   ;; Set the symbol face
-  ;; (set-face-attribute 'org-modern-symbol nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130)))
+  ;; (set-face-attribute 'org-modern-symbol nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130))
+  )
 #+end_src
 
 I normally run emacs as a daemon, so frame fontification must be configured as well.
