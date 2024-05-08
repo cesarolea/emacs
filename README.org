@@ -180,9 +180,9 @@ I use [[https://github.com/jwiegley/use-package][use-package]] for isolating pac
 ** Basic Configuration
 
 #+begin_src emacs-lisp
-  ;; Default to using melpa-stable, unless we override at the package level.
-  (setq use-package-always-pin "melpa-stable"
-	use-package-always-ensure t)
+;; Default to using melpa-stable, unless we override at the package level.
+(setq use-package-always-pin    "melpa-stable"
+      use-package-always-ensure t)
 #+end_src
 
 *** EPG
@@ -223,14 +223,6 @@ Which key makes it easier to discover the major mode you are in.
           (setq which-key-idle-delay 0.3))
 #+end_src
 
-*** Ensure system package
-
- This package allows you to install related binary (or system) programs are installed when certain packages are installed.
-
- #+begin_src emacs-lisp
- ;; (use-package use-package-ensure-system-package)
- #+end_src
-
 *** Fonts
 
 Configure fonts; both variable pitch for writing, and fixed pitch for coding.
@@ -247,8 +239,6 @@ Configure fonts; both variable pitch for writing, and fixed pitch for coding.
   ;; Set the variable pitch face
   (set-face-attribute 'variable-pitch nil :font "IBM Plex Serif" :height (if (equal system-type 'darwin) 180 130) :weight 'regular)
 
-  ;; Set the symbol face
-  ;; (set-face-attribute 'org-modern-symbol nil :font "Iosevka NFM" :height (if (equal system-type 'darwin) 180 130))
   )
 #+end_src
 
@@ -304,12 +294,12 @@ Unicode, emojis, etc.
  I use the Doom theme with the Doom modeline. This requires icon configuration. The modeline configuration has a fix so that icons are shown in the modeline when connecting to an Emacs daemon instance with ~emacsclient~.
 
  #+begin_src emacs-lisp
- (use-package all-the-icons :pin melpa)
+ (use-package all-the-icons)
 
  ;; required by doom-modeline
- (use-package nerd-icons :pin melpa)
+ (use-package nerd-icons)
 
- (use-package doom-themes :pin melpa
+ (use-package doom-themes
    :config
    (setq doom-themes-enable-bold t
          doom-themes-enable-italic t
@@ -321,7 +311,7 @@ Unicode, emojis, etc.
    (doom-themes-org-config)
    (my/font-config))
 
- (use-package doom-modeline :pin melpa
+ (use-package doom-modeline
    :init (doom-modeline-mode 1)
    :config
    ;; so that modeline icons work in emacsclient
@@ -429,20 +419,6 @@ Help buffers should also go to a side window. Prevents multiple help buffers fro
 (define-key global-map (kbd "<f5>") 'my/make-frame-floating-with-current-buffer)
 #+end_src
 
-*** Beacon
-
-When moving around its easy to lose track of where your cursor is. Beacon is a minor mode that temporarily highlights the current line.
-
-#+begin_src emacs-lisp
-;; (use-package beacon
-;;   :config
-;;   (setq beacon-color "#8fbcbb")
-;;   (add-to-list 'beacon-dont-blink-major-modes 'vterm-mode)
-;;   (add-to-list 'beacon-dont-blink-major-modes 'comint-mode)
-;;   (add-to-list 'beacon-dont-blink-major-modes 'org-agenda-mode)
-;;   (beacon-mode 1))
-#+end_src
-
 *** Diredfl
 
 Dired comes included in Emacs. Direfl adds pretty colors to its output.
@@ -519,7 +495,7 @@ Provides ido-like directory navigation
 On the fly linter and syntax checker. I want this enabled in all programming modes.
 
 #+begin_src emacs-lisp
-(use-package flycheck :pin melpa
+(use-package flycheck
   :hook ((prog-mode . flycheck-mode)
          (org-mode  . flycheck-mode))
   :diminish flycheck-mode)
@@ -738,7 +714,7 @@ A completion engine that tightly integrates to Emacs.
 Display icons in completion candidates. Requires the ~all-the-icons~ package.
 
 #+begin_src emacs-lisp
-(use-package all-the-icons-completion :pin melpa
+(use-package all-the-icons-completion
   :after consult
   :config
   (all-the-icons-completion-mode))
@@ -808,7 +784,7 @@ I have it bound to ~<f10>~. Also:
 So that typing the name of a color or its hex value, displays the actual color.
 
 #+begin_src emacs-lisp
-(use-package rainbow-mode :diminish rainbow-mode :pin gnu)
+(use-package rainbow-mode :diminish rainbow-mode)
 #+end_src
 
 ** Completion engine
@@ -841,7 +817,7 @@ Company is a completion engine for Emacs. You can install several backends. Usef
   ;(global-company-mode)
   :diminish company-mode)
 
-(use-package company-lsp :pin melpa)
+(use-package company-lsp)
 #+end_src
 
 
@@ -890,7 +866,7 @@ Org mode is able to export to several other formats, and some of them require ad
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package org-ql :pin melpa
+(use-package org-ql
   :config
   (setq org-agenda-custom-commands
         '(("oc" "Custom: Completed today"
@@ -921,7 +897,7 @@ Org mode is able to export to several other formats, and some of them require ad
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package ob-async :pin melpa
+(use-package ob-async
   :config
   (require 'ob-async))
 #+end_src
@@ -981,13 +957,15 @@ Display an outline of the current document. Useful when working with a large doc
       '(org-table                 ((t (:inherit fixed-pitch))) t)
       '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
       '(org-formula               ((t (:inherit fixed-pitch))) t)
+      '(org-date                  ((t (:inherit fixed-pitch))) t)
    ;; '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
    ;; '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold))))
    ;; '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-   ;; '(org-document-title        ((t (:height 2.0 :underline nil))))
-   ;; '(org-level-1               ((t (:inherit outline-1 :height 1.5))))
-   ;; '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
-   ;; '(org-level-3               ((t (:inherit outline-3 :height 1.1))))
+      '(org-document-title        ((t (:height 1.75 :underline nil))))
+      '(org-level-1               ((t (:inherit outline-1 :height 1.5))))
+      '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
+      '(org-level-3               ((t (:inherit outline-3 :height 1.1))))
+      '(org-modern-symbol         ((t (:family "Iosevka Aile"))) t)
    ))
 #+end_src
 
@@ -996,7 +974,7 @@ Display an outline of the current document. Useful when working with a large doc
 ~org-drill~ is an implementation of [[https://en.wikipedia.org/wiki/Spaced_repetition][spaced repetition]] to assist in learning, similar to flashcards.
 
 #+begin_src emacs-lisp
-(use-package org-drill :pin melpa
+(use-package org-drill
   :bind (:map org-mode-map
          ("C-c i" . org-drill))
   :config
@@ -1016,6 +994,7 @@ Display an outline of the current document. Useful when working with a large doc
         org-drill-failed-count-color "#bf616a"
         org-drill-done-count-color   "#d08770"))
 #+end_src
+
 *** Transclusion
     
  #+begin_src emacs-lisp
@@ -1025,7 +1004,6 @@ Display an outline of the current document. Useful when working with a large doc
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :pin melpa
   :after org
   :init (setq org-roam-v2-ack t)
   :bind (("C-c n f" . org-roam-node-find)
@@ -1097,7 +1075,6 @@ Display an outline of the current document. Useful when working with a large doc
 
 #+begin_src emacs-lisp
 (use-package org-roam-ui
-  :pin melpa
   :hook (after-init . org-roam-ui-mode)
   :config
   (setq org-roam-ui-open-on-start nil
@@ -1127,9 +1104,9 @@ Display an outline of the current document. Useful when working with a large doc
 A very powerful feature of Org is literate programming. Out of the box it is able to execute code blocks from many different programming languages. Here I am adding a rest client as well, so that you can document an API.
 
 #+begin_src emacs-lisp
-(use-package ob-restclient :pin melpa)
+(use-package ob-restclient)
 
-(use-package ob-graphql :pin melpa)
+(use-package ob-graphql)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1161,7 +1138,7 @@ Executing code locally can be dangerous of course. However there might be times 
 So that you can export Org files to Reveal.js presentations
 
 #+begin_src emacs-lisp
-(use-package ox-reveal :pin melpa
+(use-package ox-reveal
   :config (progn (setq org-reveal-root "file:///home/cesaro/workspace/reveal.js")))
 #+end_src
 
@@ -1172,7 +1149,6 @@ Support for syncing tasks to trello.
 #+begin_src emacs-lisp
 ;; (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg")))
 (use-package org-trello
-  :pin melpa
   :straight (org-trello :build (:not compile))
   :config
   (custom-set-variables '(org-trello-files '("~/Dropbox/org/Monday.org.gpg"))))
@@ -1233,6 +1209,7 @@ Common window operations. Splitting, resizing, swapping and deleting.
    ("=" text-scale-adjust :exit t))
  (global-set-key (kbd "C-c w") 'hydra-window/body)
  #+end_src
+
 **** Moving around
 
 Collection of move commands. Useful for jumping around large files.
@@ -1249,6 +1226,7 @@ Collection of move commands. Useful for jumping around large files.
  (global-set-key (kbd "C-x w") 'avy-goto-word-1)
  (global-set-key (kbd "C-x g") 'avy-goto-line)
   #+end_src
+
 **** Utility
 
 Some miscelaneous functions that don't have a home some place else.
@@ -1396,6 +1374,7 @@ Add a fireplace to your Emacs session.
   :config
   (setq fireplace-sound-file-path "~/.config/emacs/fireplace.mp3"))
 #+end_src
+
 ** Editing
 
 Useful packages for text editing.
@@ -1418,6 +1397,7 @@ A very useful package to select regions delimited by various means. You can prog
    (global-set-key (kbd "C-=") 'er/expand-region)
    (global-set-key (kbd "C-M-=") 'er/contract-region))
  #+end_src
+
 *** Undo tree
 
 One of the coolest features of Emacs, one you wonder why not more editors have included it as a standard feature. It organizes your undo/redo operations as a tree structure, and gives you a visual representation of it so you can navigate the tree.
@@ -1425,7 +1405,7 @@ One of the coolest features of Emacs, one you wonder why not more editors have i
 Never again fear a undo/redo operation makes you lose important edits!
 
  #+begin_src emacs-lisp
- (use-package undo-tree :pin gnu
+ (use-package undo-tree
    :config
    (global-undo-tree-mode 1)
    (setq undo-tree-history-dir (let ((dir (concat user-emacs-directory
@@ -1437,6 +1417,7 @@ Never again fear a undo/redo operation makes you lose important edits!
    (defalias 'redo 'undo-tree-redo)
    :diminish undo-tree-mode)
  #+end_src
+
 *** Move text
 
 Allows you to move lines of text or selected regions up and down.
@@ -1447,6 +1428,7 @@ Allows you to move lines of text or selected regions up and down.
    :bind (("M-S-<up>" . move-text-up)
           ("M-S-<down>" . move-text-down)))
  #+end_src
+
 *** Anzu
 
 Search and replace.
@@ -1459,6 +1441,7 @@ Search and replace.
    :bind ("M-%" . anzu-query-replace)
    :diminish anzu-mode)
  #+end_src
+
 *** Shrink whitepace
 
 Another of those useful editing packages. This one allows you to remove whitespace in front of the cursor.
@@ -1467,6 +1450,7 @@ Another of those useful editing packages. This one allows you to remove whitespa
  (use-package shrink-whitespace
    :bind ("M-SPC" . shrink-whitespace))
  #+end_src
+
 *** Tramp
 
 Edit files remotely.
@@ -1493,22 +1477,7 @@ Edit files remotely.
                       (when (stringp method)
                         (member method '("su" "sudo")))))))))
 #+end_src
-*** Atomic Chrome
 
-Edit browser text areas in Emacs.
-
-#+begin_src emacs-lisp
-(use-package atomic-chrome
-  :pin melpa
-  :config
-  (setq atomic-chrome-default-major-mode  'text-mode
-        atomic-chrome-buffer-open-style   'frame)
-  ;; (setq atomic-chrome-url-major-mode-alist
-  ;;       '(("flotiya\\.local" . js2-mode)
-  ;;         ("phabricator" . text-mode)))
-  (atomic-chrome-start-server)
-  :diminish AtomicChrome)
-#+end_src
 *** Crux
 
 Crux is an acronym for a Collection of Ridiculously Useful eXtensions for Emacs. It's basically a collection of functions accumulated over the years, from Bozhidar Batsov, creator of CIDER and Emacs Prelude.
@@ -1523,6 +1492,7 @@ Crux is an acronym for a Collection of Ridiculously Useful eXtensions for Emacs.
   ;; (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
   )
 #+end_src
+
 *** Super Save
 
 Save when Emacs loses focus or when idle. Forget about manual saving.
@@ -1545,12 +1515,11 @@ Packages related to code editing, navigation and related tools.
 Jump to definition without generating etags or external tools.
 
 #+begin_src emacs-lisp
-  (use-package dumb-jump
-    :pin melpa
-    :config
-    (dumb-jump-mode t)
-    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-    (global-set-key (kbd "<f12>") 'xref-find-definitions))
+(use-package dumb-jump
+  :config
+  (dumb-jump-mode t)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (global-set-key (kbd "<f12>") 'xref-find-definitions))
 #+end_src
 
 *** Diffing
@@ -1584,7 +1553,7 @@ This package implements symbol highlighting, so for example when the cursor is i
    (global-set-key (kbd "<f15>") 'highlight-symbol-next)
    (global-set-key (kbd "<f16>") 'highlight-symbol-query-replace))
 
- (use-package auto-highlight-symbol :pin melpa
+ (use-package auto-highlight-symbol
    :config
    (add-hook 'prog-mode-hook (lambda ()
                                          (auto-highlight-symbol-mode t)))
@@ -1604,9 +1573,9 @@ Navigate your git repository history. Allows you to temporarily revert a file to
 Add a rest client to your Emacs.
 
 #+begin_src emacs-lisp
-(use-package restclient :pin melpa)
+(use-package restclient)
 
-(use-package company-restclient :pin melpa
+(use-package company-restclient
   :config (progn
             (add-hook 'restclient-mode-hook #'company-mode)
             (add-to-list 'company-backends 'company-restclient)))
@@ -1672,7 +1641,7 @@ Web programming is especially tricky, as you typically need to use several other
 A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. Only used for [[Rust][Rust]] and [[Cider][Clojure]] at the moment.
 
 #+begin_src emacs-lisp
-(use-package lsp-mode :pin melpa
+(use-package lsp-mode
   :commands (lsp lsp-deferred)
   :diminish lsp-mode
   :hook ((rust-mode      . lsp-deferred)
@@ -1704,7 +1673,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-eldoc-enable-hover      nil
         lsp-enable-completion-at-point nil))
 
-(use-package lsp-ui :pin melpa
+(use-package lsp-ui
   :commands lsp-ui-mode
   :bind (("C-'" . 'lsp-ui-doc-glance))
   :config
@@ -1714,7 +1683,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         lsp-modeline-code-actions-enable nil
         lsp-headerline-breadcrumb-enable nil))
 
-(use-package dap-mode :pin melpa
+(use-package dap-mode
   :config
   (dap-mode 1))
 #+end_src
@@ -1750,7 +1719,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
         js2-strict-trailing-comma-warning nil)
   )
 
-(use-package nodejs-repl :pin melpa
+(use-package nodejs-repl
   :bind (:map js2-mode-map
               ("C-x C-e" . nodejs-repl-send-last-expression)
               ("C-c C-j" . nodejs-repl-send-line)
@@ -1759,10 +1728,10 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
               ("C-c C-l" . nodejs-repl-load-file)
               ("C-c C-z" . nodejs-repl-switch-to-repl)))
 
-(use-package prettier-js :pin melpa
+(use-package prettier-js
   :hook ((js2-mode js2-jsx-mode) . prettier-js-mode))
 
-(use-package skewer-mode :pin melpa)
+(use-package skewer-mode)
 #+end_src
 
 *** Clojure
@@ -1774,7 +1743,7 @@ Emacs has fantastic support for Clojure with Cider. It provides support for inte
 Most Cider options tweaks are documented inline. For more information refer to the excellent [[https://docs.cider.mx/cider/0.26/index.html][Cider documentation]].
 
 #+begin_src emacs-lisp
-(use-package clojure-mode :pin melpa
+(use-package clojure-mode
   :mode (("\\.clj\\'" . clojure-mode)
          ("\\.edn\\'" . clojure-mode))
   :config
@@ -1903,14 +1872,6 @@ Support for editing YAML files.
 (use-package yaml-mode)
 #+end_src
 
-*** Go
-
-Support for working with Go projects.
-
-#+begin_src emacs-lisp
-;; (use-package go-mode)
-#+end_src
-    
 *** Python
 
 Python is the only major mode so far that leverages [[Tree-sitter]] for syntax highlight and structural editing. Instead of ~python-mode~, set ~python-ts-mode~ as the major mode for editing python source files. 
@@ -1947,7 +1908,7 @@ Python is the only major mode so far that leverages [[Tree-sitter]] for syntax h
 ipcalc is an IP calculator in Emacs.
 
 #+begin_src emacs-lisp
-(use-package ipcalc :pin melpa)
+(use-package ipcalc)
 #+end_src
 
 *** Ledger
@@ -2265,7 +2226,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
 I want to be able to compose mail using Org. With ~org-mime~ you get an ~org-mode~ buffer to compose your email with all your ~org~ bindings and goodies. The email body can later converted to HTML using ~htmlize~.
 
 #+begin_src emacs-lisp
-(use-package org-mime :pin melpa
+(use-package org-mime
   :config
   (setq org-mime-export-options '(:section-numbers nil
                                                    :with-author nil
@@ -2304,7 +2265,6 @@ How notifications are displayed depend on the underlying OS. In linux it uses th
 
     #+begin_src emacs-lisp
     (use-package mu4e-alert
-      :pin melpa
       :hook (after-init . mu4e-alert-enable-notifications)
       :after (mu4e)
       :config
@@ -2473,6 +2433,7 @@ Here we change some default variables.
 ;; enable some really cool extensions like C-x C-j(dired-jump)
 (require 'dired-x)
 #+end_src
+
 ** Custom functions
 
 These are custom functions, mostly centered around killing and yanking.
@@ -2545,6 +2506,7 @@ Version 2015-05-06"
 
 (define-key process-menu-mode-map (kbd "C-k") 'joaot/delete-process-at-point)
 #+end_src
+
 ** Color emoji
 
 Configuration for displaying color emoji. Requires [[https://github.com/samuelngs/apple-emoji-linux][Apple Color Emoji]] font installed.
@@ -2557,6 +2519,7 @@ Configuration for displaying color emoji. Requires [[https://github.com/samuelng
             (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
             (set-fontset-font t 'symbol "Symbola" nil 'append)))
 #+end_src
+
 ** Calendar
 
 Display week numbers in calendar view.
@@ -2579,6 +2542,7 @@ Display week numbers in calendar view.
      (setq calendar-intermonth-header
            (propertize "Wk" 'font-lock-face 'font-lock-keyword-face))
    #+end_src
+
 ** Shell
 
    Since I use the fish shell, this custom command runs ~ansi-term~ with that specific shell.
