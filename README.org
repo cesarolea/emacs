@@ -966,6 +966,10 @@ Display an outline of the current document. Useful when working with a large doc
       '(org-level-2               ((t (:inherit outline-2 :height 1.25))))
       '(org-level-3               ((t (:inherit outline-3 :height 1.1))))
       '(org-modern-symbol         ((t (:family "Iosevka Aile"))) t)
+      '(org-modern-done           ((t (:inherit org-modern-label
+                                       :family "Iosevka NFM"
+                                       :background "gray20"
+                                       :foreground "white"))) t)
    ))
 #+end_src
 
