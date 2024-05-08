@@ -94,7 +94,7 @@
  ("ob-graphql" . "7c35419f9eec5dc44967cbcfa13c7135b9a96bfc")
  ("ob-restclient.el" . "8183f8af08838854cf145ca4855b373f3e7c44b0")
  ("orderless" . "ac4aeb66f331f4c4a430d5556071e33177304c37")
- ("org" . "c8bd2092b10bb535abbdb3ffa29efa8113e7a623")
+ ("org" . "995186c30e24fa7f1aca22ef76abfd2fbdff9eac")
  ("org-appear" . "81eba5d7a5b74cdb1bad091d85667e836f16b997")
  ("org-drill" . "bf8fe812d44a3ce3e84361fb39b8ef28ca10fd0c")
  ("org-mime" . "9d4584651d89806b79d5993b286d32d6f70499a9")
