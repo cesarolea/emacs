@@ -967,9 +967,13 @@ Display an outline of the current document. Useful when working with a large doc
       '(org-level-3               ((t (:inherit outline-3 :height 1.1))))
       '(org-modern-symbol         ((t (:family "Iosevka Aile"))) t)
       '(org-modern-done           ((t (:inherit org-modern-label
-                                       :family "Iosevka NFM"
+                                       :family fixed-pitch
                                        :background "gray20"
                                        :foreground "white"))) t)
+      '(org-modern-todo           ((t (:inherit (org-todo org-modern-label)
+                                       :family fixed-pitch
+                                       :inverse-video t
+                                       :weight semibold))))
    ))
 #+end_src
 
@@ -1657,11 +1661,13 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
          (clojure-mode   . lsp-deferred)
          (clojurec-mode  . lsp-deferred))
   :init
+  ;; (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
+  ;;       lsp-elixir-mix-target "/opt/homebrew/bin/mix"
+  ;;       lsp-clojure-custom-server-command (if (equal system-type 'darwin)
+  ;;                                             '("bash" "-c" "/opt/homebrew/bin/clojure-lsp")
+  ;;                                           '("bash" "-c" "/usr/local/bin/clojure-lsp")))
   (setq lsp-clients-clangd-executable "/usr/bin/clangd-12"
-        lsp-elixir-mix-target "/opt/homebrew/bin/mix"
-        lsp-clojure-custom-server-command (if (equal system-type 'darwin)
-                                              '("bash" "-c" "/opt/homebrew/bin/clojure-lsp")
-                                            '("bash" "-c" "/usr/local/bin/clojure-lsp")))
+        lsp-elixir-mix-target "/opt/homebrew/bin/mix")
   (add-to-list 'exec-path "~/bin/elixir-ls")
   :config
   (setq lsp-enable-snippet          nil
@@ -1805,11 +1811,11 @@ Most Cider options tweaks are documented inline. For more information refer to t
         cider-repl-display-help-banner nil
         cider-eldoc-display-for-symbol-at-point t
         cider-repl-buffer-size-limit 100000
-        cider-use-xref nil                                     ; keep using cider's own xref backend instead of emacs built in
         cider-eldoc-display-for-symbol-at-point nil
         lsp-enable-indentation nil                             ; use cider's indentation
         cider-reuse-dead-repls 'auto                           ; don't prompt to reuse dead buffers, just do it
         cider-merge-sessions 'project                          ; workaround to group repl sessions originating from different config files (e.g. deps and shadow-cljs)
+        cider-clojure-cli-global-aliases ":1.11-storm"         ; default alias to load flowstorm when jack-in
         )
 
   ;; Uncomment the code below to prevent the error buffer from popping up
