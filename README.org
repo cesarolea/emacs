@@ -115,6 +115,8 @@ Then a ton of configuration variables I've accumulated over the years. Some I kn
 
       ;; don't show bookmarks in fringe
       bookmark-set-fringe-mark nil
+
+      default-directory "~/"
 	    )
 
 (setq-default scroll-margin 0)
@@ -170,6 +172,7 @@ By default, Emacs will create backup files (files ending in ~~~) in the same dir
           (lambda (_frame)
             ;; disable the menu (macOS)
             (menu-bar-mode -1)
+            ;; (cd "~/")
             ))
 #+end_src
 
@@ -192,9 +195,9 @@ EasyPG comes built into Emacs. It's an interface to GnuPG. The configuration is 
 See: https://dev.gnupg.org/T6481
 
 #+begin_src emacs-lisp
-(use-package epg
-  :config
-  (fset 'epg-wait-for-status 'ignore))
+;; (use-package epg
+;;   :config
+;;   (fset 'epg-wait-for-status 'ignore))
 #+end_src
 
 *** Diminish
@@ -216,11 +219,14 @@ Which key makes it easier to discover the major mode you are in.
 
 #+begin_src emacs-lisp
 (use-package which-key
-  :init (which-key-mode)
+  :ensure which-key
   :bind ("s-w" . which-key-show-major-mode)
-  :diminish which-key-mode
-  :config (which-key-setup-side-window-right-bottom)
-          (setq which-key-idle-delay 0.3))
+  :diminish
+  :functions
+  which-key-mode
+  :config
+  (setq which-key-idle-delay 0.8)
+  (which-key-mode))
 #+end_src
 
 *** Fonts
@@ -337,8 +343,10 @@ This package ensures that your Emacs instance is able to use the same environmen
  #+begin_src emacs-lisp
  (use-package exec-path-from-shell
    :config
-   (when (daemonp)
-     (exec-path-from-shell-initialize)))
+   (exec-path-from-shell-initialize)
+   ;; (when (daemonp)
+   ;;   (exec-path-from-shell-initialize))
+   )
  #+end_src
 
 *** Window movement
@@ -796,7 +804,8 @@ Company is a completion engine for Emacs. You can install several backends. Usef
   :hook ((cider-repl-mode . company-mode)
          (cider-mode      . company-mode)
          (clojure-mode    . company-mode)
-         (emacs-lisp-mode . company-mode))
+         (emacs-lisp-mode . company-mode)
+         (hledger-mode    . company-mode))
   :bind (:map company-active-map
               ("C-n" .   company-select-next)
               ("C-p" .   company-select-previous)
@@ -814,6 +823,7 @@ Company is a completion engine for Emacs. You can install several backends. Usef
         )
   (add-to-list 'company-backends 'company-restclient)
   (global-set-key (kbd "C-'") 'company-complete)
+  (global-set-key (kbd "C-c '") 'company-abbrev)
   ;(global-company-mode)
   :diminish company-mode)
 
@@ -1600,27 +1610,21 @@ Tree-sitter is an incremental parsing tool able to generate an AST from grammar 
 The following package takes care of managing the language parsers, that way you don't have to do it manually:
 
 #+begin_src emacs-lisp
-;; (use-package tree-sitter-langs
-;;   :hook
-;;   (tree-sitter-after-on . tree-sitter-hl-mode))
 
-;; (use-package tree-sitter
-;;   :init
-;;   (require 'tree-sitter)
-;;   (require 'tree-sitter-langs)
-;;   :hook
-;;   ((css-mode
-;;     js-mode
-;;     json-mode
-;;     php-mode
-;;     ruby-mode
-;;     rust-mode
-;;     sh-mode
-;;     terraform-mode
-;;     typescript-mode
-;;     yaml-mode) . (lambda () (tree-sitter-mode 1)))
-;;   :config
-;;   (setq treesit-extra-load-path '("~/.config/emacs/tree-sitter")))
+#+end_src
+
+*** Code formatter
+
+#+begin_src emacs-lisp
+(use-package apheleia
+  :straight (apheleia :host github :repo "raxod502/apheleia")
+  :config
+  (setf (alist-get 'clj-zprint apheleia-formatters)
+        '("clj-zprint"
+          "{:style [:community :justified] :map {:comma? false}} <"
+          file))
+  (add-to-list 'apheleia-mode-alist '(clojure-mode . clj-zprint))
+  (apheleia-global-mode t))
 #+end_src
 
 *** Web
@@ -1685,7 +1689,7 @@ A Language Server Protocol client for Emacs. ~lsp-mode~ supports many backends. 
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :bind (("C-'" . 'lsp-ui-doc-glance))
+  :bind (:map lsp-ui-mode-map ("C-'" . 'lsp-ui-doc-glance))
   :config
   (setq lsp-ui-doc-position 'at-point
         lsp-ui-doc-show-with-cursor nil
@@ -1940,6 +1944,29 @@ Completions for ~ledger-mode~
     (add-to-list 'company-backends 'company-ledger)))
 #+end_src
 
+*** hledger
+
+~hledger~ is another plain text accounting (PTA) utility, similar to [[*Ledger][Ledger]], but written in Haskell and with additional features
+
+#+begin_src emacs-lisp
+(use-package hledger-mode
+  :mode ("\\.journal\\'")
+  :hook (hledger-mode . abbrev-mode)
+  :bind (:map hledger-mode-map ("C-'" . 'hledger-company))
+  :init
+  (setq hledger-jfile (expand-file-name "~/Dropbox/finance/hledger.journal"))
+  :config
+  (add-to-list 'company-backends 'hledger-company)
+  ;; For easily adjusting dates.
+  (define-key hledger-mode-map (kbd "<kp-add>") 'hledger-increment-entry-date)
+  (define-key hledger-mode-map (kbd "<kp-subtract>") 'hledger-decrement-entry-date))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flycheck-hledger
+  :after (flycheck ledger-mode))
+#+end_src
+
 *** Gnuplot
 
 Support for building and displaying graphs from org
@@ -2149,7 +2176,7 @@ Emacs as a mail client. It uses the ~mu~ indexer and ~isync~ for synchronizing m
                   (mu4e-attachment-dir . "~/Downloads/mail-attachments/loanpro")
                   (message-signature-file "~/.config/mu4e-signature")
                   (message-signature . t)
-                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding:2px 5px 2px 0px\"><img src=\"https://ci3.googleusercontent.com/meips/ADKq_NbTasQN4vVs4VUoArSxaUo7qwo4awfGku7I865U_IUG4sVjmwnVj2UFduhrEQhW81aXRRIi2Snd-ZKU6QS4Exi76HQTKpt34CAqCaXux6SQGhNVM8lxI4MJXpl3CcNeC3bePp6T3RlDlyc_zMA3sCNhx_Q4GIpY7mw7zV5I4YW5zU3m538qTjVkeFOhTu14XsBBTlE_DLzX4MDo0utXT-I3qA=s0-d-e1-ft#https://static.helpjuice.com/helpjuice_production/uploads/upload/image/12133/3922053/1711053779722-loanpro-favicon-400x400-rounded-edge.png\" style=\"width:60px\" class=\"CToWUd\" data-bit=\"iit\"></div><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding-left:10px;margin-top:4px\"><p style=\"margin:0px;padding:0px;font-size:15px;font-weight:bold\">César Olea</p><p style=\"margin:0px;color:rgb(82,51,237);padding:0px;font-size:12px\">Chief Technology Officer</p><div style=\"padding:0px;margin:0px;font-size:12px\"><span><a href=\"https://loanpro.io/\" style=\"color:rgb(0,0,0);padding-right:5px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1711480526077000&amp;usg=AOvVaw2nOveOBdPCJklL0f-xovKU\">loanpro.io</a></span></div></div></div><#/part>")
+                  (mu4e-compose-signature . "<#part type=text/html><div dir=\"ltr\"><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding:2px 5px 2px 0px\"><img src=\"https://ci3.googleusercontent.com/meips/ADKq_NYDTR9u-a55V33GRiNM8OX4aWRIowtf55ExHlRUmKMiog9dbO2tHuSFlz1AsD3-roJ3iCbKq0A6dWItun_yFg1kmfqXM19yU2m5Rn7vdWGDILC_TUj86VLdkbqaNV7NKym8I_olS370y-tzKIuVh--r8cK-4LceXUVcQbFRrbpvdUAhB5Uv7Ph2fewO6Xq5yhrQslFFrSBm=s0-d-e1-ft#https://static.helpjuice.com/helpjuice_production/uploads/upload/image/12133/4256059/loanpro-favicon-60x60-rounded-edge%2B_1_.png\" style=\"width:60px\" class=\"CToWUd\" data-bit=\"iit\"></div><div style=\"color:rgb(0,0,0);font-family:Arial,&quot;Helvetica Neue&quot;,Helvetica,sans-serif;font-size:medium;float:left;padding-left:10px;margin-top:4px\"><p style=\"margin:0px;padding:0px;font-size:15px;font-weight:bold\">César Olea</p><p style=\"margin:0px;color:rgb(82,51,237);padding:0px;font-size:12px\">Chief Technology Officer</p><div style=\"padding:0px;margin:0px;font-size:12px\"><span><a href=\"https://loanpro.io/\" style=\"color:rgb(0,0,0);padding-right:5px\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://loanpro.io/&amp;source=gmail&amp;ust=1722102193469000&amp;usg=AOvVaw26JyG1iVLDQYi02TBzSlao\">loanpro.io</a></span></div></div></div><#/part>")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-smtp-service . 465)
                   (smtpmail-stream-type . ssl)
